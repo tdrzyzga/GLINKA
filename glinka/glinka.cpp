@@ -7,6 +7,7 @@
 
 #include "glinka.h"
 #include "mainwindow.h"
+//dodalem cosik
 
 
 void Test::reconstruction(const std::string &name)
