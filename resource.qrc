@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/ikony">
+        <file>copy.png</file>
+        <file>cut.png</file>
+        <file>new.png</file>
+        <file>open.png</file>
+        <file>paste.png</file>
+        <file>save.png</file>
+    </qresource>
+    <qresource prefix="/plik">
+        <file>glinka.txt</file>
+    </qresource>
+</RCC>
