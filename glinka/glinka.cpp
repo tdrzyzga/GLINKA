@@ -5,10 +5,8 @@
  *      Author: teodor
  */
 
-#include "glinka.h"
-#include "mainwindow.h"
-//dodalem cosik
-
+#include "glinka/glinka.h"
+#include "mainwindow/mainwindow.h"
 
 void Test::reconstruction(const std::string &name)
 {

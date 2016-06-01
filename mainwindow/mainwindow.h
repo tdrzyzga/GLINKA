@@ -27,8 +27,8 @@
 #include <QSpacerItem>
 #include <iterator>
 
-#include "qcustomplot.h"
-#include "glinka.h"
+#include "qcustomplot/qcustomplot.h"
+#include "glinka/glinka.h"
 
 class MainWindow : public QMainWindow
 {

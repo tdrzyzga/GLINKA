@@ -90,39 +90,52 @@ void MainWindow::createLineEditWidget()
 {
 	QLineEdit *lineMaxVoltage = new QLineEdit;
 	lineMaxVoltage->setReadOnly(true);
+	lineMaxVoltage->setFont(QFont("Arial", 9));
 	lineMaxVoltage->setText(QString::number(m_Test.returnsMaxVoltage(), 'f', 2));
 	QLineEdit *lineTimeReconstruction = new QLineEdit;
 	lineTimeReconstruction->setReadOnly(true);
+	lineTimeReconstruction->setFont(QFont("Arial", 9));
 	lineTimeReconstruction->setText(QString::number(m_Test.returnsTimeReconstruction(), 'f', 2));
 
 	m_LineRatedVoltage = new QLineEdit;
+	m_LineRatedVoltage->setFont(QFont("Arial", 9));
 	if (m_Test.returnsRatedVoltage() !=0)
 		m_LineRatedVoltage->setText(QString::number(m_Test.returnsRatedVoltage()));
 
 	m_LineTestVoltage = new QLineEdit;
+	m_LineTestVoltage->setFont(QFont("Arial", 9));
 	if (m_Test.returnsTestVoltage() !=0)
 		m_LineTestVoltage->setText(QString::number(m_Test.returnsTestVoltage()));
 
 	m_LineResistanceAfter60s = new QLineEdit;
+	m_LineResistanceAfter60s->setFont(QFont("Arial", 9));
 	if (m_Test.returnsResistanceAfter60s() != 0)
 		m_LineResistanceAfter60s->setText(QString::number(m_Test.returnsResistanceAfter60s()));
 
 	m_LineResistanceAfter15s = new QLineEdit;
+	m_LineResistanceAfter15s->setFont(QFont("Arial", 9));
 	if (m_Test.returnsResistanceAfter15s() != 0)
 		m_LineResistanceAfter15s->setText(QString::number(m_Test.returnsResistanceAfter15s()));
 
 	m_LineTimeShortCircuit = new QLineEdit;
+	m_LineTimeShortCircuit->setFont(QFont("Arial", 9));
 	if (m_Test.returnsTimeShortCircuit() != 0)
 		m_LineTimeShortCircuit->setText(QString::number(m_Test.returnsTimeShortCircuit()));
 
-	QLabel *maxVoltage = new QLabel(tr("Napięcie odbudowy [V]:"));
-	//maxVoltage->setFont(QFont ( "Arial", 10));
-	QLabel *timeReconstruction = new QLabel(tr("Czas odbudowy [s]:"));
-	QLabel *ratedVoltage = new QLabel(tr("Napięcie znamionowe [V]:"));
-	QLabel *testVoltage = new QLabel(tr("Napięcie probiercze [V]:"));
-	QLabel *resistanceAfter60s = new QLabel(tr("Rezystancja po 60 sekundach [MΩ]:"));
-	QLabel *resistanceAfter15s = new QLabel(tr("Rezystancja po 15 sekundach [MΩ]:"));
-	QLabel *timeShortCircuit = new QLabel(tr("Czas zwarcia [s]:"));
+	QLabel *labelMaxVoltage = new QLabel(tr("Napięcie odbudowy [V]:"));
+	labelMaxVoltage->setFont(QFont ( "Arial", 10));
+	QLabel *labelTimeReconstruction = new QLabel(tr("Czas odbudowy [s]:"));
+	labelTimeReconstruction->setFont(QFont("Arial", 10));
+	QLabel *labelRatedVoltage = new QLabel(tr("Napięcie znamionowe [V]:"));
+	labelRatedVoltage->setFont(QFont("Arial", 10));
+	QLabel *labelTestVoltage = new QLabel(tr("Napięcie probiercze [V]:"));
+	labelTestVoltage->setFont(QFont("Arial", 10));
+	QLabel *labelResistanceAfter60s = new QLabel(tr("Rezystancja po 60 sekundach [MΩ]:"));
+	labelResistanceAfter60s->setFont(QFont("Arial", 10));
+	QLabel *labelResistanceAfter15s = new QLabel(tr("Rezystancja po 15 sekundach [MΩ]:"));
+	labelResistanceAfter15s->setFont(QFont("Arial", 10));
+	QLabel *labelTimeShortCircuit = new QLabel(tr("Czas zwarcia [s]:"));
+	labelTimeShortCircuit->setFont(QFont("Arial", 10));
 
 	QGridLayout *vBox = new QGridLayout;
 	vBox->addWidget(lineMaxVoltage, 0, 1);
@@ -134,67 +147,86 @@ void MainWindow::createLineEditWidget()
 	vBox->addWidget(m_LineTimeShortCircuit, 6, 1);
 
 
-	vBox->addWidget(maxVoltage, 0, 0);
-	vBox->addWidget(timeReconstruction, 1, 0);
-	vBox->addWidget(ratedVoltage, 2, 0);
-	vBox->addWidget(testVoltage, 3, 0);
-	vBox->addWidget(resistanceAfter60s, 4, 0);
-	vBox->addWidget(resistanceAfter15s, 5, 0);
-	vBox->addWidget(timeShortCircuit, 6, 0);
+	vBox->addWidget(labelMaxVoltage, 0, 0);
+	vBox->addWidget(labelTimeReconstruction, 1, 0);
+	vBox->addWidget(labelRatedVoltage, 2, 0);
+	vBox->addWidget(labelTestVoltage, 3, 0);
+	vBox->addWidget(labelResistanceAfter60s, 4, 0);
+	vBox->addWidget(labelResistanceAfter15s, 5, 0);
+	vBox->addWidget(labelTimeShortCircuit, 6, 0);
 
 	m_LineEdit = new QGroupBox(tr("Dane techniczne"));
 	m_LineEdit->setFont(QFont("Arial", 12, QFont::Bold));
 	m_LineEdit->setStyleSheet("QGroupBox{border:1px; border-style:outset; border-color: gray; margin:10px} "
 							"QGroupBox::title{subcontrol-origin: margin; subcontrol-position:top left}");
 	m_LineEdit->setLayout(vBox);
+	m_LineEdit->setMinimumWidth(350);
+	m_LineEdit->setMaximumWidth(350);
 }
 void MainWindow::createLineEditWidgetRate()
 {
 	QLineEdit *lineResistance60sDivTestVoltage = new QLineEdit;
 	lineResistance60sDivTestVoltage->setReadOnly(true);
+	lineResistance60sDivTestVoltage->setFont(QFont("Arial", 10));
 	lineResistance60sDivTestVoltage->setText(QString::number(m_Rate.returnsResistance60sDivTestVoltage(), 'f', 2));
 	QLineEdit *lineRateResistance60sDivTestVoltage = new QLineEdit;
 	lineRateResistance60sDivTestVoltage->setReadOnly(true);
+	lineRateResistance60sDivTestVoltage->setFont(QFont("Arial", 10));
 	lineRateResistance60sDivTestVoltage->setText(QString::number(m_Rate.returnsRateResistance60sDivTestVoltage()));
 
 	QLineEdit *lineTimeShortCircuit = new QLineEdit;
 	lineTimeShortCircuit->setReadOnly(true);
+	lineTimeShortCircuit->setFont(QFont("Arial", 10));
 	lineTimeShortCircuit->setText(QString::number(m_Rate.returnsTTimeShortCircuit(), 'f', 2));
 	QLineEdit *lineRateTimeShortCircuit = new QLineEdit;
 	lineRateTimeShortCircuit->setReadOnly(true);
+	lineRateTimeShortCircuit->setFont(QFont("Arial", 10));
 	lineRateTimeShortCircuit->setText(QString::number(m_Rate.returnsRateTimeShortCircuit()));
 
 	QLineEdit *lineMaxVoltageDivTestVoltage = new QLineEdit;
 	lineMaxVoltageDivTestVoltage->setReadOnly(true);
+	lineMaxVoltageDivTestVoltage->setFont(QFont("Arial", 10));
 	lineMaxVoltageDivTestVoltage->setText(QString::number(m_Rate.returnsMaxVoltageDivTestVoltage(), 'f', 2));
 	QLineEdit *lineRateMaxVoltageDivTestVoltage = new QLineEdit;
 	lineRateMaxVoltageDivTestVoltage->setReadOnly(true);
+	lineRateMaxVoltageDivTestVoltage->setFont(QFont("Arial", 10));
 	lineRateMaxVoltageDivTestVoltage->setText(QString::number(m_Rate.returnsRateMaxVoltageDivTestVoltage()));
 
 	QLineEdit *lineTimeReconstruction = new QLineEdit;
 	lineTimeReconstruction->setReadOnly(true);
+	lineTimeReconstruction->setFont(QFont("Arial", 10));
 	lineTimeReconstruction->setText(QString::number(m_Rate.returnsTTimeReconstruction(), 'f', 2));
 	QLineEdit *lineRateTimeReconstruction = new QLineEdit;
 	lineRateTimeReconstruction->setReadOnly(true);
+	lineRateTimeReconstruction->setFont(QFont("Arial", 10));
 	lineRateTimeReconstruction->setText(QString::number(m_Rate.returnsRateTimeReconstruction()));
 
 	QLineEdit *lineResistance60DivResistance15s = new QLineEdit;
 	lineResistance60DivResistance15s ->setReadOnly(true);
+	lineResistance60DivResistance15s->setFont(QFont("Arial", 10));
 	lineResistance60DivResistance15s ->setText(QString::number(m_Rate.returnsResistance60DivResistance15s(), 'f', 2));
 	QLineEdit *lineRateResistance60DivResistance15s = new QLineEdit;
 	lineRateResistance60DivResistance15s->setReadOnly(true);
+	lineRateResistance60DivResistance15s->setFont(QFont("Arial", 10));
 	lineRateResistance60DivResistance15s->setText(QString::number(m_Rate.returnsRateResistance60DivResistance15s()));
 
 	QLineEdit *lineRateTotal = new QLineEdit;
 	lineRateTotal->setReadOnly(true);
+	lineRateTotal->setFont(QFont("Arial", 10));
 	lineRateTotal->setText(QString::number(m_Rate.returnsRateTotal(), 'f', 1));
 
 	QLabel *labelMaxVoltageDivTestVoltage = new QLabel(tr("Rezystancja R60 przez napięcie probiercze [kΩ/V]"));
+	labelMaxVoltageDivTestVoltage->setFont(QFont("Arial", 10));
 	QLabel *labelTimeShortCircuit= new QLabel(tr("Czas zwarcia [s]:"));
+	labelTimeShortCircuit->setFont(QFont("Arial", 10));
 	QLabel *labelResistance60sDivTestVoltage = new QLabel(tr("Napięcie odbudowy przez napięcie probiercze:"));
+	labelResistance60sDivTestVoltage->setFont(QFont("Arial", 10));
 	QLabel *labelTimeReconstruction= new QLabel(tr("Czas odbudowy [s]:"));
+	labelTimeReconstruction->setFont(QFont("Arial", 10));
 	QLabel *labelResistance60DivResistance15s = new QLabel(tr("Rezystancja R60 przez R15:"));
+	labelResistance60DivResistance15s->setFont(QFont("Arial", 10));
 	QLabel *labelTotal = new QLabel(tr("Ocena ogólna:"));
+	labelTotal->setFont(QFont("Arial", 10));
 
 	QGridLayout *gBox = new QGridLayout;
 
@@ -279,12 +311,17 @@ void MainWindow::createCustomPlot()
 	}
 	m_CustomPlot->addGraph();
 	m_CustomPlot->graph(0)->setData(x, y);
-	//customPlot->graph(0)->set
-	m_CustomPlot->xAxis->setLabel("Czas [s]");
-	m_CustomPlot->yAxis->setLabel("Napięcie odbudowy [V]");
+	m_CustomPlot->graph(0)->setName(tr("Napięcie odbudowy [V]"));
+	m_CustomPlot->xAxis->setLabel(tr("Czas [s]"));
+	//m_CustomPlot->yAxis->setLabel(tr("Napięcie odbudowy [V]"));
 	m_CustomPlot->xAxis->setRange(0, *(std::max_element(x.begin(), x.end())));
 	m_CustomPlot->yAxis->setRange(0, *(std::max_element(y.begin(), y.end())));
 	m_CustomPlot->setMinimumSize(1000, 500);
+	m_CustomPlot->legend->setVisible(true);
+	m_CustomPlot->legend->setBrush(QBrush(QColor(255,255,255,230)));
+	m_CustomPlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop|Qt::AlignLeft);
+	m_CustomPlot->setInteraction(QCP::iSelectPlottables, true);
+
 	m_CustomPlot->replot();
 }
 
@@ -305,8 +342,8 @@ void MainWindow::createCentralWidget()
 
 	m_GroupBox= new QGroupBox;
 	m_GroupBox->setLayout(gridBox);
-	m_GroupBox->setMinimumSize(1000, 300);
-	m_GroupBox->setMaximumSize(1366, 300);
+	m_GroupBox->setMinimumSize(1000, 260);
+	m_GroupBox->setMaximumSize(1366, 260);
 
 	/*QScrollArea *scroll= new QScrollArea;
 	scroll->setWidgetResizable(true);
@@ -318,7 +355,7 @@ void MainWindow::createCentralWidget()
 
 void MainWindow::news()
 {
-	QString fileName = QFileDialog::getOpenFileName(this,tr("Otwórz..."), "/home/qtworkspace/", tr("Pliki txt (*.txt)"));
+	QString fileName = QFileDialog::getOpenFileName(this,tr("Otwórz..."), "/home/qtworkspac", tr("Pliki txt (*.txt)"));
 	if (!fileName.isEmpty())
 	{
 		m_Test.reconstruction(fileName.toStdString());

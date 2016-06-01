@@ -1,5 +1,5 @@
-#include "mainwindow.h"
-#include "glinka.h"
+#include "mainwindow/mainwindow.h"
+#include "glinka/glinka.h"
 #include <QApplication>
 
 
