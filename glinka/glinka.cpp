@@ -115,6 +115,17 @@ void Test::showTest() const
 	//cout<<"Czas odbudowy napięcia: "<<fixed<<setprecision(2)<<m_TimeReconstruction<<" s"<<endl;
 }
 
+void Test::resetTest()
+{
+	m_RatedVoltage = 0.0;
+	m_TestVoltage = 0.0;
+	m_MaxVoltage = 0.0;
+	m_ResistanceAfter60s = 0.0;
+	m_ResistanceAfter15s = 0.0;
+	m_TimeShortCircuit = 0.0;
+	m_TimeReconstruction = 0.0;
+}
+
 std::map<int, int> RatingInsulation::s_CriteriaResistance60sDivTestVoltageSN = {
 		{ 50, 5 },
 		{ 20, 4 },
@@ -365,4 +376,18 @@ void RatingInsulation::showRate() const
 			<<setw(wt3)<< " Ocena: "<< m_RateResistance60DivResistance15s << endl;
 	cout << setw(wt) << left << "Ocena koncowa: " << right
 			 << setw(wt2) << m_RateTotal << endl;
+}
+
+void RatingInsulation::resetRate()
+{
+	Test::resetTest();
+	m_Resistance60sDivTestVoltage = 0.0;
+	m_MaxVoltageDivTestVoltage = 0.0;
+	m_Resistance60sDivResistance15s = 0.0;
+	m_RateResistance60sDivTestVoltage = 0;
+	m_RateTimeShortCircuit = 0;
+	m_RateTimeReconstruction = 0;
+	m_RateMaxVoltageDivTestVoltage = 0;
+	m_RateResistance60DivResistance15s = 0;
+	m_RateTotal = 0.0;
 }

@@ -49,8 +49,6 @@ class MainWindow : public QMainWindow
 		QGroupBox *m_LineEdit;
 		QGroupBox *m_LineEditRate;
 
-
-
 		QLineEdit *m_LineRatedVoltage;
 		QLineEdit *m_LineTestVoltage;
 		QLineEdit *m_LineResistanceAfter60s;

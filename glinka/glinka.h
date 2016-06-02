@@ -48,6 +48,7 @@ public:
 	std::multimap<double, double> returnsGlinka(){return glinka;}
 	void setTest();
 	void showTest()const;
+	void resetTest();
 };
 class RatingInsulation: private Test
 {
@@ -94,6 +95,7 @@ public:
 	double rateTotal();
 	double returnsRateTotal()const {return m_RateTotal;}
 	void showRate()const;
+	void resetRate();
 };
 
 

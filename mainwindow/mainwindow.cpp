@@ -7,6 +7,21 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent), m_Test(), m_Rate()
 
 	createFileActions();
 
+	m_ButtonAction = nullptr;
+	m_GroupBox = nullptr;
+
+	m_LineEdit = nullptr;
+	m_LineEditRate = nullptr;
+
+	m_LineRatedVoltage = nullptr;
+	m_LineTestVoltage = nullptr;
+	m_LineResistanceAfter60s = nullptr;
+	m_LineResistanceAfter15s = nullptr;
+	m_LineTimeShortCircuit = nullptr;
+
+	m_BottomWidget = nullptr;
+	m_CustomPlot = nullptr;
+
 	createMenus();
 	createStatusBar();
 	createToolBar();
@@ -355,6 +370,11 @@ void MainWindow::createCentralWidget()
 
 void MainWindow::news()
 {
+	if (m_GroupBox != nullptr && m_BottomWidget != nullptr)
+	{
+		m_Test.resetTest();
+		m_Rate.resetRate();
+	}
 	QString fileName = QFileDialog::getOpenFileName(this,tr("Otwórz..."), "/home/qtworkspac", tr("Pliki txt (*.txt)"));
 	if (!fileName.isEmpty())
 	{
