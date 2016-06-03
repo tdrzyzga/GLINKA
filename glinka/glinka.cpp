@@ -124,6 +124,7 @@ void Test::resetTest()
 	m_ResistanceAfter15s = 0.0;
 	m_TimeShortCircuit = 0.0;
 	m_TimeReconstruction = 0.0;
+	glinka.clear();
 }
 
 std::map<int, int> RatingInsulation::s_CriteriaResistance60sDivTestVoltageSN = {

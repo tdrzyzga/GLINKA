@@ -7,9 +7,7 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent), m_Test(), m_Rate()
 
 	createFileActions();
 
-	m_ButtonAction = nullptr;
 	m_GroupBox = nullptr;
-
 	m_LineEdit = nullptr;
 	m_LineEditRate = nullptr;
 
@@ -372,6 +370,10 @@ void MainWindow::news()
 {
 	if (m_GroupBox != nullptr && m_BottomWidget != nullptr)
 	{
+		delete m_CustomPlot;
+		delete m_GroupBox;
+		delete m_BottomWidget;
+
 		m_Test.resetTest();
 		m_Rate.resetRate();
 	}
