@@ -32,16 +32,16 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent), m_Test(), m_Rate()
 
 void MainWindow::createFileActions()
 {
-	m_NewAction = new QAction(QIcon(":/ikony/new.png"), tr("&Nowy"), this);
+	m_NewAction = new QAction(QIcon(":/icons/icons/new.png"), tr("&Nowy"), this);
 	m_NewAction->setStatusTip(tr("Nowy plik."));
 	m_NewAction->setShortcut(QKeySequence::New);
 	connect (m_NewAction, SIGNAL(triggered()), this, SLOT(news()));
 
-	m_OpenAction = new QAction(QIcon(":/ikony/open.png"), tr("&Otwórz"), this);
+	m_OpenAction = new QAction(QIcon(":/icons/icons/open.png"), tr("&Otwórz"), this);
 	m_OpenAction->setStatusTip(tr("Otwórz istniejący plik."));
 	m_OpenAction->setShortcut(QKeySequence::Open);
 
-	m_SaveAction = new QAction(QIcon(":/ikony/save.png"), tr("&Zapisz"), this);
+	m_SaveAction = new QAction(QIcon(":/icons/icons/save.png"), tr("&Zapisz"), this);
 	m_SaveAction->setStatusTip(tr("Zapisz plik."));
 	m_SaveAction->setShortcut(QKeySequence::Save);
 

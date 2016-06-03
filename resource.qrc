@@ -1,13 +1,10 @@
 <RCC>
-    <qresource prefix="/ikony">
-        <file>copy.png</file>
-        <file>cut.png</file>
-        <file>new.png</file>
-        <file>open.png</file>
-        <file>paste.png</file>
-        <file>save.png</file>
-    </qresource>
-    <qresource prefix="/plik">
-        <file>glinka.txt</file>
+    <qresource prefix="/icons">
+        <file>icons/copy.png</file>
+        <file>icons/cut.png</file>
+        <file>icons/new.png</file>
+        <file>icons/open.png</file>
+        <file>icons/paste.png</file>
+        <file>icons/save.png</file>
     </qresource>
 </RCC>
