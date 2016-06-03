@@ -42,7 +42,7 @@ class MainWindow : public QMainWindow
 		QAction *m_QuitAction;
 		QAction *m_ButtonAction;
 
-		QMenu *m_HelpMenu;
+		QMenu	 *m_HelpMenu;
 		QToolBar *m_FileToolBar;
 
 		QGroupBox *m_GroupBox;
