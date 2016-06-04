@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui\
-			printsupport
+                        printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -14,18 +14,18 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-            mainwindow.cpp\
-            glinka.cpp\
-            qcustomplot.cpp
+           mainwindow/mainwindow.cpp \
+           glinka/glinka.cpp \
+           qcustomplot/qcustomplot.cpp
 
-HEADERS  += mainwindow.h\
-            glinka.h\
-            qcustomplot.h
+HEADERS  += mainwindow/mainwindow.h \
+            glinka/glinka.h \
+            qcustomplot/qcustomplot.h \
 
 FORMS    += mainwindow.ui
 
 RESOURCES += \
-            resource.qrc
+    resource.qrc
 
 
 
