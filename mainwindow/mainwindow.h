@@ -28,7 +28,8 @@
 #include <iterator>
 
 #include "qcustomplot/qcustomplot.h"
-#include "glinka/glinka.h"
+//#include "glinka/glinka.h"
+#include "glinka2.h"
 
 class MainWindow : public QMainWindow
 {
@@ -76,6 +77,7 @@ class MainWindow : public QMainWindow
 	private slots:
 		void news();
 		void rate();
+		void save();
 
 	public:
 		MainWindow(QWidget *parent=0);

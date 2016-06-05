@@ -1,12 +1,5 @@
-/*
- * glinka.h
- *
- *  Created on: 28-04-2016
- *      Author: teodor
- */
-
-#ifndef RATINGINSULATION_H_
-#define RATINGINSULATION_H_
+#ifndef GLINKA2_H
+#define GLINKA2_H
 #include<iostream>
 #include<fstream>
 #include<map>
@@ -31,6 +24,7 @@ private:
 public:
 	Test();
 	Test(const Test &ts);
+	Test(double rV, double tV, double mV, double r60, double r15, double tSC, double tR, std::multimap<double, double> &gl);
 	virtual ~Test(){}
 	void reconstruction(const std::string &name);
 	double returnsRatedVoltage()const{ return m_RatedVoltage;}
@@ -51,6 +45,7 @@ public:
 	void showTest()const;
 	void resetTest();
 };
+
 class RatingInsulation: private Test
 {
 private:
@@ -82,9 +77,10 @@ private:
 public:
 	RatingInsulation();
 	RatingInsulation(const Test &ts);
+	RatingInsulation(const Test &ts, double r60DivTV, double mVdivTV, double r60Divr15);
 	virtual ~RatingInsulation(){}
-	double returnsTTimeShortCircuit()const {return returnsTimeShortCircuit();}
-	double returnsTTimeReconstruction()const {return returnsTimeReconstruction();}
+	double returnsTTimeShortCircuit()const {return Test::returnsTimeShortCircuit();}
+	double returnsTTimeReconstruction()const {return Test::returnsTimeReconstruction();}
 	double returnsResistance60sDivTestVoltage()const {return m_Resistance60sDivTestVoltage;}
 	double returnsMaxVoltageDivTestVoltage()const {return m_MaxVoltageDivTestVoltage;}
 	double returnsResistance60DivResistance15s()const {return m_Resistance60sDivResistance15s;}
@@ -93,13 +89,10 @@ public:
 	int returnsRateTimeReconstruction()const {return m_RateTimeReconstruction;}
 	int returnsRateMaxVoltageDivTestVoltage()const {return m_RateMaxVoltageDivTestVoltage;}
 	int returnsRateResistance60DivResistance15s()const {return m_RateResistance60DivResistance15s;}
+	Test &returnsTest();
 	double rateTotal();
 	double returnsRateTotal()const {return m_RateTotal;}
 	void showRate()const;
 	void resetRate();
 };
-
-
-
-
-#endif /* RATINGINSULATION_H_ */
+#endif // GLINKA2_H

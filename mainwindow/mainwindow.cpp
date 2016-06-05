@@ -42,6 +42,7 @@ void MainWindow::createFileActions()
 	m_SaveAction = new QAction(QIcon(":/icons/icons/save.png"), tr("&Zapisz"), this);
 	m_SaveAction->setStatusTip(tr("Zapisz plik."));
 	m_SaveAction->setShortcut(QKeySequence::Save);
+	connect (m_SaveAction, SIGNAL(triggered()), this, SLOT(save()));
 
 	m_QuitAction = new QAction(tr("&Wyjście"), this);
 	m_QuitAction->setStatusTip(tr("Wyjdź z programu."));
@@ -288,7 +289,7 @@ void MainWindow::getLineData()
 	QString timeShortCircuit = m_LineTimeShortCircuit->text();
 	m_Test.returnsTimeShortCircuit() = timeShortCircuit.toDouble();
 
-	m_Rate=m_Test;
+	m_Rate = m_Test;
 }
 
 void MainWindow::createBottomWidget()
@@ -389,8 +390,13 @@ void MainWindow::news()
 void MainWindow::rate()
 {
 	getLineData();
-	m_Rate.showRate();
 	m_Rate.rateTotal();
-
+	m_Rate.showRate();
 	createCentralWidget();
+}
+
+void MainWindow::save()
+{
+		QString fileName = QFileDialog::getSaveFileName(this,tr("Zapisz plik jako..."), "/home/*.glinka", tr("Pliki txt (*.glinka)"));
+
 }

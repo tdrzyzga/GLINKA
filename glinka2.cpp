@@ -1,3 +1,4 @@
+#include "glinka2.h"
 /*
  * glinka.cpp
  *
@@ -5,7 +6,7 @@
  *      Author: teodor
  */
 
-#include "glinka/glinka.h"
+#include "glinka2.h"
 #include "mainwindow/mainwindow.h"
 
 void Test::reconstruction(const std::string &name)
@@ -20,7 +21,6 @@ void Test::reconstruction(const std::string &name)
 		exit(EXIT_FAILURE);
 	}
 
-	//multimap<double, double> glinka;
 	pair<double, double> temp_glinka;
 	pair<double, double> min;
 	bool min_get = false;
@@ -37,21 +37,9 @@ void Test::reconstruction(const std::string &name)
 
 	multimap<double, double>::reverse_iterator max=glinka.rbegin();
 
-/*	cout <<left<<setw(50)<< "Rozpoczecie odbudowy napiecia: " << fixed << setprecision(1)
-			<<setw(7)<<right<< min.first << " V"<<left << " Czas: " << setw(6)<<setprecision(2) <<right<< min.second
-			<< " s" << endl;
-	cout <<left<<setw(50)<< "Maksymalne napiecie odbudowy: " << fixed << setprecision(1)
-			<<setw(7)<<right<< max->first << " V" <<left<< " Czas: " << setw(6)<< setprecision(2) <<right<< max->second
-			<< " s" << endl;
-	cout <<left<<setw(50)<< "Czas odbudowy napiecia: " << fixed  << setprecision(2)
-			<<setw(7)<<right<< max->second - min.second << " s" << endl;
-*/
 	m_TimeReconstruction=max->second-min.second;
 	m_MaxVoltage=max->first;
-	//gl.insert(glinka.begin(), glinka.end());
-
 }
-
 Test::Test()
 {
 	m_RatedVoltage = 0.0;
@@ -62,7 +50,6 @@ Test::Test()
 	m_TimeShortCircuit = 0.0;
 	m_TimeReconstruction = 0.0;
 }
-
 Test::Test(const Test &ts)
 {
 	m_RatedVoltage = ts.m_RatedVoltage;
@@ -74,7 +61,17 @@ Test::Test(const Test &ts)
 	m_TimeReconstruction = ts.m_TimeReconstruction;
 	glinka = ts.glinka;
 }
-
+Test::Test(double rV, double tV, double mV, double r60, double r15, double tSC, double tR, std::multimap<double, double> &gl)
+{
+	m_RatedVoltage = rV;
+	m_TestVoltage = tV;
+	m_MaxVoltage = mV;
+	m_ResistanceAfter60s = r60;
+	m_ResistanceAfter15s = r15;
+	m_TimeShortCircuit = tSC;
+	m_TimeReconstruction = tR;
+	glinka = gl;
+}
 void Test::setTest()
 {
 	using std::cout;
@@ -82,24 +79,16 @@ void Test::setTest()
 	std::string name;
 	cout << "Podaj nazwę pliku do przetworzenia: ";
 	getline(cin, name);
-	//std::pair<double, double> temp;
-	//temp=Reconstruction(name);
-	//m_TimeReconstruction = temp.second;
-	//max_voltage = temp.first;
 	cout << "Napięcie znamonowe [V]: ";
 	cin >> m_RatedVoltage;
 	cout << "Napięcie probiercze [V]: ";
 	cin >> m_TestVoltage;
-	//cout<<"Maksymalne napięcie odbudowy: ";
-	//cin>>max_voltage;
 	cout << "Rezystancja po 60 sekundach [kOhm]: ";
 	cin >> m_ResistanceAfter60s;
 	cout << "Rezystancja po 15 sekundach [kOhm]: ";
 	cin >> m_ResistanceAfter15s;
 	cout << "Czas zwarcia [s]: ";
 	cin >> m_TimeShortCircuit;
-	//cout<<"Czas odbudowy napięcia [s]: ";
-	//cin>>m_TimeReconstruction;
 }
 void Test::showTest() const
 {
@@ -127,7 +116,6 @@ void Test::showTest() const
 	//cout<<"Czas zwarcia: "<<fixed<<setprecision(2)<<m_TimeShortCircuit<<" s"<<endl;
 	//cout<<"Czas odbudowy napięcia: "<<fixed<<setprecision(2)<<m_TimeReconstruction<<" s"<<endl;
 }
-
 void Test::resetTest()
 {
 	m_RatedVoltage = 0.0;
@@ -139,7 +127,6 @@ void Test::resetTest()
 	m_TimeReconstruction = 0.0;
 	glinka.clear();
 }
-
 std::map<int, int> RatingInsulation::s_CriteriaResistance60sDivTestVoltageSN = {
 		{ 50, 5 },
 		{ 20, 4 },
@@ -227,9 +214,15 @@ RatingInsulation::RatingInsulation(const Test &ts) :Test(ts)
 	m_RateResistance60DivResistance15s = 0;
 	m_RateTotal = 0.0;
 }
+RatingInsulation::RatingInsulation(const Test &ts, double r60DivTV, double mVdivTV, double r60Divr15):Test(ts)
+{
+	m_Resistance60sDivTestVoltage = r60DivTV;
+	m_MaxVoltageDivTestVoltage = mVdivTV;
+	m_Resistance60sDivResistance15s = r60Divr15;
+}
 int RatingInsulation::rateResistance60sDivTestVoltage()
 {
-	if (returnsRatedVoltage() >= SN) {
+	if (Test::returnsRatedVoltage() >= SN) {
 		if (m_Resistance60sDivTestVoltage >= 50)
 			m_RateResistance60sDivTestVoltage = s_CriteriaResistance60sDivTestVoltageSN[50];
 		else if (m_Resistance60sDivTestVoltage < 50	&& m_Resistance60sDivTestVoltage >= 20)
@@ -251,59 +244,59 @@ int RatingInsulation::rateResistance60sDivTestVoltage()
 }
 int RatingInsulation::rateTimeReconstruction()
 {
-	if (returnsRatedVoltage() >= SN)
+	if (Test::returnsRatedVoltage() >= SN)
 	{
-		if (returnsTimeReconstruction() >= 240)
+		if (Test::returnsTimeReconstruction() >= 240)
 			m_RateTimeReconstruction = s_CriteriaTimeReconstructionSN[240];
-		else if (returnsTimeReconstruction() < 240 && returnsTimeReconstruction() >= 120)
+		else if (Test::returnsTimeReconstruction() < 240 && Test::returnsTimeReconstruction() >= 120)
 			m_RateTimeReconstruction = s_CriteriaTimeReconstructionSN[120];
-		else if (returnsTimeReconstruction() < 120 && returnsTimeReconstruction() >= 30)
+		else if (Test::returnsTimeReconstruction() < 120 && Test::returnsTimeReconstruction() >= 30)
 			m_RateTimeReconstruction = s_CriteriaTimeReconstructionSN[30];
-		else if (returnsTimeReconstruction() < 120 && returnsTimeReconstruction() >= 30)
+		else if (Test::returnsTimeReconstruction() < 120 && Test::returnsTimeReconstruction() >= 30)
 			m_RateTimeReconstruction = s_CriteriaTimeReconstructionSN[30];
-		else if (returnsTimeReconstruction() < 30 && returnsTimeReconstruction() >= 10)
+		else if (Test::returnsTimeReconstruction() < 30 && Test::returnsTimeReconstruction() >= 10)
 			m_RateTimeReconstruction = s_CriteriaTimeReconstructionSN[10];
-		else if (returnsTimeReconstruction() == 0 && returnsTimeShortCircuit() == 1)
+		else if (Test::returnsTimeReconstruction() == 0 && Test::returnsTimeShortCircuit() == 1)
 			m_RateTimeReconstruction = s_CriteriaTimeReconstructionSN[0];
-		else if (returnsTimeReconstruction() == 0 && returnsTimeShortCircuit() == 0)
+		else if (Test::returnsTimeReconstruction() == 0 && Test::returnsTimeShortCircuit() == 0)
 			m_RateTimeReconstruction = s_CriteriaTimeReconstructionSN[0] - 1;
 	}
 	else
 	{
 		auto temp = find_if(s_CriteriaTimeReconstructionnN.rbegin(), s_CriteriaTimeReconstructionnN.rend(),
-				[=](std::pair<const int, int>  i){return i.first<=returnsTimeReconstruction();});
+				[=](std::pair<const int, int>  i){return i.first<=Test::returnsTimeReconstruction();});
 		m_RateTimeReconstruction = temp->second;
 	}
 	return m_RateTimeReconstruction;
 }
 int RatingInsulation::rateTimeShortCircuit()
 {
-	if (returnsRatedVoltage() >= SN)
+	if (Test::returnsRatedVoltage() >= SN)
 	{
-		if (returnsTimeShortCircuit() == 30 && returnsTimeReconstruction() >= 240)
+		if (Test::returnsTimeShortCircuit() == 30 && Test::returnsTimeReconstruction() >= 240)
 			m_RateTimeShortCircuit = s_CriteriaTimeShortCircuitSN[30];
-		else if (returnsTimeShortCircuit() == 30 && returnsTimeReconstruction() < 240	&& returnsTimeReconstruction() >= 120)
+		else if (Test::returnsTimeShortCircuit() == 30 && Test::returnsTimeReconstruction() < 240	&& returnsTimeReconstruction() >= 120)
 			m_RateTimeShortCircuit = s_CriteriaTimeShortCircuitSN[30] - 1;
-		else if (returnsTimeShortCircuit() == 30 && returnsTimeReconstruction() < 120	&& returnsTimeReconstruction() >= 30)
+		else if (Test::returnsTimeShortCircuit() == 30 && Test::returnsTimeReconstruction() < 120	&& returnsTimeReconstruction() >= 30)
 			m_RateTimeShortCircuit = s_CriteriaTimeShortCircuitSN[30] - 2;
-		else if (returnsTimeShortCircuit() == 1 && returnsTimeReconstruction() < 30 && returnsTimeReconstruction() >= 10)
+		else if (Test::returnsTimeShortCircuit() == 1 && Test::returnsTimeReconstruction() < 30 && returnsTimeReconstruction() >= 10)
 			m_RateTimeShortCircuit = s_CriteriaTimeShortCircuitSN[1];
-		else if (returnsTimeShortCircuit() == 1 && returnsTimeReconstruction() == 0)
+		else if (Test::returnsTimeShortCircuit() == 1 && Test::returnsTimeReconstruction() == 0)
 			m_RateTimeShortCircuit = s_CriteriaTimeShortCircuitSN[1] - 1;
-		else if (returnsTimeShortCircuit() == 0)
+		else if (Test::returnsTimeShortCircuit() == 0)
 			m_RateTimeShortCircuit = s_CriteriaTimeShortCircuitSN[0];
 	}
 	else
 	{
-		if (returnsTimeShortCircuit() == 10 && returnsTimeReconstruction() >= 120)
+		if (Test::returnsTimeShortCircuit() == 10 && Test::returnsTimeReconstruction() >= 120)
 			m_RateTimeShortCircuit = s_CriteriaTimeShortCircuitnN[10];
-		else if (returnsTimeShortCircuit() == 10 && returnsTimeReconstruction() < 120	&& returnsTimeReconstruction() >= 60)
+		else if (Test::returnsTimeShortCircuit() == 10 && Test::returnsTimeReconstruction() < 120	&& Test::returnsTimeReconstruction() >= 60)
 			m_RateTimeShortCircuit = s_CriteriaTimeShortCircuitnN[10] - 1;
-		else if (returnsTimeShortCircuit() == 10 && returnsTimeReconstruction() < 60)
+		else if (Test::returnsTimeShortCircuit() == 10 && Test::returnsTimeReconstruction() < 60)
 			m_RateTimeShortCircuit = s_CriteriaTimeShortCircuitnN[10] - 2;
-		else if (returnsTimeShortCircuit() == 1 && returnsTimeReconstruction() < 15 && returnsTimeReconstruction() >= 5)
+		else if (Test::returnsTimeShortCircuit() == 1 && Test::returnsTimeReconstruction() < 15 && Test::returnsTimeReconstruction() >= 5)
 			m_RateTimeShortCircuit = s_CriteriaTimeShortCircuitnN[1];
-		else if (returnsTimeShortCircuit() == 0)
+		else if (Test::returnsTimeShortCircuit() == 0)
 			m_RateTimeShortCircuit = s_CriteriaTimeShortCircuitnN[0];
 	}
 	return m_RateTimeShortCircuit;
@@ -316,7 +309,7 @@ int RatingInsulation::rateMaxVoltageDivTestVoltage()
 }
 int RatingInsulation::rateResistance60DivResistance15s()
 {
-	if (returnsRatedVoltage() >= SN)
+	if (Test::returnsRatedVoltage() >= SN)
 	{
 		if (m_Resistance60sDivResistance15s >= 1.5)
 			m_RateResistance60DivResistance15s = s_CriteriaResistance60DivResistance15sSN[1.5];
@@ -342,7 +335,6 @@ int RatingInsulation::rateResistance60DivResistance15s()
 	}
 	return m_RateResistance60DivResistance15s;
 }
-
 double RatingInsulation::rateTotal()
 {
 	m_RateTotal += rateResistance60sDivTestVoltage();
@@ -371,10 +363,10 @@ void RatingInsulation::showRate() const
 	Test::showTest();
 	cout  << fixed << setprecision(2);
 	cout  << setw(wt) << left << "Czas zwarcia: " << right
-			<< setw(wt2) << returnsTimeShortCircuit() <<setw(7)<<left<<" s "
+			<< setw(wt2) << Test::returnsTimeShortCircuit() <<setw(7)<<left<<" s "
 			<<right<< " Ocena: " << m_RateTimeShortCircuit << endl;
 	cout << setw(wt) << left << "Czas odbudowy napiecia: "
-			<< right  << setw(wt2) << returnsTimeReconstruction()<<setw(7)<<left<<" s "
+			<< right  << setw(wt2) << Test::returnsTimeReconstruction()<<setw(7)<<left<<" s "
 			<<right<< " Ocena: "  << m_RateTimeReconstruction << endl;
 	cout  << setw(wt) << left
 			<< "Rezystancja po 60s przez napiecie probiercze: " << right
@@ -391,7 +383,10 @@ void RatingInsulation::showRate() const
 	cout << setw(wt) << left << "Ocena koncowa: " << right
 			 << setw(wt2) << m_RateTotal << endl;
 }
-
+ Test & RatingInsulation::returnsTest()
+{
+	return (Test &)*this;
+}
 void RatingInsulation::resetRate()
 {
 	Test::resetTest();
@@ -405,3 +400,4 @@ void RatingInsulation::resetRate()
 	m_RateResistance60DivResistance15s = 0;
 	m_RateTotal = 0.0;
 }
+

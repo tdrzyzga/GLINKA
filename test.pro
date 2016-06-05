@@ -15,12 +15,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
            mainwindow/mainwindow.cpp \
-           glinka/glinka.cpp \
-           qcustomplot/qcustomplot.cpp
+           qcustomplot/qcustomplot.cpp \
+    glinka2.cpp
 
 HEADERS  += mainwindow/mainwindow.h \
-            glinka/glinka.h \
             qcustomplot/qcustomplot.h \
+    glinka2.h
 
 FORMS    += mainwindow.ui
 
