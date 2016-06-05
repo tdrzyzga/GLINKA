@@ -400,4 +400,3 @@ void RatingInsulation::resetRate()
 	m_RateResistance60DivResistance15s = 0;
 	m_RateTotal = 0.0;
 }
-
