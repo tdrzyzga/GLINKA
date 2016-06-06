@@ -362,20 +362,20 @@ void RatingInsulation::showRate() const
 
 	Test::showTest();
 	cout  << fixed << setprecision(2);
-	cout  << setw(wt) << left << "Czas zwarcia: " << right
-			<< setw(wt2) << Test::returnsTimeShortCircuit() <<setw(7)<<left<<" s "
-			<<right<< " Ocena: " << m_RateTimeShortCircuit << endl;
-	cout << setw(wt) << left << "Czas odbudowy napiecia: "
-			<< right  << setw(wt2) << Test::returnsTimeReconstruction()<<setw(7)<<left<<" s "
-			<<right<< " Ocena: "  << m_RateTimeReconstruction << endl;
 	cout  << setw(wt) << left
 			<< "Rezystancja po 60s przez napiecie probiercze: " << right
 			<< setw(wt2) << m_Resistance60sDivTestVoltage<<" kOhm/V"
 			<<setw(7)<< " Ocena: " << m_RateResistance60sDivTestVoltage << endl;
+	cout  << setw(wt) << left << "Czas zwarcia: " << right
+			<< setw(wt2) << Test::returnsTimeShortCircuit() <<setw(7)<<left<<" s "
+			<<right<< " Ocena: " << m_RateTimeShortCircuit << endl;
 	cout  << setw(wt) << left
 			<< "Napiecie odbudowy przez napiecie probiercze: " << right
 			<< setw(wt2) << m_MaxVoltageDivTestVoltage
 			<<setw(wt3)<< " Ocena: " << m_RateMaxVoltageDivTestVoltage << endl;
+	cout << setw(wt) << left << "Czas odbudowy napiecia: "
+			<< right  << setw(wt2) << Test::returnsTimeReconstruction()<<setw(7)<<left<<" s "
+			<<right<< " Ocena: "  << m_RateTimeReconstruction << endl;
 	cout << setw(wt) << left
 			<< "Rezystancja po 60s przez rezystancje po 15s: " << right
 			<< setw(wt2) << m_Resistance60sDivResistance15s

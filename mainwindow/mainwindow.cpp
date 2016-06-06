@@ -378,7 +378,7 @@ void MainWindow::news()
 		m_Test.resetTest();
 		m_Rate.resetRate();
 	}
-	QString fileName = QFileDialog::getOpenFileName(this,tr("Otwórz..."), "/home/qtworkspac", tr("Pliki txt (*.txt)"));
+	QString fileName = QFileDialog::getOpenFileName(this,tr("Otwórz..."), "/home/", tr("Pliki txt (*.txt)"));
 	if (!fileName.isEmpty())
 	{
 		m_Test.reconstruction(fileName.toStdString());
