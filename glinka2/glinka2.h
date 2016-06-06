@@ -13,13 +13,17 @@
 class Test
 {
 private:
-	double m_RatedVoltage;
-	double m_TestVoltage;
-	double m_MaxVoltage;
-	double m_ResistanceAfter60s;
-	double m_ResistanceAfter15s;
-	double m_TimeShortCircuit;
-	double m_TimeReconstruction;
+	struct TechnicalData
+	{
+			double m_RatedVoltage;
+			double m_TestVoltage;
+			double m_MaxVoltage;
+			double m_ResistanceAfter60s;
+			double m_ResistanceAfter15s;
+			double m_TimeShortCircuit;
+			double m_TimeReconstruction;
+	};
+	TechnicalData m_tD;
 	std::multimap<double, double> glinka;
 public:
 	Test();
@@ -27,23 +31,24 @@ public:
 	Test(double rV, double tV, double mV, double r60, double r15, double tSC, double tR, std::multimap<double, double> &gl);
 	virtual ~Test(){}
 	void reconstruction(const std::string &name);
-	double returnsRatedVoltage()const{ return m_RatedVoltage;}
-	double returnsTestVoltage()const{ return m_TestVoltage;}
-	double returnsMaxVoltage()const{ return m_MaxVoltage;}
-	double returnsTimeReconstruction()const{return  m_TimeReconstruction;}
-	double returnsResistanceAfter60s()const{ return m_ResistanceAfter60s;}
-	double returnsResistanceAfter15s() const{return m_ResistanceAfter15s;}
-	double returnsTimeShortCircuit()const{return m_TimeShortCircuit;}
-	double &returnsRatedVoltage(){ return m_RatedVoltage;}
-	double &returnsTestVoltage(){ return m_TestVoltage;}
-	double &returnsMaxVoltage(){ return m_MaxVoltage;}
-	double &returnsResistanceAfter60s(){ return m_ResistanceAfter60s;}
-	double &returnsResistanceAfter15s(){return m_ResistanceAfter15s;}
-	double &returnsTimeShortCircuit(){return m_TimeShortCircuit;}
+	double returnsRatedVoltage()const{ return m_tD.m_RatedVoltage;}
+	double returnsTestVoltage()const{ return m_tD.m_TestVoltage;}
+	double returnsMaxVoltage()const{ return m_tD.m_MaxVoltage;}
+	double returnsTimeReconstruction()const{return  m_tD.m_TimeReconstruction;}
+	double returnsResistanceAfter60s()const{ return m_tD.m_ResistanceAfter60s;}
+	double returnsResistanceAfter15s() const{return m_tD.m_ResistanceAfter15s;}
+	double returnsTimeShortCircuit()const{return m_tD.m_TimeShortCircuit;}
+	double &returnsRatedVoltage(){ return m_tD.m_RatedVoltage;}
+	double &returnsTestVoltage(){ return m_tD.m_TestVoltage;}
+	double &returnsMaxVoltage(){ return m_tD.m_MaxVoltage;}
+	double &returnsResistanceAfter60s(){ return m_tD.m_ResistanceAfter60s;}
+	double &returnsResistanceAfter15s(){return m_tD.m_ResistanceAfter15s;}
+	double &returnsTimeShortCircuit(){return m_tD.m_TimeShortCircuit;}
 	std::multimap<double, double> returnsGlinka(){return glinka;}
 	void setTest();
 	void showTest()const;
 	void resetTest();
+	void writeTest(const std::string &name)const;
 };
 
 class RatingInsulation: private Test

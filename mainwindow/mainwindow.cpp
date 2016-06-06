@@ -398,5 +398,5 @@ void MainWindow::rate()
 void MainWindow::save()
 {
 		QString fileName = QFileDialog::getSaveFileName(this,tr("Zapisz plik jako..."), "/home/*.glinka", tr("Pliki txt (*.glinka)"));
-
+		m_Test.writeTest(fileName.toStdString());
 }

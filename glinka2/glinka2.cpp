@@ -13,7 +13,7 @@ void Test::reconstruction(const std::string &name)
 {
 	using namespace std;
 	ifstream infile;
-	infile.open(name, std::ios::in);
+	infile.open(name, std::ios_base::in);
 
 	if (!infile.is_open())
 	{
@@ -37,39 +37,39 @@ void Test::reconstruction(const std::string &name)
 
 	multimap<double, double>::reverse_iterator max=glinka.rbegin();
 
-	m_TimeReconstruction=max->second-min.second;
-	m_MaxVoltage=max->first;
+	m_tD.m_TimeReconstruction=max->second-min.second;
+	m_tD.m_MaxVoltage=max->first;
 }
 Test::Test()
 {
-	m_RatedVoltage = 0.0;
-	m_TestVoltage = 0.0;
-	m_MaxVoltage = 0.0;
-	m_ResistanceAfter60s = 0.0;
-	m_ResistanceAfter15s = 0.0;
-	m_TimeShortCircuit = 0.0;
-	m_TimeReconstruction = 0.0;
+	m_tD.m_RatedVoltage = 0.0;
+	m_tD.m_TestVoltage = 0.0;
+	m_tD.m_MaxVoltage = 0.0;
+	m_tD.m_ResistanceAfter60s = 0.0;
+	m_tD.m_ResistanceAfter15s = 0.0;
+	m_tD.m_TimeShortCircuit = 0.0;
+	m_tD.m_TimeReconstruction = 0.0;
 }
 Test::Test(const Test &ts)
 {
-	m_RatedVoltage = ts.m_RatedVoltage;
-	m_TestVoltage = ts.m_TestVoltage;
-	m_MaxVoltage = ts.m_MaxVoltage;
-	m_ResistanceAfter60s = ts.m_ResistanceAfter60s;
-	m_ResistanceAfter15s = ts.m_ResistanceAfter15s;
-	m_TimeShortCircuit = ts.m_TimeShortCircuit;
-	m_TimeReconstruction = ts.m_TimeReconstruction;
+	m_tD.m_RatedVoltage = ts.m_tD.m_RatedVoltage;
+	m_tD.m_TestVoltage = ts.m_tD.m_TestVoltage;
+	m_tD.m_MaxVoltage = ts.m_tD.m_MaxVoltage;
+	m_tD.m_ResistanceAfter60s = ts.m_tD.m_ResistanceAfter60s;
+	m_tD.m_ResistanceAfter15s = ts.m_tD.m_ResistanceAfter15s;
+	m_tD.m_TimeShortCircuit = ts.m_tD.m_TimeShortCircuit;
+	m_tD.m_TimeReconstruction = ts.m_tD.m_TimeReconstruction;
 	glinka = ts.glinka;
 }
 Test::Test(double rV, double tV, double mV, double r60, double r15, double tSC, double tR, std::multimap<double, double> &gl)
 {
-	m_RatedVoltage = rV;
-	m_TestVoltage = tV;
-	m_MaxVoltage = mV;
-	m_ResistanceAfter60s = r60;
-	m_ResistanceAfter15s = r15;
-	m_TimeShortCircuit = tSC;
-	m_TimeReconstruction = tR;
+	m_tD.m_RatedVoltage = rV;
+	m_tD.m_TestVoltage = tV;
+	m_tD.m_MaxVoltage = mV;
+	m_tD.m_ResistanceAfter60s = r60;
+	m_tD.m_ResistanceAfter15s = r15;
+	m_tD.m_TimeShortCircuit = tSC;
+	m_tD.m_TimeReconstruction = tR;
 	glinka = gl;
 }
 void Test::setTest()
@@ -80,15 +80,15 @@ void Test::setTest()
 	cout << "Podaj nazwę pliku do przetworzenia: ";
 	getline(cin, name);
 	cout << "Napięcie znamonowe [V]: ";
-	cin >> m_RatedVoltage;
+	cin >> m_tD.m_RatedVoltage;
 	cout << "Napięcie probiercze [V]: ";
-	cin >> m_TestVoltage;
+	cin >> m_tD.m_TestVoltage;
 	cout << "Rezystancja po 60 sekundach [kOhm]: ";
-	cin >> m_ResistanceAfter60s;
+	cin >> m_tD.m_ResistanceAfter60s;
 	cout << "Rezystancja po 15 sekundach [kOhm]: ";
-	cin >> m_ResistanceAfter15s;
+	cin >> m_tD.m_ResistanceAfter15s;
 	cout << "Czas zwarcia [s]: ";
-	cin >> m_TimeShortCircuit;
+	cin >> m_tD.m_TimeShortCircuit;
 }
 void Test::showTest() const
 {
@@ -104,28 +104,50 @@ void Test::showTest() const
 
 	cout  << fixed << setprecision(2);
 	cout <<setw(wt)<<left<< "Napiecie znamonowe: " << setw(wt2)<<right
-			<< m_RatedVoltage<< " V" << endl;
+			<< m_tD.m_RatedVoltage<< " V" << endl;
 	cout <<setw(wt)<<left<< "Napiecie probiercze: " << setw(wt2)<<right
-			<< m_TestVoltage<< " V" << endl;
+			<< m_tD.m_TestVoltage<< " V" << endl;
 	cout <<setw(wt)<<left<< "Maksymalne napiecie odbudowy: " << setw(wt2)<<right
-			<< m_MaxVoltage << " V" << endl;
+			<< m_tD.m_MaxVoltage << " V" << endl;
 	cout <<setw(wt)<<left<< "Rezystancja po 60 sekundach: " << setw(wt2)<<right
-			<< m_ResistanceAfter60s << " kOhm" << endl;
+			<< m_tD.m_ResistanceAfter60s << " kOhm" << endl;
 	cout <<setw(wt)<<left<< "Rezystancja 15 sekundach: " << setw(wt2)<<right
-			<< m_ResistanceAfter15s << " kOhm" << endl;
+			<< m_tD.m_ResistanceAfter15s << " kOhm" << endl;
 	//cout<<"Czas zwarcia: "<<fixed<<setprecision(2)<<m_TimeShortCircuit<<" s"<<endl;
 	//cout<<"Czas odbudowy napięcia: "<<fixed<<setprecision(2)<<m_TimeReconstruction<<" s"<<endl;
 }
 void Test::resetTest()
 {
-	m_RatedVoltage = 0.0;
-	m_TestVoltage = 0.0;
-	m_MaxVoltage = 0.0;
-	m_ResistanceAfter60s = 0.0;
-	m_ResistanceAfter15s = 0.0;
-	m_TimeShortCircuit = 0.0;
-	m_TimeReconstruction = 0.0;
+	m_tD.m_RatedVoltage = 0.0;
+	m_tD.m_TestVoltage = 0.0;
+	m_tD.m_MaxVoltage = 0.0;
+	m_tD.m_ResistanceAfter60s = 0.0;
+	m_tD.m_ResistanceAfter15s = 0.0;
+	m_tD.m_TimeShortCircuit = 0.0;
+	m_tD.m_TimeReconstruction = 0.0;
 	glinka.clear();
+}
+void Test::writeTest(const std::string &name)const
+{
+	using namespace std;
+
+	ofstream outfile;
+	outfile.open(name, ios_base::out | ios_base::binary);
+	if (!outfile.is_open())
+	{
+		cerr << "Cannot open file: " << name << endl;
+		exit(EXIT_FAILURE);
+	}
+
+	int sizeStruct = sizeof m_tD;
+	outfile.write((char *) &sizeStruct, sizeof sizeStruct);
+	outfile.write((char *) &m_tD, sizeStruct);
+
+	int sizeMultimap = glinka.size();
+	outfile.write((char *) &sizeMultimap, sizeof sizeMultimap);
+	for (auto x:glinka)
+		outfile.write((char *) &x, sizeof x);
+	outfile.close();
 }
 std::map<int, int> RatingInsulation::s_CriteriaResistance60sDivTestVoltageSN = {
 		{ 50, 5 },
