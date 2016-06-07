@@ -78,6 +78,8 @@ class MainWindow : public QMainWindow
 		void news();
 		void rate();
 		void save();
+		void open();
+
 
 	public:
 		MainWindow(QWidget *parent=0);

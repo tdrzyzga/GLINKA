@@ -31,21 +31,22 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent), m_Test(), m_Rate()
 void MainWindow::createFileActions()
 {
 	m_NewAction = new QAction(QIcon(":/icons/icons/new.png"), tr("&Nowy"), this);
-	m_NewAction->setStatusTip(tr("Nowy plik."));
+	m_NewAction->setStatusTip(tr("Nowy plik"));
 	m_NewAction->setShortcut(QKeySequence::New);
 	connect (m_NewAction, SIGNAL(triggered()), this, SLOT(news()));
 
 	m_OpenAction = new QAction(QIcon(":/icons/icons/open.png"), tr("&Otwórz"), this);
-	m_OpenAction->setStatusTip(tr("Otwórz istniejący plik."));
+	m_OpenAction->setStatusTip(tr("Otwórz istniejący plik"));
 	m_OpenAction->setShortcut(QKeySequence::Open);
+	connect (m_OpenAction, SIGNAL(triggered()), this, SLOT(open()));
 
 	m_SaveAction = new QAction(QIcon(":/icons/icons/save.png"), tr("&Zapisz"), this);
-	m_SaveAction->setStatusTip(tr("Zapisz plik."));
+	m_SaveAction->setStatusTip(tr("Zapisz plik"));
 	m_SaveAction->setShortcut(QKeySequence::Save);
 	connect (m_SaveAction, SIGNAL(triggered()), this, SLOT(save()));
 
 	m_QuitAction = new QAction(tr("&Wyjście"), this);
-	m_QuitAction->setStatusTip(tr("Wyjdź z programu."));
+	m_QuitAction->setStatusTip(tr("Wyjdź z programu"));
 	m_QuitAction->setShortcut(Qt::CTRL + Qt::Key_Q);
 	connect (m_QuitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
 }
@@ -62,7 +63,7 @@ void MainWindow::createMenus()
 	m_FileMenu->addSeparator();
 	m_FileMenu->addAction(m_QuitAction);
 
-	m_HelpMenu = new QMenu(tr("P&omoc"), this);
+	m_HelpMenu = new QMenu(tr("&Pomoc"), this);
 	menuBar()->addMenu(m_HelpMenu);
 
 	m_HelpMenu->addAction(tr("O &Qt"), qApp, SLOT(aboutQt()));
@@ -344,7 +345,13 @@ void MainWindow::createCentralWidget()
 	createLineEditWidget();
 	createLineEditWidgetRate();
 
-	QPushButton	*button = new QPushButton(tr("Oceń"));
+	QPushButton	*button = new QPushButton(tr("Oceń"), this);
+	button->setDefault(true);
+	//button->setAutoDefault(true);
+	button->setShortcut(QKeySequence(Qt::Key_Return));
+
+	//QShortcut *enterShortcut= new QShortcut(QKeySequence(tr("CTR+T")), button);
+	//connect(enterShortcut, SIGNAL(activated()), button, SIGNAL(clicked()));
 	connect(button, SIGNAL(clicked()), this, SLOT(rate()));
 
 	QGridLayout *gridBox = new QGridLayout;
@@ -369,6 +376,8 @@ void MainWindow::createCentralWidget()
 
 void MainWindow::news()
 {
+	QString fileName = QFileDialog::getOpenFileName(this,tr("Otwórz..."), "/home/", tr("Pliki txt (*.txt)"));
+
 	if (m_GroupBox != nullptr && m_BottomWidget != nullptr)
 	{
 		delete m_CustomPlot;
@@ -378,7 +387,6 @@ void MainWindow::news()
 		m_Test.resetTest();
 		m_Rate.resetRate();
 	}
-	QString fileName = QFileDialog::getOpenFileName(this,tr("Otwórz..."), "/home/", tr("Pliki txt (*.txt)"));
 	if (!fileName.isEmpty())
 	{
 		m_Test.reconstruction(fileName.toStdString());
@@ -398,5 +406,30 @@ void MainWindow::rate()
 void MainWindow::save()
 {
 		QString fileName = QFileDialog::getSaveFileName(this,tr("Zapisz plik jako..."), "/home/*.glinka", tr("Pliki txt (*.glinka)"));
-		m_Test.writeTest(fileName.toStdString());
+		m_Rate.writeRatingInsulation(fileName.toStdString());
+		//m_Test = m_Rate.returnsTest();
+		//m_Test.writeTest(fileName.toStdString());
 }
+void MainWindow::open()
+{
+	QString fileName = QFileDialog::getOpenFileName(this,tr("Otwórz..."), "/home/", tr("Pliki glinka (*.glinka)"));
+	if (m_GroupBox != nullptr && m_BottomWidget != nullptr)
+	{
+		delete m_CustomPlot;
+		delete m_GroupBox;
+		delete m_BottomWidget;
+
+		m_Test.resetTest();
+		m_Rate.resetRate();
+	}
+	if (!fileName.isEmpty())
+	{
+		m_Rate.getRatingInsulation(fileName.toStdString());
+		m_Test = m_Rate.returnsTest();
+		//m_Test.getTest(fileName.toStdString());
+		createCentralWidget();
+		createBottomWidget();
+	}
+}
+
+
