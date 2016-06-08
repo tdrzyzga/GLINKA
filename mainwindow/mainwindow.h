@@ -1,8 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QTextCodec>
-
+#include <QtGui>
+#include <QLocale>
+/*
 #include <QAction>
 #include <QToolBar>
 #include <QMenu>
@@ -25,7 +26,7 @@
 #include <QLocale>
 #include <QStyle>
 #include <QSpacerItem>
-#include <iterator>
+#include <iterator>*/
 
 #include "qcustomplot/qcustomplot.h"
 //#include "glinka/glinka.h"
@@ -61,19 +62,20 @@ class MainWindow : public QMainWindow
 
 		Test m_Test;
 		RatingInsulation m_Rate;
-
-		void createCustomPlot();
-		void createBottomWidget();
-		void createCentralWidget();
-		void createLineEditWidget();
-		void createLineEditWidgetRate();
+		QLocale poland;
 
 		void createFileActions();
 		void createMenus();
 		void createStatusBar();
 		void createToolBar();
 
+		void createCentralWidget();
+		void createLineEditWidget();
+		void createLineEditWidgetRate();
+		void createCustomPlot();
+		void createBottomWidget();
 		void getLineData();
+
 	private slots:
 		void news();
 		void rate();

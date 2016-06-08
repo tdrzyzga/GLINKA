@@ -9,37 +9,6 @@
 #include "glinka2.h"
 #include "mainwindow/mainwindow.h"
 
-void Test::reconstruction(const std::string &name)
-{
-	using namespace std;
-	ifstream inFile;
-	inFile.open(name, ios_base::in);
-
-	if (!inFile.is_open())
-	{
-		cerr << "Cannot open file: " << name << endl;
-		exit(EXIT_FAILURE);
-	}
-
-	pair<double, double> temp_glinka;
-	pair<double, double> min;
-	bool min_get = false;
-	while (inFile >> temp_glinka.second && inFile >> temp_glinka.first)
-	{
-		if (temp_glinka.first >= 0.09 && !min_get)
-		{
-			min = temp_glinka;
-			min_get = true;
-		}
-		glinka.insert(temp_glinka);
-	}
-	inFile.close();
-
-	multimap<double, double>::reverse_iterator max=glinka.rbegin();
-
-	m_TD.m_TimeReconstruction=max->second-min.second;
-	m_TD.m_MaxVoltage=max->first;
-}
 Test::Test()
 {
 	m_TD.m_RatedVoltage = 0.0;
@@ -71,6 +40,38 @@ Test::Test(double rV, double tV, double mV, double r60, double r15, double tSC, 
 	m_TD.m_TimeShortCircuit = tSC;
 	m_TD.m_TimeReconstruction = tR;
 	glinka = gl;
+}
+void Test::reconstruction(const std::string &name)
+{
+	using namespace std;
+
+	ifstream inFile;
+	inFile.open(name, ios_base::in);
+
+	if (!inFile.is_open())
+	{
+		cerr << "Cannot open file: " << name << endl;
+		exit(EXIT_FAILURE);
+	}
+
+	pair<double, double> temp_glinka;
+	pair<double, double> min;
+	bool min_get = false;
+	while (inFile >> temp_glinka.second && inFile >> temp_glinka.first)
+	{
+		if (temp_glinka.first >= 0.09 && !min_get)
+		{
+			min = temp_glinka;
+			min_get = true;
+		}
+		glinka.insert(temp_glinka);
+	}
+	inFile.close();
+
+	multimap<double, double>::reverse_iterator max=glinka.rbegin();
+
+	m_TD.m_TimeReconstruction=max->second-min.second;
+	m_TD.m_MaxVoltage=max->first;
 }
 void Test::setTest()
 {
@@ -133,6 +134,7 @@ void Test::writeTest(const std::string &name)const
 
 	ofstream outFile;
 	outFile.open(name, ios_base::out | ios_base::binary);
+
 	if (!outFile.is_open())
 	{
 		cerr << "Cannot open file: " << name << endl;
@@ -152,6 +154,7 @@ void Test::writeTest(const std::string &name)const
 std::streampos Test::getTest(const std::string &name)
 {
 	using namespace std;
+
 	ifstream inFile;
 	inFile.open(name, ios_base::in | ios_base::binary);
 
