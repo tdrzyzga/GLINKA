@@ -1,31 +1,21 @@
 #include "mainwindow.h"
 
 
-MainWindow::MainWindow(QWidget *parent):QMainWindow(parent), m_Test(), m_Rate(), poland(QLocale::Polish, QLocale::Poland)
+MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
 {
 	QTextCodec::setCodecForLocale(QTextCodec::codecForName ("UTF-8"));
 
+	ratingWidget = new RatingWidget(this);
+
 	createFileActions();
-
-	m_GroupBox = nullptr;
-	m_LineEdit = nullptr;
-	m_LineEditRate = nullptr;
-
-	m_LineRatedVoltage = nullptr;
-	m_LineTestVoltage = nullptr;
-	m_LineResistanceAfter60s = nullptr;
-	m_LineResistanceAfter15s = nullptr;
-	m_LineTimeShortCircuit = nullptr;
-
-	m_BottomWidget = nullptr;
-	m_CustomPlot = nullptr;
-
 	createMenus();
 	createStatusBar();
 	createToolBar();
 
 	setMinimumSize(1000, 600);
 	resize(1000, 700);
+
+	setCentralWidget(ratingWidget);
 }
 void MainWindow::createFileActions()
 {
@@ -93,7 +83,7 @@ void MainWindow::createToolBar()
 	tableWidget->setItem(2, 1, timeReconstruction);
 	QTableWidgetItem *maxVoltage= new QTableWidgetItem(tr("%1").arg(test.MaxVoltage()));
 	tableWidget->setItem(1, 0, maxVoltage);
-}*/
+}
 void MainWindow::createLineEditWidget()
 {
 	QFont fontLine("Arial", 10);
@@ -379,16 +369,17 @@ void MainWindow::createCentralWidget()
 	m_GroupBox->setMinimumSize(1000, 260);
 	m_GroupBox->setMaximumSize(1366, 260);
 
-	/*QScrollArea *scroll= new QScrollArea;
+	QScrollArea *scroll= new QScrollArea;
 	scroll->setWidgetResizable(true);
 	scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-	scroll->setWidget(groupBox);*/
+	scroll->setWidget(groupBox);
 
 	setCentralWidget(m_GroupBox);
-}
+}*/
 void MainWindow::news()
 {
-	QString fileName = QFileDialog::getOpenFileName(this,tr("Otwórz..."), "/home/", tr("Pliki txt (*.txt)"));
+	ratingWidget->news();
+	/*QString fileName = QFileDialog::getOpenFileName(this,tr("Otwórz..."), "/home/", tr("Pliki txt (*.txt)"));
 
 	if (m_GroupBox != nullptr && m_BottomWidget != nullptr && !fileName.isEmpty())
 	{
@@ -404,31 +395,35 @@ void MainWindow::news()
 		m_Test.reconstruction(fileName.toStdString());
 		createCentralWidget();
 		createBottomWidget();
-	}
+	}*/
+	setCentralWidget(ratingWidget);
 }
-void MainWindow::rate()
+/*void MainWindow::rate()
 {
 	getLineData();
 	m_Rate.rateTotal();
 	m_Rate.showRate();
 	createCentralWidget();
-}
+}*/
 void MainWindow::save()
 {
-		QString fileName = QFileDialog::getSaveFileName(this,tr("Zapisz plik jako..."), "/home/*.glinka", tr("Pliki txt (*.glinka)"));
+	ratingWidget->save();
+		//QString fileName = QFileDialog::getSaveFileName(this,tr("Zapisz plik jako..."), "/home/*.glinka", tr("Pliki txt (*.glinka)"));
 
-		if (!fileName.isEmpty())
-		{
-			if (m_Rate.returnsRateTotal()== 0.0)
-				getLineData();
-			m_Rate.writeRatingInsulation(fileName.toStdString());
-		}
+		//if (!fileName.isEmpty())
+		//{
+		//	if (m_Rate.returnsRateTotal()== 0.0)
+		//		getLineData();
+		//	m_Rate.writeRatingInsulation(fileName.toStdString());
+		//}
 		//m_Test = m_Rate.returnsTest();
 		//m_Test.writeTest(fileName.toStdString());
+	//setCentralWidget(ratingWidget);
 }
 void MainWindow::open()
 {
-	QString fileName = QFileDialog::getOpenFileName(this,tr("Otwórz..."), "/home/", tr("Pliki glinka (*.glinka)"));
+	ratingWidget->open();
+	/*QString fileName = QFileDialog::getOpenFileName(this,tr("Otwórz..."), "/home/", tr("Pliki glinka (*.glinka)"));
 	if (m_GroupBox != nullptr && m_BottomWidget != nullptr && !fileName.isEmpty())
 	{
 		delete m_CustomPlot;
@@ -445,7 +440,8 @@ void MainWindow::open()
 		//m_Test.getTest(fileName.toStdString());
 		createCentralWidget();
 		createBottomWidget();
-	}
+	}*/
+
 }
 
 

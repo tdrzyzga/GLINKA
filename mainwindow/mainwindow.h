@@ -31,6 +31,7 @@
 #include "qcustomplot/qcustomplot.h"
 //#include "glinka/glinka.h"
 #include "glinka2/glinka2.h"
+#include "ratingwidget/ratingwidget.h"
 
 class MainWindow : public QMainWindow
 {
@@ -47,6 +48,8 @@ class MainWindow : public QMainWindow
 		QMenu	 *m_HelpMenu;
 		QToolBar *m_FileToolBar;
 
+		RatingWidget *ratingWidget;
+/*
 		QGroupBox *m_GroupBox;
 		QGroupBox *m_LineEdit;
 		QGroupBox *m_LineEditRate;
@@ -62,23 +65,23 @@ class MainWindow : public QMainWindow
 
 		Test m_Test;
 		RatingInsulation m_Rate;
-		QLocale poland;
+		QLocale poland;*/
 
 		void createFileActions();
 		void createMenus();
 		void createStatusBar();
 		void createToolBar();
 
-		void createCentralWidget();
+		/*void createCentralWidget();
 		void createLineEditWidget();
 		void createLineEditWidgetRate();
 		void createCustomPlot();
 		void createBottomWidget();
-		void getLineData();
+		void getLineData();*/
 
 	private slots:
 		void news();
-		void rate();
+		//void rate();
 		void save();
 		void open();
 
