@@ -17,13 +17,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
            mainwindow/mainwindow.cpp \
            qcustomplot/qcustomplot.cpp \
-			glinka2\glinka2.cpp \
-			ratingwidget\ratingwidget.cpp
+                        glinka2/glinka2.cpp \
+                        ratingwidget/ratingwidget.cpp
 
 HEADERS  += mainwindow/mainwindow.h \
             qcustomplot/qcustomplot.h \
-			glinka2\glinka2.h \
-			ratingwidget\ratingwidget.h
+                        glinka2/glinka2.h \
+                        ratingwidget/ratingwidget.h
 
 FORMS    += mainwindow.ui
 
