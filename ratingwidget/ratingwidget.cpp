@@ -56,28 +56,28 @@ void RatingWidget::createLineEditWidget()
 	QLabel *labelTimeShortCircuit = new QLabel(tr("Czas zwarcia [s]:"), this);
 	labelTimeShortCircuit->setFont(fontLabel);
 
-	QGridLayout *vBox = new QGridLayout(this);
-	vBox->addWidget(m_LineMaxVoltage, 0, 1);
-	vBox->addWidget(m_LineTimeReconstruction, 1, 1);
-	vBox->addWidget(m_LineRatedVoltage, 2, 1);
-	vBox->addWidget(m_LineTestVoltage, 3, 1);
-	vBox->addWidget(m_LineResistanceAfter60s, 4, 1);
-	vBox->addWidget(m_LineResistanceAfter15s, 5, 1);
-	vBox->addWidget(m_LineTimeShortCircuit, 6, 1);
+	QGridLayout *gBox = new QGridLayout(this);
+	gBox->addWidget(m_LineMaxVoltage, 0, 1);
+	gBox->addWidget(m_LineTimeReconstruction, 1, 1);
+	gBox->addWidget(m_LineRatedVoltage, 2, 1);
+	gBox->addWidget(m_LineTestVoltage, 3, 1);
+	gBox->addWidget(m_LineResistanceAfter60s, 4, 1);
+	gBox->addWidget(m_LineResistanceAfter15s, 5, 1);
+	gBox->addWidget(m_LineTimeShortCircuit, 6, 1);
 
-	vBox->addWidget(labelMaxVoltage, 0, 0);
-	vBox->addWidget(labelTimeReconstruction, 1, 0);
-	vBox->addWidget(labelRatedVoltage, 2, 0);
-	vBox->addWidget(labelTestVoltage, 3, 0);
-	vBox->addWidget(labelResistanceAfter60s, 4, 0);
-	vBox->addWidget(labelResistanceAfter15s, 5, 0);
-	vBox->addWidget(labelTimeShortCircuit, 6, 0);
+	gBox->addWidget(labelMaxVoltage, 0, 0);
+	gBox->addWidget(labelTimeReconstruction, 1, 0);
+	gBox->addWidget(labelRatedVoltage, 2, 0);
+	gBox->addWidget(labelTestVoltage, 3, 0);
+	gBox->addWidget(labelResistanceAfter60s, 4, 0);
+	gBox->addWidget(labelResistanceAfter15s, 5, 0);
+	gBox->addWidget(labelTimeShortCircuit, 6, 0);
 
 	m_LineEdit = new QGroupBox(tr("Dane techniczne"), this);
 	m_LineEdit->setFont(QFont("Arial", 12, QFont::Bold));
 	m_LineEdit->setStyleSheet("QGroupBox{border:1px; border-style:outset; border-color: gray; margin:10px} "
 								"QGroupBox::title{subcontrol-origin: margin; subcontrol-position:top left}");
-	m_LineEdit->setLayout(vBox);
+	m_LineEdit->setLayout(gBox);
 	m_LineEdit->setMinimumWidth(350);
 	m_LineEdit->setMaximumWidth(350);
 }
@@ -276,13 +276,13 @@ void RatingWidget::createWidget()
 
 	connect(button, SIGNAL(clicked()), this, SLOT(rate()));
 
-	QGridLayout *gridBox = new QGridLayout(this);
-	gridBox->addWidget(m_LineEdit, 0, 0);
-	gridBox->addWidget(m_LineEditRate, 0, 1);
-	gridBox->addWidget(button, 1, 0);
+	QGridLayout *gBox = new QGridLayout(this);
+	gBox->addWidget(m_LineEdit, 0, 0);
+	gBox->addWidget(m_LineEditRate, 0, 1);
+	gBox->addWidget(button, 1, 0);
 
 	QGroupBox *groupBox = new QGroupBox(this);
-	groupBox->setLayout(gridBox);
+	groupBox->setLayout(gBox);
 	groupBox->setMinimumHeight(260);
 	groupBox->setMaximumHeight(260);
 

@@ -35,6 +35,8 @@ class RatingWidget : public QWidget
 		QVBoxLayout *m_VerticalBox;
 		QGroupBox *m_LineEdit;
 		QGroupBox *m_LineEditRate;
+		QSplitter *m_Splitter;
+
 
 		QLineEdit *m_LineMaxVoltage;
 		QLineEdit *m_LineTimeReconstruction;

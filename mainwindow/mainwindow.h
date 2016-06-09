@@ -49,6 +49,7 @@ class MainWindow : public QMainWindow
 		QToolBar *m_FileToolBar;
 
 		RatingWidget *ratingWidget;
+		QTabWidget *tabWidget;
 /*
 		QGroupBox *m_GroupBox;
 		QGroupBox *m_LineEdit;

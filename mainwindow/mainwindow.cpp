@@ -15,7 +15,9 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
 	setMinimumSize(1000, 600);
 	resize(1000, 700);
 
-	setCentralWidget(ratingWidget);
+	tabWidget = new QTabWidget(this);
+	tabWidget->addTab(ratingWidget, tr("Napięcie odbudowy"));
+	setCentralWidget(tabWidget);
 }
 void MainWindow::createFileActions()
 {
