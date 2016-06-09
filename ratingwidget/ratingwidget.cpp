@@ -317,14 +317,14 @@ void RatingWidget::rate()
 }
 void RatingWidget::save()
 {
-		QString fileName = QFileDialog::getSaveFileName(this,tr("Zapisz plik jako..."), "/home/*.glinka", tr("Pliki txt (*.glinka)"));
+	QString fileName = QFileDialog::getSaveFileName(this,tr("Zapisz plik jako..."), "/home/*.glinka", tr("Pliki txt (*.glinka)"));
 
-		if (!fileName.isEmpty())
-		{
-			if (m_Rate.returnsRateTotal()== 0.0)
-				getLineData();
-			m_Rate.writeRatingInsulation(fileName.toStdString());
-		}
+	if (!fileName.isEmpty())
+	{
+		if (m_Rate.returnsRateTotal()== 0.0)
+			getLineData();
+		m_Rate.writeRatingInsulation(fileName.toStdString());
+	}
 }
 void RatingWidget::open()
 {
