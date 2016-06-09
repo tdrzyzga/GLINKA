@@ -10,53 +10,53 @@ void RatingWidget::createLineEditWidget()
 {
 	QFont fontLine("Arial", 10);
 
-	m_LineMaxVoltage = new QLineEdit;
+	m_LineMaxVoltage = new QLineEdit(this);
 	m_LineMaxVoltage->setReadOnly(true);
 	m_LineMaxVoltage->setFont(fontLine);
 
-	m_LineTimeReconstruction = new QLineEdit;
+	m_LineTimeReconstruction = new QLineEdit(this);
 	m_LineTimeReconstruction->setReadOnly(true);
 	m_LineTimeReconstruction->setFont(fontLine);
 
-	m_LineRatedVoltage = new QLineEdit;
+	m_LineRatedVoltage = new QLineEdit(this);
 	m_LineRatedVoltage->setFont(fontLine);
 
-	m_LineTestVoltage = new QLineEdit;
+	m_LineTestVoltage = new QLineEdit(this);
 	m_LineTestVoltage->setFont(fontLine);
 
-	m_LineResistanceAfter60s = new QLineEdit;
+	m_LineResistanceAfter60s = new QLineEdit(this);
 	m_LineResistanceAfter60s->setFont(fontLine);
 
-	m_LineResistanceAfter15s = new QLineEdit;
+	m_LineResistanceAfter15s = new QLineEdit(this);
 	m_LineResistanceAfter15s->setFont(fontLine);
 
-	m_LineTimeShortCircuit = new QLineEdit;
+	m_LineTimeShortCircuit = new QLineEdit(this);
 	m_LineTimeShortCircuit->setFont(fontLine);
 
 	QFont fontLabel("Arial", 10);
 
-	QLabel *labelMaxVoltage = new QLabel(tr("Napięcie odbudowy [V]:"));
+	QLabel *labelMaxVoltage = new QLabel(tr("Napięcie odbudowy [V]:"), this);
 	labelMaxVoltage->setFont(fontLabel);
 
-	QLabel *labelTimeReconstruction = new QLabel(tr("Czas odbudowy [s]:"));
+	QLabel *labelTimeReconstruction = new QLabel(tr("Czas odbudowy [s]:"), this);
 	labelTimeReconstruction->setFont(fontLabel);
 
-	QLabel *labelRatedVoltage = new QLabel(tr("Napięcie znamionowe [V]:"));
+	QLabel *labelRatedVoltage = new QLabel(tr("Napięcie znamionowe [V]:"), this);
 	labelRatedVoltage->setFont(fontLabel);
 
-	QLabel *labelTestVoltage = new QLabel(tr("Napięcie probiercze [V]:"));
+	QLabel *labelTestVoltage = new QLabel(tr("Napięcie probiercze [V]:"), this);
 	labelTestVoltage->setFont(fontLabel);
 
-	QLabel *labelResistanceAfter60s = new QLabel(tr("Rezystancja po 60 sekundach [MΩ]:"));
+	QLabel *labelResistanceAfter60s = new QLabel(tr("Rezystancja po 60 sekundach [MΩ]:"), this);
 	labelResistanceAfter60s->setFont(fontLabel);
 
-	QLabel *labelResistanceAfter15s = new QLabel(tr("Rezystancja po 15 sekundach [MΩ]:"));
+	QLabel *labelResistanceAfter15s = new QLabel(tr("Rezystancja po 15 sekundach [MΩ]:"), this);
 	labelResistanceAfter15s->setFont(fontLabel);
 
-	QLabel *labelTimeShortCircuit = new QLabel(tr("Czas zwarcia [s]:"));
+	QLabel *labelTimeShortCircuit = new QLabel(tr("Czas zwarcia [s]:"), this);
 	labelTimeShortCircuit->setFont(fontLabel);
 
-	QGridLayout *vBox = new QGridLayout;
+	QGridLayout *vBox = new QGridLayout(this);
 	vBox->addWidget(m_LineMaxVoltage, 0, 1);
 	vBox->addWidget(m_LineTimeReconstruction, 1, 1);
 	vBox->addWidget(m_LineRatedVoltage, 2, 1);
@@ -73,7 +73,7 @@ void RatingWidget::createLineEditWidget()
 	vBox->addWidget(labelResistanceAfter15s, 5, 0);
 	vBox->addWidget(labelTimeShortCircuit, 6, 0);
 
-	m_LineEdit = new QGroupBox(tr("Dane techniczne"));
+	m_LineEdit = new QGroupBox(tr("Dane techniczne"), this);
 	m_LineEdit->setFont(QFont("Arial", 12, QFont::Bold));
 	m_LineEdit->setStyleSheet("QGroupBox{border:1px; border-style:outset; border-color: gray; margin:10px} "
 								"QGroupBox::title{subcontrol-origin: margin; subcontrol-position:top left}");
@@ -96,71 +96,71 @@ void RatingWidget::createLineEditWidgetRate()
 {
 	QFont fontLine("Arial", 10);
 
-	m_LineResistance60sDivTestVoltage = new QLineEdit;
+	m_LineResistance60sDivTestVoltage = new QLineEdit(this);
 	m_LineResistance60sDivTestVoltage->setReadOnly(true);
 	m_LineResistance60sDivTestVoltage->setFont(fontLine);
 
-	m_LineRateResistance60sDivTestVoltage = new QLineEdit;
+	m_LineRateResistance60sDivTestVoltage = new QLineEdit(this);
 	m_LineRateResistance60sDivTestVoltage->setReadOnly(true);
 	m_LineRateResistance60sDivTestVoltage->setFont(fontLine);
 
-	m_LineTimeShortCircuitR = new QLineEdit;
+	m_LineTimeShortCircuitR = new QLineEdit(this);
 	m_LineTimeShortCircuitR->setReadOnly(true);
 	m_LineTimeShortCircuitR->setFont(fontLine);
 
-	m_LineRateTimeShortCircuit = new QLineEdit;
+	m_LineRateTimeShortCircuit = new QLineEdit(this);
 	m_LineRateTimeShortCircuit->setReadOnly(true);
 	m_LineRateTimeShortCircuit->setFont(fontLine);
 
-	m_LineMaxVoltageDivTestVoltage = new QLineEdit;
+	m_LineMaxVoltageDivTestVoltage = new QLineEdit(this);
 	m_LineMaxVoltageDivTestVoltage->setReadOnly(true);
 	m_LineMaxVoltageDivTestVoltage->setFont(fontLine);
 
-	m_LineRateMaxVoltageDivTestVoltage = new QLineEdit;
+	m_LineRateMaxVoltageDivTestVoltage = new QLineEdit(this);
 	m_LineRateMaxVoltageDivTestVoltage->setReadOnly(true);
 	m_LineRateMaxVoltageDivTestVoltage->setFont(fontLine);
 
-	m_LineTimeReconstructionR = new QLineEdit;
+	m_LineTimeReconstructionR = new QLineEdit(this);
 	m_LineTimeReconstructionR->setReadOnly(true);
 	m_LineTimeReconstructionR->setFont(fontLine);
 
-	m_LineRateTimeReconstruction = new QLineEdit;
+	m_LineRateTimeReconstruction = new QLineEdit(this);
 	m_LineRateTimeReconstruction->setReadOnly(true);
 	m_LineRateTimeReconstruction->setFont(fontLine);
 
-	m_LineResistance60DivResistance15s = new QLineEdit;
+	m_LineResistance60DivResistance15s = new QLineEdit(this);
 	m_LineResistance60DivResistance15s ->setReadOnly(true);
 	m_LineResistance60DivResistance15s->setFont(fontLine);
 
-	m_LineRateResistance60DivResistance15s = new QLineEdit;
+	m_LineRateResistance60DivResistance15s = new QLineEdit(this);
 	m_LineRateResistance60DivResistance15s->setReadOnly(true);
 	m_LineRateResistance60DivResistance15s->setFont(fontLine);
 
-	m_LineRateTotal = new QLineEdit;
+	m_LineRateTotal = new QLineEdit(this);
 	m_LineRateTotal->setReadOnly(true);
 	m_LineRateTotal->setFont(fontLine);
 
 	QFont fontLabel("Arial", 10);
 
-	QLabel *labelMaxVoltageDivTestVoltage = new QLabel(tr("Rezystancja R60 przez napięcie probiercze [kΩ/V]"));
+	QLabel *labelMaxVoltageDivTestVoltage = new QLabel(tr("Rezystancja R60 przez napięcie probiercze [kΩ/V]"), this);
 	labelMaxVoltageDivTestVoltage->setFont(fontLabel);
 
-	QLabel *labelTimeShortCircuit= new QLabel(tr("Czas zwarcia [s]:"));
+	QLabel *labelTimeShortCircuit= new QLabel(tr("Czas zwarcia [s]:"), this);
 	labelTimeShortCircuit->setFont(fontLabel);
 
-	QLabel *labelResistance60sDivTestVoltage = new QLabel(tr("Napięcie odbudowy przez napięcie probiercze:"));
+	QLabel *labelResistance60sDivTestVoltage = new QLabel(tr("Napięcie odbudowy przez napięcie probiercze:"), this);
 	labelResistance60sDivTestVoltage->setFont(fontLabel);
 
-	QLabel *labelTimeReconstruction= new QLabel(tr("Czas odbudowy [s]:"));
+	QLabel *labelTimeReconstruction= new QLabel(tr("Czas odbudowy [s]:"), this);
 	labelTimeReconstruction->setFont(fontLabel);
 
-	QLabel *labelResistance60DivResistance15s = new QLabel(tr("Rezystancja R60 przez R15:"));
+	QLabel *labelResistance60DivResistance15s = new QLabel(tr("Rezystancja R60 przez R15:"), this);
 	labelResistance60DivResistance15s->setFont(fontLabel);
 
-	QLabel *labelTotal = new QLabel(tr("Ocena ogólna:"));
+	QLabel *labelTotal = new QLabel(tr("Ocena ogólna:"), this);
 	labelTotal->setFont(fontLabel);
 
-	QGridLayout *gBox = new QGridLayout;
+	QGridLayout *gBox = new QGridLayout(this);
 
 	gBox->addWidget(labelMaxVoltageDivTestVoltage, 0 , 0);
 	gBox->addWidget(labelTimeShortCircuit, 1 , 0);
@@ -182,7 +182,7 @@ void RatingWidget::createLineEditWidgetRate()
 	gBox->addWidget(m_LineRateTimeReconstruction, 3 , 2);
 	gBox->addWidget(m_LineRateResistance60DivResistance15s, 4 , 2);
 
-	m_LineEditRate = new QGroupBox(tr("Ocena"));
+	m_LineEditRate = new QGroupBox(tr("Ocena"), this);
 	m_LineEditRate->setFont(QFont("Arial", 12, QFont::Bold));
 	m_LineEditRate->setStyleSheet("QGroupBox{border:1px; border-style:outset; border-color: gray; margin:10px;} "
 							"QGroupBox::title{subcontrol-origin: margin; subcontrol-position:top left}");
@@ -264,7 +264,7 @@ void RatingWidget::createWidget()
 	createLineEditWidgetRate();
 	createCustomPlot();
 
-	QScrollArea *scroll= new QScrollArea;
+	QScrollArea *scroll= new QScrollArea(this);
 	scroll->setWidgetResizable(true);
 	scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 	scroll->setWidget(m_CustomPlot);
@@ -276,12 +276,12 @@ void RatingWidget::createWidget()
 
 	connect(button, SIGNAL(clicked()), this, SLOT(rate()));
 
-	QGridLayout *gridBox = new QGridLayout;
+	QGridLayout *gridBox = new QGridLayout(this);
 	gridBox->addWidget(m_LineEdit, 0, 0);
 	gridBox->addWidget(m_LineEditRate, 0, 1);
 	gridBox->addWidget(button, 1, 0);
 
-	QGroupBox *groupBox = new QGroupBox;
+	QGroupBox *groupBox = new QGroupBox(this);
 	groupBox->setLayout(gridBox);
 	groupBox->setMinimumHeight(260);
 	groupBox->setMaximumHeight(260);
