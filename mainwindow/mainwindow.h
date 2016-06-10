@@ -48,41 +48,17 @@ class MainWindow : public QMainWindow
 		QMenu	 *m_HelpMenu;
 		QToolBar *m_FileToolBar;
 
-		RatingWidget *ratingWidget;
+		QVector<RatingWidget *> ratingWidget;
+		//RatingWidget *ratingWidget;
 		QTabWidget *tabWidget;
-/*
-		QGroupBox *m_GroupBox;
-		QGroupBox *m_LineEdit;
-		QGroupBox *m_LineEditRate;
-
-		QLineEdit *m_LineRatedVoltage;
-		QLineEdit *m_LineTestVoltage;
-		QLineEdit *m_LineResistanceAfter60s;
-		QLineEdit *m_LineResistanceAfter15s;
-		QLineEdit *m_LineTimeShortCircuit;
-
-		QDockWidget *m_BottomWidget;
-		QCustomPlot *m_CustomPlot;
-
-		Test m_Test;
-		RatingInsulation m_Rate;
-		QLocale poland;*/
 
 		void createFileActions();
 		void createMenus();
 		void createStatusBar();
 		void createToolBar();
 
-		/*void createCentralWidget();
-		void createLineEditWidget();
-		void createLineEditWidgetRate();
-		void createCustomPlot();
-		void createBottomWidget();
-		void getLineData();*/
-
 	private slots:
 		void news();
-		//void rate();
 		void save();
 		void open();
 
