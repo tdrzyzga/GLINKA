@@ -73,7 +73,7 @@ class RatingWidget : public QWidget
 		void getLineData();
 
 	public:
-		explicit RatingWidget(QWidget *parent = 0);
+		explicit RatingWidget(RatingInsulation *ratingInsulation, QWidget *parent = 0);
 		void news();
 		void save();
 		void open();

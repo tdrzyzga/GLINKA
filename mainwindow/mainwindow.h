@@ -32,6 +32,8 @@
 //#include "glinka/glinka.h"
 #include "glinka2/glinka2.h"
 #include "ratingwidget/ratingwidget.h"
+#include "motor/motor.h"
+#include "motorwidget/motorwidget.h"
 
 class MainWindow : public QMainWindow
 {
@@ -48,9 +50,11 @@ class MainWindow : public QMainWindow
 		QMenu	 *m_HelpMenu;
 		QToolBar *m_FileToolBar;
 
-		QVector<RatingWidget *> ratingWidget;
-		//RatingWidget *ratingWidget;
-		QTabWidget *tabWidget;
+		QVector<RatingWidget *> m_VectorRatingWidget;
+		Motor *m_Motor;
+		QTabWidget *m_TabWidget;
+		MotorWidget *m_MotorWidget;
+
 
 		void createFileActions();
 		void createMenus();

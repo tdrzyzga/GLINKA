@@ -79,17 +79,22 @@ void MainWindow::news()
 {
 	//ratingWidget->news();
 	bool ok;
-	int n = QInputDialog::getInt(this, tr("QInputDialog::getInteger()"),
+	int numberWindings = QInputDialog::getInt(this, tr("QInputDialog::getInteger()"),
 									 tr("Podaj ilość uzwojeń:"), 2, 0, 100, 1, &ok);
 	if (ok)
 	{
-		tabWidget = new QTabWidget(this);
-		for (int i=0; i<n; ++i)
+		m_Motor = new Motor(numberWindings);
+		m_TabWidget = new QTabWidget(this);
+
+
+		for (int i=0; i<numberWindings; ++i)
 		{
-			ratingWidget.push_back(new RatingWidget(this));
-			tabWidget->addTab(ratingWidget[i], tr("Napięcie odbudowy"));
+			m_VectorRatingWidget.push_back(new RatingWidget(m_Motor->returnsRatingInsulation(i), this));
+			m_TabWidget->addTab(m_VectorRatingWidget[i], tr("Napięcie odbudowy"));
 		}
-		setCentralWidget(tabWidget);
+		m_MotorWidget = new MotorWidget(m_VectorRatingWidget, numberWindings, this);
+		m_TabWidget->addTab(m_MotorWidget, tr("Silnik"));
+		setCentralWidget(m_TabWidget);
 	}
 }
 void MainWindow::save()

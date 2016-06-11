@@ -18,12 +18,16 @@ SOURCES += main.cpp\
            mainwindow/mainwindow.cpp \
            qcustomplot/qcustomplot.cpp \
                         glinka2/glinka2.cpp \
-                        ratingwidget/ratingwidget.cpp
+                        ratingwidget/ratingwidget.cpp \
+    motor/motor.cpp \
+    motorwidget/motorwidget.cpp
 
 HEADERS  += mainwindow/mainwindow.h \
             qcustomplot/qcustomplot.h \
                         glinka2/glinka2.h \
-                        ratingwidget/ratingwidget.h
+                        ratingwidget/ratingwidget.h \
+    motor/motor.h \
+    motorwidget/motorwidget.h
 
 FORMS    += mainwindow.ui
 
