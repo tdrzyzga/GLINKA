@@ -76,10 +76,11 @@ class RatingWidget : public QWidget
 		void rate();
 
 	public:
-		explicit RatingWidget(RatingInsulation *ratingInsulation, QWidget *parent = 0);
+		explicit RatingWidget(QWidget *parent = 0);
 		void news();
 		void save();
 		void open();
+		RatingInsulation &returnsm_Rate();
 };
 
 #endif // RATINGWIDGET_H

@@ -1,10 +1,8 @@
 #include "ratingwidget.h"
 
-RatingWidget::RatingWidget(RatingInsulation *ratingInsulation, QWidget *parent) : QWidget(parent), m_Test(), m_Rate(), poland(QLocale::Polish, QLocale::Poland)
+RatingWidget::RatingWidget(QWidget *parent) : QWidget(parent), m_Test(), m_Rate(), poland(QLocale::Polish, QLocale::Poland)
 {
 	QTextCodec::setCodecForLocale(QTextCodec::codecForName ("UTF-8"));
-
-	ratingInsulation = &m_Rate;
 
 	createWidget();
 }
@@ -344,4 +342,8 @@ void RatingWidget::open()
 		setLineEditWidgetRate();
 		setCustomPlot();
 	}
+}
+RatingInsulation & RatingWidget::returnsm_Rate()
+{
+	return m_Rate;
 }

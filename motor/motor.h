@@ -10,7 +10,7 @@ class Motor
 
 	public:
 		Motor(int numberWindings);
-		RatingInsulation * returnsRatingInsulation(int numberWinding);
+		RatingInsulation &returnsRatingInsulation(int numberWinding);
 		~Motor(){}
 };
 

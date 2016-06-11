@@ -82,13 +82,19 @@ void MainWindow::news()
 									 tr("Podaj ilość uzwojeń:"), 2, 0, 100, 1, &ok);
 	if (ok)
 	{
+		if (!m_VectorRatingWidget.isEmpty())
+		{
+			m_TabWidget->clear();
+			m_VectorRatingWidget.clear();
+		}
 		m_Motor = new Motor(numberWindings);
 		m_TabWidget = new QTabWidget(this);
 
 
 		for (int i=0; i<numberWindings; ++i)
 		{
-			m_VectorRatingWidget.push_back(new RatingWidget(m_Motor->returnsRatingInsulation(i), this));
+			m_VectorRatingWidget.push_back(new RatingWidget(this));
+			m_Motor->returnsRatingInsulation(i) = m_VectorRatingWidget[i]->returnsm_Rate();
 			m_TabWidget->addTab(m_VectorRatingWidget[i], tr("Napięcie odbudowy"));
 		}
 		m_MotorWidget = new MotorWidget(m_VectorRatingWidget, numberWindings, this);
