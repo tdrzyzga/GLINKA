@@ -55,7 +55,6 @@ class MainWindow : public QMainWindow
 		QTabWidget *m_TabWidget;
 		MotorWidget *m_MotorWidget;
 
-
 		void createFileActions();
 		void createMenus();
 		void createStatusBar();
@@ -65,7 +64,6 @@ class MainWindow : public QMainWindow
 		void news();
 		void save();
 		void open();
-
 
 	public:
 		MainWindow(QWidget *parent=0);

@@ -77,7 +77,6 @@ void MainWindow::createToolBar()
 }
 void MainWindow::news()
 {
-	//ratingWidget->news();
 	bool ok;
 	int numberWindings = QInputDialog::getInt(this, tr("QInputDialog::getInteger()"),
 									 tr("Podaj ilość uzwojeń:"), 2, 0, 100, 1, &ok);

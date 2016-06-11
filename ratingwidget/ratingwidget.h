@@ -72,15 +72,14 @@ class RatingWidget : public QWidget
 		void setLineEditWidgetRate();
 		void getLineData();
 
+	private slots:
+		void rate();
+
 	public:
 		explicit RatingWidget(RatingInsulation *ratingInsulation, QWidget *parent = 0);
 		void news();
 		void save();
 		void open();
-	signals:
-
-	public slots:
-			void rate();
 };
 
 #endif // RATINGWIDGET_H
