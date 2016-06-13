@@ -61,6 +61,7 @@ class RatingWidget : public QWidget
 		Test m_Test;
 		RatingInsulation m_Rate;
 		QLocale poland;
+		QString m_NameWinding;
 
 		void createWidget();
 		void createLineEditWidget();
@@ -81,6 +82,7 @@ class RatingWidget : public QWidget
 		void save();
 		void open();
 		RatingInsulation &returnsm_Rate();
+		QString &returnsNameWinding(){return m_NameWinding;}
 };
 
 #endif // RATINGWIDGET_H

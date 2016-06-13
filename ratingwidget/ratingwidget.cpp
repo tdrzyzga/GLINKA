@@ -3,6 +3,7 @@
 RatingWidget::RatingWidget(QWidget *parent) : QWidget(parent), m_Test(), m_Rate(), poland(QLocale::Polish, QLocale::Poland)
 {
 	QTextCodec::setCodecForLocale(QTextCodec::codecForName ("UTF-8"));
+	m_NameWinding = tr("Uzwojenie");
 
 	createWidget();
 }
@@ -305,6 +306,7 @@ void RatingWidget::news()
 		setLineEditWidget();
 		setLineEditWidgetRate();
 		setCustomPlot();
+		parent
 	}
 }
 void RatingWidget::rate()

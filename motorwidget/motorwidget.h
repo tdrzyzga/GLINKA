@@ -6,7 +6,7 @@
 #include <QPushButton>
 //#inlcude <QGroupBox>
 #include "ratingwidget/ratingwidget.h"
-#
+#include "motor/motor.h"
 
 class MotorWidget : public QWidget
 {
@@ -25,6 +25,9 @@ class MotorWidget : public QWidget
 		QVector<QGroupBox *>m_VectorTempWindingBox;
 		QGroupBox *m_WindingData;
 
+		RatedData m_rData;
+		QVector<QString> m_VectorNameWindings;
+
 	private slots:
 		void addDateReconstruction(int);
 	public:
@@ -32,6 +35,8 @@ class MotorWidget : public QWidget
 		void createRatedData();
 		void createLabelButton();
 		void createMainWidget();
+		void getLineWindings();
+
 };
 
 #endif // MOTORWIDGET_H

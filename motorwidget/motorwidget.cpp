@@ -46,6 +46,7 @@ void MotorWidget::createLabelButton()
 }
 void MotorWidget::addDateReconstruction(int i)
 {
+		m_VectorRatingWidget[i]->returnsNameWinding() = m_VectorLabelButton[i].first->text();
 		m_VectorRatingWidget[i]->news();
 }
 void MotorWidget::createRatedData()
@@ -111,4 +112,9 @@ void MotorWidget::createMainWidget()
 	QVBoxLayout *vMainBox= new QVBoxLayout(this);
 	vMainBox->addWidget(m_RatedData);
 	vMainBox->addWidget(m_WindingData);
+}
+void MotorWidget::getLineWindings()
+{
+	for (auto x: m_VectorLabelButton)
+		m_VectorNameWindings.push_back(x.first->text());
 }
