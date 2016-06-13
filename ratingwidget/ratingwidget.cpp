@@ -286,9 +286,9 @@ void RatingWidget::createWidget()
 	groupBox->setMinimumHeight(260);
 	groupBox->setMaximumHeight(260);
 
-	m_VerticalBox = new QVBoxLayout(this);
-	m_VerticalBox->addWidget(groupBox);
-	m_VerticalBox->addWidget(scroll);
+	m_MainBox = new QVBoxLayout(this);
+	m_MainBox->addWidget(groupBox);
+	m_MainBox->addWidget(scroll);
 }
 void RatingWidget::news()
 {

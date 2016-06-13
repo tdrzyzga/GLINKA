@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QtGui>
 #include <QPushButton>
+//#inlcude <QGroupBox>
 #include "ratingwidget/ratingwidget.h"
 #
 
@@ -11,12 +12,26 @@ class MotorWidget : public QWidget
 {
 		Q_OBJECT
 	private:
-		QVector<QPushButton *>m_VectorButton;
+		QVector<QPair< QLineEdit *, QPushButton *>>m_VectorLabelButton;
 		QVector<RatingWidget *>m_VectorRatingWidget;
+		QGroupBox *m_RatedData;
+		QLineEdit *m_LineName;
+		QLineEdit *m_LineType;
+		QLineEdit *m_LineNumber;
+		QLineEdit *m_LinePower;
+
+		int m_NumberButton;
+
+		QVector<QGroupBox *>m_VectorTempWindingBox;
+		QGroupBox *m_WindingData;
+
 	private slots:
 		void addDateReconstruction(int);
 	public:
 		explicit MotorWidget(QVector<RatingWidget *> &vectorRatingWidget,int numberButton, QWidget *parent = 0);
+		void createRatedData();
+		void createLabelButton();
+		void createMainWidget();
 };
 
 #endif // MOTORWIDGET_H

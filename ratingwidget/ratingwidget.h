@@ -32,7 +32,7 @@ class RatingWidget : public QWidget
 {
 		Q_OBJECT
 	private:
-		QVBoxLayout *m_VerticalBox;
+		QVBoxLayout *m_MainBox;
 		QGroupBox *m_LineEdit;
 		QGroupBox *m_LineEditRate;
 

@@ -2,6 +2,10 @@
 
 Motor::Motor(int numberWindings)
 {
+	m_RatedData.m_Name = "---";
+	m_RatedData.m_Type = "---";
+	m_RatedData.m_Number = "---";
+	m_RatedData.m_Power = 0.0;
 	for (int i=0; i<numberWindings; ++i)
 		m_VectorWindings.push_back(new RatingInsulation());
 }
