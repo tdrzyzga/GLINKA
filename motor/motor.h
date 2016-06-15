@@ -15,13 +15,13 @@ class Motor
 		RatedData m_RatedData;
 		std::vector<std::string> m_VectorNameWindings;
 		std::vector<RatingInsulation *> m_VectorWindings;
-
+		int m_NumberWindings;
 	public:
 		Motor(int numberWindings);
 		Motor(int numberWindings, RatedData &ratedData);
 		Motor(int numberWindings, RatedData &ratedData, std::vector<RatingInsulation *> &vectorWindings, std::vector<std::string> vectorNameWindings);
 		RatingInsulation &returnsRatingInsulation(int numberWinding);
-		RatedData &returnsStructRatedData() {return m_RatedData;}
+		void setStructRatedData(RatedData rD) {m_RatedData = rD;}
 		~Motor(){}
 };
 

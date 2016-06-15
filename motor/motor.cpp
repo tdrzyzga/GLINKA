@@ -6,11 +6,12 @@ Motor::Motor(int numberWindings)
 	m_RatedData.m_Type = "---";
 	m_RatedData.m_Number = "---";
 	m_RatedData.m_Power = 0.0;
+	m_NumberWindings = numberWindings;
 
-	for (int i=0; i<numberWindings; ++i)
+	for (int i=0; i<m_NumberWindings; ++i)
 		m_VectorNameWindings.push_back("---");
 
-	for (int i=0; i<numberWindings; ++i)
+	for (int i=0; i<m_NumberWindings; ++i)
 		m_VectorWindings.push_back(new RatingInsulation());
 }
 Motor::Motor(int numberWindings, RatedData &ratedData)
@@ -19,11 +20,12 @@ Motor::Motor(int numberWindings, RatedData &ratedData)
 	m_RatedData.m_Type = ratedData.m_Type;
 	m_RatedData.m_Number = ratedData.m_Number;
 	m_RatedData.m_Power = ratedData.m_Power;
+	m_NumberWindings = numberWindings;
 
-	for (int i=0; i<numberWindings; ++i)
+	for (int i=0; i<m_NumberWindings; ++i)
 		m_VectorNameWindings.push_back("---");
 
-	for (int i=0; i<numberWindings; ++i)
+	for (int i=0; i<m_NumberWindings; ++i)
 		m_VectorWindings.push_back(new RatingInsulation());
 }
 Motor::Motor(int numberWindings, RatedData &ratedData, std::vector<RatingInsulation *> &vectorWindings, std::vector<std::string> vectorNameWindings)
@@ -32,6 +34,7 @@ Motor::Motor(int numberWindings, RatedData &ratedData, std::vector<RatingInsulat
 	m_RatedData.m_Type = ratedData.m_Type;
 	m_RatedData.m_Number = ratedData.m_Number;
 	m_RatedData.m_Power = ratedData.m_Power;
+	m_NumberWindings = numberWindings;
 
 	m_VectorNameWindings = vectorNameWindings;
 
