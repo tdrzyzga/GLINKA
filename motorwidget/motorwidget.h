@@ -27,16 +27,16 @@ class MotorWidget : public QWidget
 
 		RatedData m_rData;
 		QVector<QString> m_VectorNameWindings;
+		QTabBar *m_TabBar;
 
 	private slots:
 		void addDateReconstruction(int);
 	public:
-		explicit MotorWidget(QVector<RatingWidget *> &vectorRatingWidget,int numberButton, QWidget *parent = 0);
+		explicit MotorWidget(QTabBar *tabBar, QVector<RatingWidget *> &vectorRatingWidget,int numberButton, QWidget *parent = 0);
 		void createRatedData();
 		void createLabelButton();
 		void createMainWidget();
 		void getLineWindings();
-
 };
 
 #endif // MOTORWIDGET_H

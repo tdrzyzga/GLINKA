@@ -306,7 +306,6 @@ void RatingWidget::news()
 		setLineEditWidget();
 		setLineEditWidgetRate();
 		setCustomPlot();
-		parent
 	}
 }
 void RatingWidget::rate()

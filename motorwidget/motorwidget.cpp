@@ -1,9 +1,10 @@
 #include "motorwidget.h"
 
-MotorWidget::MotorWidget(QVector<RatingWidget *> &vectorRatingWidget, int numberButton, QWidget *parent) : QWidget(parent)
+MotorWidget::MotorWidget(QTabBar *tabBar, QVector<RatingWidget *> &vectorRatingWidget, int numberButton, QWidget *parent) : QWidget(parent)
 {
 	m_VectorRatingWidget = vectorRatingWidget;
 	m_NumberButton = numberButton;
+	m_TabBar = tabBar;
 
 	createRatedData();
 
@@ -46,7 +47,7 @@ void MotorWidget::createLabelButton()
 }
 void MotorWidget::addDateReconstruction(int i)
 {
-		m_VectorRatingWidget[i]->returnsNameWinding() = m_VectorLabelButton[i].first->text();
+		m_TabBar->setTabText(i, m_VectorLabelButton[i].first->text());
 		m_VectorRatingWidget[i]->news();
 }
 void MotorWidget::createRatedData()
