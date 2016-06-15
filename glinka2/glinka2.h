@@ -38,13 +38,13 @@ public:
 	double returnsResistanceAfter60s()const{ return m_TD.m_ResistanceAfter60s;}
 	double returnsResistanceAfter15s() const{return m_TD.m_ResistanceAfter15s;}
 	double returnsTimeShortCircuit()const{return m_TD.m_TimeShortCircuit;}
-	double &returnsRatedVoltage(){ return m_TD.m_RatedVoltage;}
-	double &returnsTestVoltage(){ return m_TD.m_TestVoltage;}
-	double &returnsMaxVoltage(){ return m_TD.m_MaxVoltage;}
-	double &returnsResistanceAfter60s(){ return m_TD.m_ResistanceAfter60s;}
-	double &returnsResistanceAfter15s(){return m_TD.m_ResistanceAfter15s;}
-	double &returnsTimeShortCircuit(){return m_TD.m_TimeShortCircuit;}
-	std::multimap<double, double> returnsGlinka(){return glinka;}
+	void setRatedVoltage(double rV){ m_TD.m_RatedVoltage = rV;}
+	void setTestVoltage(double tV){ m_TD.m_TestVoltage = tV;}
+	void setMaxVoltage(double mV){ m_TD.m_MaxVoltage = mV;}
+	void setResistanceAfter60s(double r60){  m_TD.m_ResistanceAfter60s = r60;}
+	void setResistanceAfter15s(double r15){ m_TD.m_ResistanceAfter15s = r15;}
+	void setTimeShortCircuit(double tSC){ m_TD.m_TimeShortCircuit = tSC;}
+	std::multimap<double, double> returnsGlinka(){ return glinka;}
 	void setTest();
 	void showTest()const;
 	void resetTest();

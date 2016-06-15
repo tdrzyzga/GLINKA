@@ -208,19 +208,19 @@ void RatingWidget::setLineEditWidgetRate()
 void RatingWidget::getLineData()
 {
 	QString ratedVoltage = m_LineRatedVoltage->text();
-	m_Test.returnsRatedVoltage()=poland.toDouble(ratedVoltage);
+	m_Test.setRatedVoltage(poland.toDouble(ratedVoltage));
 
 	QString testVoltage = m_LineTestVoltage->text();
-	m_Test.returnsTestVoltage() = poland.toDouble(testVoltage);
+	m_Test.setTestVoltage(poland.toDouble(testVoltage));
 
 	QString resistanceAfter60s = m_LineResistanceAfter60s->text();
-	m_Test.returnsResistanceAfter60s() = poland.toDouble(resistanceAfter60s);
+	m_Test.setResistanceAfter60s(poland.toDouble(resistanceAfter60s));
 
 	QString resistanceAfter15s = m_LineResistanceAfter15s->text();
-	m_Test.returnsResistanceAfter15s() = poland.toDouble(resistanceAfter15s);
+	m_Test.setResistanceAfter15s(poland.toDouble(resistanceAfter15s));
 
 	QString timeShortCircuit = m_LineTimeShortCircuit->text();
-	m_Test.returnsTimeShortCircuit() = poland.toDouble(timeShortCircuit);
+	m_Test.setTimeShortCircuit(poland.toDouble(timeShortCircuit));
 
 	m_Rate = m_Test;
 }

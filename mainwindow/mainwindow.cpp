@@ -95,7 +95,7 @@ void MainWindow::news()
 		{
 			m_VectorRatingWidget.push_back(new RatingWidget(this));
 			m_Motor->returnsRatingInsulation(i) = m_VectorRatingWidget[i]->returnsm_Rate();
-			m_TabWidget->addTab(m_VectorRatingWidget[i], m_VectorRatingWidget[i]->returnsNameWinding());
+			m_TabWidget->addTab(m_VectorRatingWidget[i], (m_VectorRatingWidget[i]->returnsNameWinding()+" %1").arg(i+1));
 		}
 		m_MotorWidget = new MotorWidget(m_TabWidget->tabBar(), m_VectorRatingWidget, numberWindings, this);
 		m_TabWidget->addTab(m_MotorWidget, tr("Silnik"));
