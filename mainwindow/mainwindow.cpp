@@ -87,17 +87,17 @@ void MainWindow::news()
 			m_TabWidget->clear();
 			m_VectorRatingWidget.clear();
 		}
-		m_Motor = new Motor(numberWindings);
+		m_Motor = new Motor();
 		m_TabWidget = new QTabWidget(this);
 
 
 		for (int i=0; i<numberWindings; ++i)
 		{
 			m_VectorRatingWidget.push_back(new RatingWidget(this));
-			m_Motor->returnsRatingInsulation(i) = m_VectorRatingWidget[i]->returnsm_Rate();
+			m_Motor->setVectorWindings(m_VectorRatingWidget[i]->returnsm_Rate());
 			m_TabWidget->addTab(m_VectorRatingWidget[i], (m_VectorRatingWidget[i]->returnsNameWinding()+" %1").arg(i+1));
 		}
-		m_MotorWidget = new MotorWidget(m_TabWidget->tabBar(), m_VectorRatingWidget, numberWindings, this);
+		m_MotorWidget = new MotorWidget(m_Motor->returnsm_RatedData(), m_TabWidget->tabBar(), m_VectorRatingWidget, numberWindings, this);
 		m_TabWidget->addTab(m_MotorWidget, tr("Silnik"));
 
 		setCentralWidget(m_TabWidget);
@@ -105,6 +105,16 @@ void MainWindow::news()
 }
 void MainWindow::save()
 {
+	for (auto x: m_VectorRatingWidget)
+		x->getLineRatingWidget();
+
+	m_MotorWidget->getLineMotorWidget();
+
+	QString fileName = QFileDialog::getSaveFileName(this,tr("Zapisz plik jako..."), "/home/*.glinka", tr("Pliki txt (*.glinka)"));
+
+	if (!fileName.isEmpty())
+		m_Motor.writeMotor(fileName.toStdString());
+
 	//ratingWidget->save();
 		//QString fileName = QFileDialog::getSaveFileName(this,tr("Zapisz plik jako..."), "/home/*.glinka", tr("Pliki txt (*.glinka)"));
 

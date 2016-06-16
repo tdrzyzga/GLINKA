@@ -205,7 +205,7 @@ void RatingWidget::setLineEditWidgetRate()
 	m_LineRateTotal->setText(poland.toString(m_Rate.returnsRateTotal(), 'f', 1));
 }
 
-void RatingWidget::getLineData()
+void RatingWidget::getLineRatingWidget()
 {
 	QString ratedVoltage = m_LineRatedVoltage->text();
 	m_Test.setRatedVoltage(poland.toDouble(ratedVoltage));
@@ -310,7 +310,7 @@ void RatingWidget::news()
 }
 void RatingWidget::rate()
 {
-	getLineData();
+	getLineRatingWidget();
 	m_Rate.rateTotal();
 	m_Rate.showRate();
 	setLineEditWidget();
@@ -323,7 +323,7 @@ void RatingWidget::save()
 	if (!fileName.isEmpty())
 	{
 		if (m_Rate.returnsRateTotal()== 0.0)
-			getLineData();
+			getLineRatingWidget();
 		m_Rate.writeRatingInsulation(fileName.toStdString());
 	}
 }
@@ -344,7 +344,7 @@ void RatingWidget::open()
 		setCustomPlot();
 	}
 }
-RatingInsulation & RatingWidget::returnsm_Rate()
+RatingInsulation *RatingWidget::returnsm_Rate()
 {
-	return m_Rate;
+	return &m_Rate;
 }
