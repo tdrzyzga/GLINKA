@@ -32,7 +32,7 @@ class MotorWidget : public QWidget
 	private slots:
 		void addDateReconstruction(int);
 	public:
-		explicit MotorWidget(Motor *ratedData, QTabBar *tabBar, QVector<RatingWidget *> &vectorRatingWidget,int numberButton, QWidget *parent = 0);
+		explicit MotorWidget(RatedData *ratedData, QTabBar *tabBar, QVector<RatingWidget *> &vectorRatingWidget,int numberButton, QWidget *parent = 0);
 		void createRatedData();
 		void createLabelButton();
 		void createMainWidget();

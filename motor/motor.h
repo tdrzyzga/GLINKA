@@ -22,6 +22,7 @@ class Motor
 		Motor(RatedData &ratedData, std::vector<RatingInsulation *> &vectorWindings, std::vector<std::string> vectorNameWindings);
 		void setVectorWindings(RatingInsulation *rate);
 		RatedData *returnsm_RatedData(){return &m_RatedData;}
+		void writeMotor(const std::string &name)const;
 		~Motor(){}
 };
 

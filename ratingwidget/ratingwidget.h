@@ -71,7 +71,6 @@ class RatingWidget : public QWidget
 
 		void setLineEditWidget();
 		void setLineEditWidgetRate();
-		void getLineRatingWidget();
 
 	private slots:
 		void rate();
@@ -83,6 +82,7 @@ class RatingWidget : public QWidget
 		void open();
 		RatingInsulation *returnsm_Rate();
 		QString &returnsNameWinding(){return m_NameWinding;}
+		void getLineRatingWidget();
 };
 
 #endif // RATINGWIDGET_H

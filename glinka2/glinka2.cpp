@@ -151,7 +151,7 @@ void Test::writeTest(const std::string &name)const
 		outFile.write((char *) &x, sizeof x);
 	outFile.close();
 }
-std::streampos Test::getTest(const std::string &name)
+std::streampos Test::getTest(const std::string &name, std::streampos place)
 {
 	using namespace std;
 
@@ -164,6 +164,7 @@ std::streampos Test::getTest(const std::string &name)
 		exit(EXIT_FAILURE);
 	}
 
+	inFile.seekg(place);
 	int sizeStruct;
 	inFile.read((char *) &sizeStruct, sizeof sizeStruct);
 	inFile.read((char *) &m_TD, sizeStruct);
@@ -474,11 +475,11 @@ void RatingInsulation::writeRatingInsulation(const std::string &name)const
 
 	outFile.close();
 }
-void RatingInsulation::getRatingInsulation(const std::string &name)
+std::streampos RatingInsulation::getRatingInsulation(const std::string &name, std::streampos place)
 {
 	using namespace std;
 
-	streampos place = Test::getTest(name);
+	streampos place = Test::getTest(name, place);
 
 	ifstream inFile;
 	inFile.open(name, ios_base::in | ios_base::binary);
@@ -493,5 +494,7 @@ void RatingInsulation::getRatingInsulation(const std::string &name)
 	inFile.read((char *) &sizeStruct, sizeof sizeStruct);
 	inFile.read((char *) &m_Rating, sizeStruct);
 
+	place = inFile.tellg();
 	inFile.close();
+	return place;
 }

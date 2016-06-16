@@ -113,7 +113,7 @@ void MainWindow::save()
 	QString fileName = QFileDialog::getSaveFileName(this,tr("Zapisz plik jako..."), "/home/*.glinka", tr("Pliki txt (*.glinka)"));
 
 	if (!fileName.isEmpty())
-		m_Motor.writeMotor(fileName.toStdString());
+		m_Motor->writeMotor(fileName.toStdString());
 
 	//ratingWidget->save();
 		//QString fileName = QFileDialog::getSaveFileName(this,tr("Zapisz plik jako..."), "/home/*.glinka", tr("Pliki txt (*.glinka)"));

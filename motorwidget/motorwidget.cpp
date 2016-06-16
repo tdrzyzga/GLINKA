@@ -1,11 +1,11 @@
 #include "motorwidget.h"
 
-MotorWidget::MotorWidget(Motor *ratedData, QTabBar *tabBar, QVector<RatingWidget *> &vectorRatingWidget, int numberButton, QWidget *parent) : QWidget(parent)
+MotorWidget::MotorWidget(RatedData *ratedData, QTabBar *tabBar, QVector<RatingWidget *> &vectorRatingWidget, int numberButton, QWidget *parent) : QWidget(parent)
 {
 	m_VectorRatingWidget = vectorRatingWidget;
 	m_NumberButton = numberButton;
 	m_TabBar = tabBar;
-	m_rData = rateData;
+	m_rData = ratedData;
 
 	createRatedData();
 
@@ -118,11 +118,11 @@ void MotorWidget::createMainWidget()
 }
 void MotorWidget::getLineMotorWidget()
 {
-	m_rData->m_Name = m_LineName->text();
+	m_rData->m_Name = m_LineName->text().toStdString();
 
-	m_rData->m_Type = m_LineType->text();
+	m_rData->m_Type = m_LineType->text().toStdString();
 
-	m_rData->m_Number = m_LineNumber->text();
+	m_rData->m_Number = m_LineNumber->text().toStdString();
 
-	m_rData->m_Power = m_LinePower->text();
+	m_rData->m_Power = m_LinePower->text().toFloat();
 }

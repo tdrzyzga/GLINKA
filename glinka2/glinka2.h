@@ -49,7 +49,7 @@ public:
 	void showTest()const;
 	void resetTest();
 	void writeTest(const std::string &name)const;
-	std::streampos getTest(const std::string &name);
+	std::streampos getTest(const std::string &name, std::streampos place = 0);
 };
 
 class RatingInsulation: private Test
@@ -106,6 +106,6 @@ public:
 	void showRate()const;
 	void resetRate();
 	void writeRatingInsulation(const std::string &name)const;
-	void getRatingInsulation(const std::string &name);
+	std::streampos getRatingInsulation(const std::string &name, std::streampos place = 0);
 };
 #endif // GLINKA2_H
