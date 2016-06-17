@@ -89,6 +89,7 @@ public:
 	RatingInsulation();
 	RatingInsulation(const Test &ts);
 	RatingInsulation(const Test &ts, double r60DivTV, double mVdivTV, double r60Divr15);
+	RatingInsulation(RatingInsulation &rI);
 	virtual ~RatingInsulation(){}
 	double returnsTTimeShortCircuit()const {return Test::returnsTimeShortCircuit();}
 	double returnsTTimeReconstruction()const {return Test::returnsTimeReconstruction();}

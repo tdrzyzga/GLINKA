@@ -1,11 +1,12 @@
 #include "motorwidget.h"
 
-MotorWidget::MotorWidget(RatedData *ratedData, QTabBar *tabBar, QVector<RatingWidget *> &vectorRatingWidget, int numberButton, QWidget *parent) : QWidget(parent)
+MotorWidget::MotorWidget(std::vector<std::string> *vectorNameWindings, RatedData *ratedData, QTabBar *tabBar, QVector<RatingWidget *> &vectorRatingWidget, int numberButton, QWidget *parent) : QWidget(parent)
 {
 	m_VectorRatingWidget = vectorRatingWidget;
 	m_NumberButton = numberButton;
 	m_TabBar = tabBar;
 	m_rData = ratedData;
+	m_VectorNameWindings = vectorNameWindings;
 
 	createRatedData();
 
@@ -49,7 +50,7 @@ void MotorWidget::createLabelButton()
 void MotorWidget::addDateReconstruction(int i)
 {
 		m_TabBar->setTabText(i, m_VectorLabelButton[i].first->text());
-		m_VectorNameWindings.push_back(m_VectorLabelButton[i].first->text());
+		m_VectorNameWindings->push_back(m_VectorLabelButton[i].first->text().toStdString());
 		m_VectorRatingWidget[i]->news();
 }
 void MotorWidget::createRatedData()
@@ -125,4 +126,15 @@ void MotorWidget::getLineMotorWidget()
 	m_rData->m_Number = m_LineNumber->text().toStdString();
 
 	m_rData->m_Power = m_LinePower->text().toFloat();
+}
+void MotorWidget::setLineMotorWidget()
+{
+	m_LineName->setText(QString::fromStdString(m_rData->m_Name));
+
+	m_LineType->setText(QString::fromStdString(m_rData->m_Type));
+
+	m_LineNumber->setText(QString::fromStdString(m_rData->m_Number));
+
+	m_LinePower->setText(QString::number(m_rData->m_Power));
+
 }

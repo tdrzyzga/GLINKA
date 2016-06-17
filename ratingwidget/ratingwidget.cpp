@@ -1,9 +1,20 @@
 #include "ratingwidget.h"
 
-RatingWidget::RatingWidget(QWidget *parent) : QWidget(parent), m_Test(), m_Rate(), poland(QLocale::Polish, QLocale::Poland)
+RatingWidget::RatingWidget(QWidget *parent) : QWidget(parent), poland(QLocale::Polish, QLocale::Poland)
 {
 	QTextCodec::setCodecForLocale(QTextCodec::codecForName ("UTF-8"));
+	m_Test = new Test();
+	m_Rate = new RatingInsulation();
 	m_NameWinding = tr("Uzwojenie");
+
+	createWidget();
+}
+RatingWidget::RatingWidget(QString nameWinding, RatingInsulation *rate, QWidget *parent) : QWidget(parent), poland(QLocale::Polish, QLocale::Poland)
+{
+	QTextCodec::setCodecForLocale(QTextCodec::codecForName ("UTF-8"));
+	m_Rate = rate;
+	m_Test = new Test(m_Rate->returnsTest());
+	m_NameWinding = nameWinding;
 
 	createWidget();
 }
@@ -84,13 +95,13 @@ void RatingWidget::createLineEditWidget()
 }
 void RatingWidget::setLineEditWidget()
 {
-	m_LineMaxVoltage->setText(poland.toString(m_Test.returnsMaxVoltage(), 'f', 2));
-	m_LineTimeReconstruction->setText(poland.toString(m_Test.returnsTimeReconstruction(), 'f', 2));
-	m_LineRatedVoltage->setText(poland.toString(m_Test.returnsRatedVoltage()));
-	m_LineTestVoltage->setText(poland.toString(m_Test.returnsTestVoltage()));
-	m_LineResistanceAfter60s->setText(poland.toString(m_Test.returnsResistanceAfter60s()));
-	m_LineResistanceAfter15s->setText(poland.toString(m_Test.returnsResistanceAfter15s()));
-	m_LineTimeShortCircuit->setText(poland.toString(m_Test.returnsTimeShortCircuit()));
+	m_LineMaxVoltage->setText(poland.toString(m_Test->returnsMaxVoltage(), 'f', 2));
+	m_LineTimeReconstruction->setText(poland.toString(m_Test->returnsTimeReconstruction(), 'f', 2));
+	m_LineRatedVoltage->setText(poland.toString(m_Test->returnsRatedVoltage()));
+	m_LineTestVoltage->setText(poland.toString(m_Test->returnsTestVoltage()));
+	m_LineResistanceAfter60s->setText(poland.toString(m_Test->returnsResistanceAfter60s()));
+	m_LineResistanceAfter15s->setText(poland.toString(m_Test->returnsResistanceAfter15s()));
+	m_LineTimeShortCircuit->setText(poland.toString(m_Test->returnsTimeShortCircuit()));
 }
 
 void RatingWidget::createLineEditWidgetRate()
@@ -192,37 +203,37 @@ void RatingWidget::createLineEditWidgetRate()
 }
 void RatingWidget::setLineEditWidgetRate()
 {
-	m_LineResistance60sDivTestVoltage->setText(poland.toString(m_Rate.returnsResistance60sDivTestVoltage(), 'f', 2));
-	m_LineRateResistance60sDivTestVoltage->setText(poland.toString(m_Rate.returnsRateResistance60sDivTestVoltage()));
-	m_LineTimeShortCircuitR->setText(poland.toString(m_Rate.returnsTTimeShortCircuit(), 'f', 2));
-	m_LineRateTimeShortCircuit->setText(poland.toString(m_Rate.returnsRateTimeShortCircuit()));
-	m_LineMaxVoltageDivTestVoltage->setText(poland.toString(m_Rate.returnsMaxVoltageDivTestVoltage(), 'f', 2));
-	m_LineRateMaxVoltageDivTestVoltage->setText(poland.toString(m_Rate.returnsRateMaxVoltageDivTestVoltage()));
-	m_LineTimeReconstructionR->setText(poland.toString(m_Rate.returnsTTimeReconstruction(), 'f', 2));
-	m_LineRateTimeReconstruction->setText(poland.toString(m_Rate.returnsRateTimeReconstruction()));
-	m_LineResistance60DivResistance15s ->setText(poland.toString(m_Rate.returnsResistance60DivResistance15s(), 'f', 2));
-	m_LineRateResistance60DivResistance15s->setText(poland.toString(m_Rate.returnsRateResistance60DivResistance15s()));
-	m_LineRateTotal->setText(poland.toString(m_Rate.returnsRateTotal(), 'f', 1));
+	m_LineResistance60sDivTestVoltage->setText(poland.toString(m_Rate->returnsResistance60sDivTestVoltage(), 'f', 2));
+	m_LineRateResistance60sDivTestVoltage->setText(poland.toString(m_Rate->returnsRateResistance60sDivTestVoltage()));
+	m_LineTimeShortCircuitR->setText(poland.toString(m_Rate->returnsTTimeShortCircuit(), 'f', 2));
+	m_LineRateTimeShortCircuit->setText(poland.toString(m_Rate->returnsRateTimeShortCircuit()));
+	m_LineMaxVoltageDivTestVoltage->setText(poland.toString(m_Rate->returnsMaxVoltageDivTestVoltage(), 'f', 2));
+	m_LineRateMaxVoltageDivTestVoltage->setText(poland.toString(m_Rate->returnsRateMaxVoltageDivTestVoltage()));
+	m_LineTimeReconstructionR->setText(poland.toString(m_Rate->returnsTTimeReconstruction(), 'f', 2));
+	m_LineRateTimeReconstruction->setText(poland.toString(m_Rate->returnsRateTimeReconstruction()));
+	m_LineResistance60DivResistance15s ->setText(poland.toString(m_Rate->returnsResistance60DivResistance15s(), 'f', 2));
+	m_LineRateResistance60DivResistance15s->setText(poland.toString(m_Rate->returnsRateResistance60DivResistance15s()));
+	m_LineRateTotal->setText(poland.toString(m_Rate->returnsRateTotal(), 'f', 1));
 }
 
 void RatingWidget::getLineRatingWidget()
 {
 	QString ratedVoltage = m_LineRatedVoltage->text();
-	m_Test.setRatedVoltage(poland.toDouble(ratedVoltage));
+	m_Test->setRatedVoltage(poland.toDouble(ratedVoltage));
 
 	QString testVoltage = m_LineTestVoltage->text();
-	m_Test.setTestVoltage(poland.toDouble(testVoltage));
+	m_Test->setTestVoltage(poland.toDouble(testVoltage));
 
 	QString resistanceAfter60s = m_LineResistanceAfter60s->text();
-	m_Test.setResistanceAfter60s(poland.toDouble(resistanceAfter60s));
+	m_Test->setResistanceAfter60s(poland.toDouble(resistanceAfter60s));
 
 	QString resistanceAfter15s = m_LineResistanceAfter15s->text();
-	m_Test.setResistanceAfter15s(poland.toDouble(resistanceAfter15s));
+	m_Test->setResistanceAfter15s(poland.toDouble(resistanceAfter15s));
 
 	QString timeShortCircuit = m_LineTimeShortCircuit->text();
-	m_Test.setTimeShortCircuit(poland.toDouble(timeShortCircuit));
+	m_Test->setTimeShortCircuit(poland.toDouble(timeShortCircuit));
 
-	m_Rate = m_Test;
+	*m_Rate = *m_Test;
 }
 void RatingWidget::createCustomPlot()
 {
@@ -236,7 +247,7 @@ void RatingWidget::createCustomPlot()
 }
 void RatingWidget::setCustomPlot()
 {
-	std::multimap<double, double> glinka(m_Test.returnsGlinka());
+	std::multimap<double, double> glinka(m_Test->returnsGlinka());
 	QVector<double> x;
 	QVector<double> y;
 	for (auto i:glinka)
@@ -295,14 +306,14 @@ void RatingWidget::news()
 {
 	QString fileName = QFileDialog::getOpenFileName(this,tr("Otwórz..."), "/home/", tr("Pliki txt (*.txt)"));
 
-	if (m_Test.returnsMaxVoltage() && !fileName.isEmpty())
+	if (m_Test->returnsMaxVoltage() && !fileName.isEmpty())
 	{
-		m_Test.resetTest();
-		m_Rate.resetRate();
+		m_Test->resetTest();
+		m_Rate->resetRate();
 	}
 	if (!fileName.isEmpty())
 	{
-		m_Test.reconstruction(fileName.toStdString());
+		m_Test->reconstruction(fileName.toStdString());
 		setLineEditWidget();
 		setLineEditWidgetRate();
 		setCustomPlot();
@@ -311,8 +322,8 @@ void RatingWidget::news()
 void RatingWidget::rate()
 {
 	getLineRatingWidget();
-	m_Rate.rateTotal();
-	m_Rate.showRate();
+	m_Rate->rateTotal();
+	m_Rate->showRate();
 	setLineEditWidget();
 	setLineEditWidgetRate();
 }
@@ -322,29 +333,21 @@ void RatingWidget::save()
 
 	if (!fileName.isEmpty())
 	{
-		if (m_Rate.returnsRateTotal()== 0.0)
+		if (m_Rate->returnsRateTotal()== 0.0)
 			getLineRatingWidget();
-		m_Rate.writeRatingInsulation(fileName.toStdString());
+		m_Rate->writeRatingInsulation(fileName.toStdString());
 	}
 }
-void RatingWidget::open()
+void RatingWidget::setRatingWidget()
 {
-	QString fileName = QFileDialog::getOpenFileName(this,tr("Otwórz..."), "/home/", tr("Pliki glinka (*.glinka)"));
-	if (m_Test.returnsMaxVoltage() && !fileName.isEmpty())
-	{
-		m_Test.resetTest();
-		m_Rate.resetRate();
-	}
-	if (!fileName.isEmpty())
-	{
-		m_Rate.getRatingInsulation(fileName.toStdString());
-		m_Test = m_Rate.returnsTest();
-		setLineEditWidget();
-		setLineEditWidgetRate();
-		setCustomPlot();
-	}
+	*m_Test = m_Rate->returnsTest();
+	setLineEditWidget();
+	setLineEditWidgetRate();
+	setCustomPlot();
+
 }
 RatingInsulation *RatingWidget::returnsm_Rate()
 {
-	return &m_Rate;
+	return m_Rate;
 }
+

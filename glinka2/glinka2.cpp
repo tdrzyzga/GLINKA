@@ -133,7 +133,7 @@ void Test::writeTest(const std::string &name)const
 	using namespace std;
 
 	ofstream outFile;
-	outFile.open(name, ios_base::out | ios_base::binary);
+	outFile.open(name, ios_base::out | ios_base::app | ios_base::binary);
 
 	if (!outFile.is_open())
 	{
@@ -177,7 +177,7 @@ std::streampos Test::getTest(const std::string &name, std::streampos place)
 		inFile.read((char *) &temp_glinka, sizeof temp_glinka);
 		glinka.insert(temp_glinka);
 	}
-	std::streampos place = inFile.tellg();
+	place = inFile.tellg();
 	inFile.close();
 	return place;
 }
@@ -274,6 +274,10 @@ RatingInsulation::RatingInsulation(const Test &ts, double r60DivTV, double mVdiv
 	m_Rating.m_Resistance60sDivTestVoltage = r60DivTV;
 	m_Rating.m_MaxVoltageDivTestVoltage = mVdivTV;
 	m_Rating.m_Resistance60sDivResistance15s = r60Divr15;
+}
+RatingInsulation::RatingInsulation(RatingInsulation &rI):Test(rI.returnsTest())
+{
+	*this = rI;
 }
 int RatingInsulation::rateResistance60sDivTestVoltage()
 {
@@ -479,7 +483,7 @@ std::streampos RatingInsulation::getRatingInsulation(const std::string &name, st
 {
 	using namespace std;
 
-	streampos place = Test::getTest(name, place);
+	place = Test::getTest(name, place);
 
 	ifstream inFile;
 	inFile.open(name, ios_base::in | ios_base::binary);

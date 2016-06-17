@@ -6,7 +6,7 @@ Motor::Motor()
 	m_RatedData.m_Type = "---";
 	m_RatedData.m_Number = "---";
 	m_RatedData.m_Power = 0.0;
-	m_NumberWindings = 1;
+	m_NumberWindings = 0;
 
 	/*for (int i=0; i<m_NumberWindings; ++i)
 		m_VectorNameWindings.push_back("---");
@@ -20,7 +20,7 @@ Motor::Motor(RatedData &ratedData)
 	m_RatedData.m_Type = ratedData.m_Type;
 	m_RatedData.m_Number = ratedData.m_Number;
 	m_RatedData.m_Power = ratedData.m_Power;
-	m_NumberWindings = 1;
+	m_NumberWindings = 0;
 }
 Motor::Motor(RatedData &ratedData, std::vector<RatingInsulation *> &vectorWindings, std::vector<std::string> vectorNameWindings)
 {
@@ -28,7 +28,7 @@ Motor::Motor(RatedData &ratedData, std::vector<RatingInsulation *> &vectorWindin
 	m_RatedData.m_Type = ratedData.m_Type;
 	m_RatedData.m_Number = ratedData.m_Number;
 	m_RatedData.m_Power = ratedData.m_Power;
-	m_NumberWindings = 1;
+	m_NumberWindings = 0;
 
 	m_VectorNameWindings = vectorNameWindings;
 
@@ -40,12 +40,17 @@ void Motor::setVectorWindings(RatingInsulation *rate)
 	m_VectorWindings.push_back(rate);
 	++m_NumberWindings;
 }
+RatingInsulation *Motor::returnsRatingInsulation(int i)
+{
+	return m_VectorWindings[i];
+}
+
 void Motor::writeMotor(const std::string &name)const
 {
 	using namespace std;
 
 	ofstream outFile;
-	outFile.open(name, ios_base::out | ios_base::app | ios_base::binary);
+	outFile.open(name, ios_base::out | ios_base::binary);
 
 	if (!outFile.is_open())
 	{
@@ -58,6 +63,14 @@ void Motor::writeMotor(const std::string &name)const
 
 	for (auto x:m_VectorWindings)
 		x->writeRatingInsulation(name);
+
+	outFile.open(name, ios_base::out | ios_base::app | ios_base::binary);
+
+	if (!outFile.is_open())
+	{
+		cerr << "Cannot open file: " << name << endl;
+		exit(EXIT_FAILURE);
+	}
 
 	int sizeStruct = sizeof m_RatedData;
 	outFile.write((char *) &sizeStruct, sizeof sizeStruct);
@@ -99,8 +112,15 @@ void Motor::getMotor(const std::string &name)
 		place = tempRatingInsulation->getRatingInsulation(name, place);
 		m_VectorWindings.push_back(tempRatingInsulation);
 	}
+	inFile.open(name, ios_base::in | ios_base::binary);
 
+	if (!inFile.is_open())
+	{
+		cerr << "Cannot open file: " << name << endl;
+		exit(EXIT_FAILURE);
+	}
 	inFile.seekg(place);
+
 	int sizeStruct;
 	inFile.read((char *) &sizeStruct, sizeof sizeStruct);
 	inFile.read((char *) &m_RatedData, sizeStruct);
@@ -111,6 +131,7 @@ void Motor::getMotor(const std::string &name)
 	{
 		inFile.read((char *) &sizeString, sizeof sizeString);
 		inFile.read((char *) &tempString, sizeString);
+		m_VectorNameWindings.push_back(tempString);
 	}
 	inFile.close();
 }

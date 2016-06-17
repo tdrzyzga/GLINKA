@@ -58,8 +58,8 @@ class RatingWidget : public QWidget
 
 		QCustomPlot *m_CustomPlot;
 
-		Test m_Test;
-		RatingInsulation m_Rate;
+		Test *m_Test;
+		RatingInsulation *m_Rate;
 		QLocale poland;
 		QString m_NameWinding;
 
@@ -67,21 +67,21 @@ class RatingWidget : public QWidget
 		void createLineEditWidget();
 		void createLineEditWidgetRate();
 		void createCustomPlot();
-		void setCustomPlot();
-
-		void setLineEditWidget();
-		void setLineEditWidgetRate();
 
 	private slots:
 		void rate();
 
 	public:
 		explicit RatingWidget(QWidget *parent = 0);
+		RatingWidget(QString nameWinding, RatingInsulation *rate, QWidget *parent);
 		void news();
 		void save();
-		void open();
+		void setRatingWidget();
 		RatingInsulation *returnsm_Rate();
 		QString &returnsNameWinding(){return m_NameWinding;}
+		void setCustomPlot();
+		void setLineEditWidget();
+		void setLineEditWidgetRate();
 		void getLineRatingWidget();
 };
 

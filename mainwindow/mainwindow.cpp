@@ -97,7 +97,7 @@ void MainWindow::news()
 			m_Motor->setVectorWindings(m_VectorRatingWidget[i]->returnsm_Rate());
 			m_TabWidget->addTab(m_VectorRatingWidget[i], (m_VectorRatingWidget[i]->returnsNameWinding()+" %1").arg(i+1));
 		}
-		m_MotorWidget = new MotorWidget(m_Motor->returnsm_RatedData(), m_TabWidget->tabBar(), m_VectorRatingWidget, numberWindings, this);
+		m_MotorWidget = new MotorWidget(m_Motor->returnsVectorNameWinding(), m_Motor->returnsm_RatedData(), m_TabWidget->tabBar(), m_VectorRatingWidget, numberWindings, this);
 		m_TabWidget->addTab(m_MotorWidget, tr("Silnik"));
 
 		setCentralWidget(m_TabWidget);
@@ -130,6 +130,40 @@ void MainWindow::save()
 }
 void MainWindow::open()
 {
+	/*if (!m_VectorRatingWidget.isEmpty())
+	{
+		m_TabWidget->clear();
+		m_VectorRatingWidget.clear();
+	}*/
+	QString fileName = QFileDialog::getOpenFileName(this,tr("Otwórz..."), "/home/", tr("Pliki glinka (*.glinka)"));
+
+	m_Motor = new Motor();
+	m_Motor->getMotor(fileName.toStdString());
+	int numberWindings = m_Motor->returnsm_NumberWindings();
+	std::cout<<"Liczba uzwojen "<<numberWindings<<std::endl;
+	m_TabWidget = new QTabWidget(this);
+
+	for (int i=0; i<numberWindings; ++i)
+	{
+		m_VectorRatingWidget.push_back(new RatingWidget(QString::fromStdString(m_Motor->returnsNameWinding(i)), m_Motor->returnsRatingInsulation(i), this));
+		m_TabWidget->addTab(m_VectorRatingWidget[i], QString::fromStdString(m_Motor->returnsNameWinding(i)));
+
+		std::cout<<m_Motor->returnsNameWinding(i)<<std::endl;
+		m_VectorRatingWidget[i]->returnsm_Rate()->showRate();
+
+		//m_VectorRatingWidget[i]->setLineEditWidget();
+		//m_VectorRatingWidget[i]->setLineEditWidgetRate();
+		//m_VectorRatingWidget[i]->setCustomPlot();
+	}
+	m_MotorWidget = new MotorWidget(m_Motor->returnsVectorNameWinding(), m_Motor->returnsm_RatedData(), m_TabWidget->tabBar(), m_VectorRatingWidget, numberWindings, this);
+	m_TabWidget->addTab(m_MotorWidget, tr("Silnik"));
+
+	for (int i=0; i<numberWindings; ++i)
+		m_VectorRatingWidget[i]->setRatingWidget();
+
+
+	setCentralWidget(m_TabWidget);
+
 	//ratingWidget->open();
 	/*QString fileName = QFileDialog::getOpenFileName(this,tr("Otwórz..."), "/home/", tr("Pliki glinka (*.glinka)"));
 	if (m_GroupBox != nullptr && m_BottomWidget != nullptr && !fileName.isEmpty())
