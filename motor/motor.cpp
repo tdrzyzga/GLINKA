@@ -63,8 +63,8 @@ void Motor::writeMotor(const std::string &name)const
 	outFile.write((char *) &sizeStruct, sizeof sizeStruct);
 	outFile.write((char *) &m_RatedData, sizeStruct);
 
-	int sizeVectorName = m_VectorNameWindings.size();
-	outFile.write((char *) &sizeVectorName, sizeVectorName);
+	//int sizeVectorName = m_VectorNameWindings.size();
+	//outFile.write((char *) &sizeVectorName, sizeVectorName);
 	for (auto x:m_VectorNameWindings)
 		outFile.write((char *) &x, sizeof x);
 
@@ -89,10 +89,17 @@ void Motor::getMotor(const std::string &name)
 
 	inFile.close();
 
-	RatingInsulation tempRatingInsulation;
+	RatingInsulation *tempRatingInsulation;
 
 	for (int i=0; i<m_NumberWindings; ++i)
-		m_VectorNameWindings(getRatingInsulation(name, place))
+	{
+		tempRatingInsulation = new RatingInsulation();
+		place = tempRatingInsulation->getRatingInsulation(name, place);
+		m_VectorWindings.push_back(tempRatingInsulation);
+	}
+
+	for (int i=0; i<m_NumberWindings; ++i)
+		m_VectorNameWindings(getRatingInsulation(name, place));
 	for (auto x:m_VectorWindings)
 		place = x.getRatingInsulation(name, place);
 
