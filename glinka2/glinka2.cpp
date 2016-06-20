@@ -479,11 +479,13 @@ void RatingInsulation::writeRatingInsulation(const std::string &name)const
 
 	outFile.close();
 }
-std::streampos RatingInsulation::getRatingInsulation(const std::string &name, std::streampos place)
+std::streampos RatingInsulation::getRatingInsulation(const std::string &name, std::streampos p)
 {
 	using namespace std;
 
-	place = Test::getTest(name, place);
+	streampos place = p;
+
+	place = Test::getTest(name, p);
 
 	ifstream inFile;
 	inFile.open(name, ios_base::in | ios_base::binary);

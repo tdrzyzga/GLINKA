@@ -97,7 +97,7 @@ void MainWindow::news()
 			m_Motor->setVectorWindings(m_VectorRatingWidget[i]->returnsm_Rate());
 			m_TabWidget->addTab(m_VectorRatingWidget[i], (m_VectorRatingWidget[i]->returnsNameWinding()+" %1").arg(i+1));
 		}
-		m_MotorWidget = new MotorWidget(m_Motor->returnsVectorNameWinding(), m_Motor->returnsm_RatedData(), m_TabWidget->tabBar(), m_VectorRatingWidget, numberWindings, this);
+		m_MotorWidget = new MotorWidget(m_Motor, m_TabWidget->tabBar(), m_VectorRatingWidget, numberWindings, this);
 		m_TabWidget->addTab(m_MotorWidget, tr("Silnik"));
 
 		setCentralWidget(m_TabWidget);
@@ -146,7 +146,7 @@ void MainWindow::open()
 	for (int i=0; i<numberWindings; ++i)
 	{
 		m_VectorRatingWidget.push_back(new RatingWidget(QString::fromStdString(m_Motor->returnsNameWinding(i)), m_Motor->returnsRatingInsulation(i), this));
-		m_TabWidget->addTab(m_VectorRatingWidget[i], QString::fromStdString(m_Motor->returnsNameWinding(i)));
+		m_TabWidget->addTab(m_VectorRatingWidget[i], m_VectorRatingWidget[i]->returnsNameWinding());
 
 		std::cout<<m_Motor->returnsNameWinding(i)<<std::endl;
 		m_VectorRatingWidget[i]->returnsm_Rate()->showRate();
@@ -155,13 +155,13 @@ void MainWindow::open()
 		//m_VectorRatingWidget[i]->setLineEditWidgetRate();
 		//m_VectorRatingWidget[i]->setCustomPlot();
 	}
-	m_MotorWidget = new MotorWidget(m_Motor->returnsVectorNameWinding(), m_Motor->returnsm_RatedData(), m_TabWidget->tabBar(), m_VectorRatingWidget, numberWindings, this);
+	m_MotorWidget = new MotorWidget(m_Motor, m_TabWidget->tabBar(), m_VectorRatingWidget, numberWindings, this);
 	m_TabWidget->addTab(m_MotorWidget, tr("Silnik"));
 
 	for (int i=0; i<numberWindings; ++i)
 		m_VectorRatingWidget[i]->setRatingWidget();
 
-
+	m_MotorWidget->setLineMotorWidget();
 	setCentralWidget(m_TabWidget);
 
 	//ratingWidget->open();

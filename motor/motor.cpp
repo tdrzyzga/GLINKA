@@ -1,4 +1,4 @@
-#include "motor.h"
+﻿#include "motor.h"
 
 Motor::Motor()
 {
@@ -71,14 +71,29 @@ void Motor::writeMotor(const std::string &name)const
 		cerr << "Cannot open file: " << name << endl;
 		exit(EXIT_FAILURE);
 	}
+	streampos placewrite= outFile.tellp();
 
-	int sizeStruct = sizeof m_RatedData;
+	int sizeStruct;
+	sizeStruct = m_RatedData.m_Name.size();
 	outFile.write((char *) &sizeStruct, sizeof sizeStruct);
-	outFile.write((char *) &m_RatedData, sizeStruct);
+	outFile.write((char *) &m_RatedData.m_Name, sizeStruct);
+
+	sizeStruct = m_RatedData.m_Type.size();
+	outFile.write((char *) &sizeStruct, sizeof sizeStruct);
+	outFile.write((char *) &m_RatedData.m_Type, sizeStruct);
+
+	sizeStruct = m_RatedData.m_Number.size();
+	outFile.write((char *) &sizeStruct, sizeof sizeStruct);
+	outFile.write((char *) &m_RatedData.m_Number, sizeStruct);
+
+	sizeStruct = sizeof m_RatedData.m_Power;
+	outFile.write((char *) &sizeStruct, sizeof sizeStruct);
+	outFile.write((char *) &m_RatedData.m_Power, sizeStruct);
 
 	int sizeString;
 	for (auto x:m_VectorNameWindings)
 	{
+		placewrite = outFile.tellp();
 		sizeString = x.size();
 		outFile.write((char *) &sizeString, sizeof sizeString);
 		outFile.write((char *) &x, sizeString);
@@ -121,9 +136,23 @@ void Motor::getMotor(const std::string &name)
 	}
 	inFile.seekg(place);
 
+//	int sizeStruct;
+//	inFile.read((char *) &sizeStruct, sizeof sizeStruct);
+	//inFile.read((char *) &m_RatedData, sizeStruct);
+
 	int sizeStruct;
+
 	inFile.read((char *) &sizeStruct, sizeof sizeStruct);
-	inFile.read((char *) &m_RatedData, sizeStruct);
+	inFile.read((char *) &m_RatedData.m_Name, sizeStruct);
+
+	inFile.read((char *) &sizeStruct, sizeof sizeStruct);
+	inFile.read((char *) &m_RatedData.m_Type, sizeStruct);
+
+	inFile.read((char *) &sizeStruct, sizeof sizeStruct);
+	inFile.read((char *) &m_RatedData.m_Number, sizeStruct);
+
+	inFile.read((char *) &sizeStruct, sizeof sizeStruct);
+	inFile.read((char *) &m_RatedData.m_Power, sizeStruct);
 
 	int sizeString;
 	string tempString;
@@ -133,5 +162,6 @@ void Motor::getMotor(const std::string &name)
 		inFile.read((char *) &tempString, sizeString);
 		m_VectorNameWindings.push_back(tempString);
 	}
+
 	inFile.close();
 }

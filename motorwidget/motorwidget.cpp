@@ -1,12 +1,11 @@
 #include "motorwidget.h"
 
-MotorWidget::MotorWidget(std::vector<std::string> *vectorNameWindings, RatedData *ratedData, QTabBar *tabBar, QVector<RatingWidget *> &vectorRatingWidget, int numberButton, QWidget *parent) : QWidget(parent)
+MotorWidget::MotorWidget(Motor *motor, QTabBar *tabBar, QVector<RatingWidget *> &vectorRatingWidget, int numberButton, QWidget *parent) : QWidget(parent)
 {
 	m_VectorRatingWidget = vectorRatingWidget;
 	m_NumberButton = numberButton;
 	m_TabBar = tabBar;
-	m_rData = ratedData;
-	m_VectorNameWindings = vectorNameWindings;
+	m_Motor = motor;
 
 	createRatedData();
 
@@ -50,7 +49,7 @@ void MotorWidget::createLabelButton()
 void MotorWidget::addDateReconstruction(int i)
 {
 		m_TabBar->setTabText(i, m_VectorLabelButton[i].first->text());
-		m_VectorNameWindings->push_back(m_VectorLabelButton[i].first->text().toStdString());
+		m_VectorNameWindings.push_back(m_VectorLabelButton[i].first->text());
 		m_VectorRatingWidget[i]->news();
 }
 void MotorWidget::createRatedData()
@@ -119,22 +118,27 @@ void MotorWidget::createMainWidget()
 }
 void MotorWidget::getLineMotorWidget()
 {
-	m_rData->m_Name = m_LineName->text().toStdString();
+	m_Motor->setRatedData().m_Name = m_LineName->text().toStdString();
 
-	m_rData->m_Type = m_LineType->text().toStdString();
+	m_Motor->setRatedData().m_Type = m_LineType->text().toStdString();
 
-	m_rData->m_Number = m_LineNumber->text().toStdString();
+	m_Motor->setRatedData().m_Number = m_LineNumber->text().toStdString();
 
-	m_rData->m_Power = m_LinePower->text().toFloat();
+	m_Motor->setRatedData().m_Power = m_LinePower->text().toFloat();
+
+	for (int i=0; i<m_VectorNameWindings.size(); ++i)
+		m_Motor->setVectorNameWinding().push_back(m_VectorNameWindings[i].toStdString());
 }
 void MotorWidget::setLineMotorWidget()
 {
-	m_LineName->setText(QString::fromStdString(m_rData->m_Name));
+	m_LineName->setText(QString::fromStdString(m_Motor->setRatedData().m_Name));
 
-	m_LineType->setText(QString::fromStdString(m_rData->m_Type));
+	m_LineType->setText(QString::fromStdString(m_Motor->setRatedData().m_Type));
 
-	m_LineNumber->setText(QString::fromStdString(m_rData->m_Number));
+	m_LineNumber->setText(QString::fromStdString(m_Motor->setRatedData().m_Number));
 
-	m_LinePower->setText(QString::number(m_rData->m_Power));
+	m_LinePower->setText(QString::number(m_Motor->setRatedData().m_Power));
+
+
 
 }
