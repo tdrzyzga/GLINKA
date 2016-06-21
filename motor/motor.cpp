@@ -50,7 +50,7 @@ void Motor::writeMotor(const std::string &name)const
 	using namespace std;
 
 	ofstream outFile;
-	outFile.open(name, ios_base::out | ios_base::binary);
+	outFile.open(name, ios_base::out | ios_base::binary | ios_base::trunc);
 
 	if (!outFile.is_open())
 	{
@@ -73,16 +73,24 @@ void Motor::writeMotor(const std::string &name)const
 	}
 	streampos placewrite= outFile.tellp();
 
+	/*outFile<<endl<<m_RatedData.m_Name<<" ";
+	outFile<<m_RatedData.m_Type<<" ";
+	outFile<<m_RatedData.m_Number<<" ";
+	outFile<<m_RatedData.m_Power<<" ";
+
+	for (auto x:m_VectorNameWindings)
+		outFile<<x<<" ";*/
+
 	int sizeStruct;
-	sizeStruct = m_RatedData.m_Name.size();
+	sizeStruct = m_RatedData.m_Name.size()*sizeof(char);
 	outFile.write((char *) &sizeStruct, sizeof sizeStruct);
 	outFile.write((char *) &m_RatedData.m_Name, sizeStruct);
 
-	sizeStruct = m_RatedData.m_Type.size();
+	sizeStruct = m_RatedData.m_Type.size()*sizeof(char);
 	outFile.write((char *) &sizeStruct, sizeof sizeStruct);
 	outFile.write((char *) &m_RatedData.m_Type, sizeStruct);
 
-	sizeStruct = m_RatedData.m_Number.size();
+	sizeStruct = m_RatedData.m_Number.size()*sizeof(char);
 	outFile.write((char *) &sizeStruct, sizeof sizeStruct);
 	outFile.write((char *) &m_RatedData.m_Number, sizeStruct);
 
@@ -90,14 +98,14 @@ void Motor::writeMotor(const std::string &name)const
 	outFile.write((char *) &sizeStruct, sizeof sizeStruct);
 	outFile.write((char *) &m_RatedData.m_Power, sizeStruct);
 
-	int sizeString;
-	for (auto x:m_VectorNameWindings)
-	{
-		placewrite = outFile.tellp();
-		sizeString = x.size();
-		outFile.write((char *) &sizeString, sizeof sizeString);
-		outFile.write((char *) &x, sizeString);
-	}
+	//int sizeString;
+	//for (auto x:m_VectorNameWindings)
+	//{
+		//placewrite = outFile.tellp();
+		//sizeString = x.size()*sizeof(char);
+		//outFile.write((char *) &sizeString, sizeof sizeString);
+		//outFile.write((char *) &x, sizeString);
+	//}
 
 	outFile.close();
 }
@@ -127,7 +135,7 @@ void Motor::getMotor(const std::string &name)
 		place = tempRatingInsulation->getRatingInsulation(name, place);
 		m_VectorWindings.push_back(tempRatingInsulation);
 	}
-	inFile.open(name, ios_base::in | ios_base::binary);
+	inFile.open(name, ios_base::in);
 
 	if (!inFile.is_open())
 	{
@@ -135,6 +143,18 @@ void Motor::getMotor(const std::string &name)
 		exit(EXIT_FAILURE);
 	}
 	inFile.seekg(place);
+
+/*inFile>>m_RatedData.m_Name;
+	inFile>>m_RatedData.m_Type;
+	inFile>>m_RatedData.m_Number;
+	inFile>>m_RatedData.m_Power;
+
+	string tempString;
+	for (int i=0; i<m_NumberWindings; ++i)
+	{
+		inFile>>tempString;
+		m_VectorNameWindings.push_back(tempString);
+	}*/
 
 //	int sizeStruct;
 //	inFile.read((char *) &sizeStruct, sizeof sizeStruct);
@@ -154,7 +174,7 @@ void Motor::getMotor(const std::string &name)
 	inFile.read((char *) &sizeStruct, sizeof sizeStruct);
 	inFile.read((char *) &m_RatedData.m_Power, sizeStruct);
 
-	int sizeString;
+	/*int sizeString;
 	string tempString;
 	for (int i=0; i<m_NumberWindings; ++i)
 	{
@@ -162,6 +182,6 @@ void Motor::getMotor(const std::string &name)
 		inFile.read((char *) &tempString, sizeString);
 		m_VectorNameWindings.push_back(tempString);
 	}
-
+*/
 	inFile.close();
 }
