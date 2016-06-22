@@ -22,7 +22,10 @@ void MotorWidget::createLabelButton()
 	{
 		QLineEdit *tempLineEdit = new QLineEdit(this);
 		tempLineEdit->setFont(fontLine);
-		tempLineEdit->setText(tr("Wpisz nazwę uzwojenia"));
+		if (m_Motor->setVectorNameWinding().empty())
+			tempLineEdit->setText(tr("Wpisz nazwę uzwojenia"));
+		else
+			tempLineEdit->setText(QString::fromStdString(m_Motor->returnsNameWinding(i)));
 
 		QPushButton *tempButton = new QPushButton(tr("Dodaj dane uzwojenia"));
 
@@ -51,6 +54,7 @@ void MotorWidget::addDateReconstruction(int i)
 		m_TabBar->setTabText(i, m_VectorLabelButton[i].first->text());
 		m_VectorNameWindings.push_back(m_VectorLabelButton[i].first->text());
 		m_VectorRatingWidget[i]->news();
+		m_TabBar->setCurrentIndex(i);
 }
 void MotorWidget::createRatedData()
 {

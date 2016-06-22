@@ -14,14 +14,6 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
 
 	setMinimumSize(1000, 600);
 	resize(1000, 700);
-
-	/*tabWidget = new QTabWidget(this);
-	for (int i=0; i<2; ++i)
-	{
-		ratingWidget.push_back(new RatingWidget(this));
-		tabWidget->addTab(ratingWidget[i], tr("Napięcie odbudowy"));
-	}
-	setCentralWidget(tabWidget);*/
 }
 void MainWindow::createFileActions()
 {
@@ -78,30 +70,37 @@ void MainWindow::createToolBar()
 void MainWindow::news()
 {
 	bool ok;
-	int numberWindings = QInputDialog::getInt(this, tr("QInputDialog::getInteger()"),
-									 tr("Podaj ilość uzwojeń:"), 2, 0, 100, 1, &ok);
-	if (ok)
+	int numberWindings;
+
+	if(m_VectorRatingWidget.isEmpty())
 	{
-		if (!m_VectorRatingWidget.isEmpty())
+		numberWindings = QInputDialog::getInt(this, tr("QInputDialog::getInteger()"),
+									 tr("Podaj ilość uzwojeń:"), 2, 0, 100, 1, &ok);
+		if (ok)
+			createTabWidgetSave(numberWindings);
+	}
+	else
+	{
+		int ret = QMessageBox::warning(this, tr(""), tr("Zapisać plik?"),
+									   QMessageBox::Ok | QMessageBox::Cancel,
+									   QMessageBox::Ok);
+		if (ret==QMessageBox::Ok)
+			save();
+
+		numberWindings = QInputDialog::getInt(this, tr("QInputDialog::getInteger()"),
+									 tr("Podaj ilość uzwojeń:"), 2, 0, 100, 1, &ok);
+		if (ok)
 		{
 			m_TabWidget->clear();
 			m_VectorRatingWidget.clear();
+			delete m_Motor;
+
+			createTabWidgetSave(numberWindings);
 		}
-		m_Motor = new Motor();
-		m_TabWidget = new QTabWidget(this);
-
-
-		for (int i=0; i<numberWindings; ++i)
-		{
-			m_VectorRatingWidget.push_back(new RatingWidget(this));
-			m_Motor->setVectorWindings(m_VectorRatingWidget[i]->returnsm_Rate());
-			m_TabWidget->addTab(m_VectorRatingWidget[i], (m_VectorRatingWidget[i]->returnsNameWinding()+" %1").arg(i+1));
-		}
-		m_MotorWidget = new MotorWidget(m_Motor, m_TabWidget->tabBar(), m_VectorRatingWidget, numberWindings, this);
-		m_TabWidget->addTab(m_MotorWidget, tr("Silnik"));
-
-		setCentralWidget(m_TabWidget);
 	}
+
+	if (ok)
+		setCentralWidget(m_TabWidget);
 }
 void MainWindow::save()
 {
@@ -114,29 +113,56 @@ void MainWindow::save()
 
 	if (!fileName.isEmpty())
 		m_Motor->writeMotor(fileName.toStdString());
-
-	//ratingWidget->save();
-		//QString fileName = QFileDialog::getSaveFileName(this,tr("Zapisz plik jako..."), "/home/*.glinka", tr("Pliki txt (*.glinka)"));
-
-		//if (!fileName.isEmpty())
-		//{
-		//	if (m_Rate.returnsRateTotal()== 0.0)
-		//		getLineData();
-		//	m_Rate.writeRatingInsulation(fileName.toStdString());
-		//}
-		//m_Test = m_Rate.returnsTest();
-		//m_Test.writeTest(fileName.toStdString());
-	//setCentralWidget(ratingWidget);
 }
 void MainWindow::open()
 {
-	/*if (!m_VectorRatingWidget.isEmpty())
-	{
-		m_TabWidget->clear();
-		m_VectorRatingWidget.clear();
-	}*/
-	QString fileName = QFileDialog::getOpenFileName(this,tr("Otwórz..."), "/home/", tr("Pliki glinka (*.glinka)"));
+	QString fileName;
 
+	if(m_VectorRatingWidget.isEmpty())
+	{
+		fileName = QFileDialog::getOpenFileName(this,tr("Otwórz..."), "/home/", tr("Pliki glinka (*.glinka)"));
+
+		if (!fileName.isEmpty())
+			createTabWidgetOpen(fileName);
+	}
+	else
+	{
+		int ret = QMessageBox::warning(this, tr(""), tr("Zapisać plik?"),
+									   QMessageBox::Ok | QMessageBox::Cancel,
+									   QMessageBox::Ok);
+		if (ret==QMessageBox::Ok)
+			save();
+
+		fileName = QFileDialog::getOpenFileName(this,tr("Otwórz..."), "/home/", tr("Pliki glinka (*.glinka)"));
+
+		if (!fileName.isEmpty())
+		{
+			m_TabWidget->clear();
+			m_VectorRatingWidget.clear();
+			delete m_Motor;
+
+			createTabWidgetOpen(fileName);
+		}
+	}
+	if (!fileName.isEmpty())
+		setCentralWidget(m_TabWidget);
+}
+void MainWindow::createTabWidgetSave(int numberWindings)
+{
+	m_Motor = new Motor();
+	m_TabWidget = new QTabWidget(this);
+
+	for (int i=0; i<numberWindings; ++i)
+	{
+		m_VectorRatingWidget.push_back(new RatingWidget(this));
+		m_Motor->setVectorWindings(m_VectorRatingWidget[i]->returnsm_Rate());
+		m_TabWidget->addTab(m_VectorRatingWidget[i], (m_VectorRatingWidget[i]->returnsNameWinding()+" %1").arg(i+1));
+	}
+	m_MotorWidget = new MotorWidget(m_Motor, m_TabWidget->tabBar(), m_VectorRatingWidget, numberWindings, this);
+	m_TabWidget->addTab(m_MotorWidget, tr("Silnik"));
+}
+void MainWindow::createTabWidgetOpen(QString fileName)
+{
 	m_Motor = new Motor();
 	m_Motor->getMotor(fileName.toStdString());
 	int numberWindings = m_Motor->returnsm_NumberWindings();
@@ -150,11 +176,8 @@ void MainWindow::open()
 
 		std::cout<<m_Motor->returnsNameWinding(i)<<std::endl;
 		m_VectorRatingWidget[i]->returnsm_Rate()->showRate();
-
-		//m_VectorRatingWidget[i]->setLineEditWidget();
-		//m_VectorRatingWidget[i]->setLineEditWidgetRate();
-		//m_VectorRatingWidget[i]->setCustomPlot();
 	}
+
 	m_MotorWidget = new MotorWidget(m_Motor, m_TabWidget->tabBar(), m_VectorRatingWidget, numberWindings, this);
 	m_TabWidget->addTab(m_MotorWidget, tr("Silnik"));
 
@@ -162,28 +185,4 @@ void MainWindow::open()
 		m_VectorRatingWidget[i]->setRatingWidget();
 
 	m_MotorWidget->setLineMotorWidget();
-	setCentralWidget(m_TabWidget);
-
-	//ratingWidget->open();
-	/*QString fileName = QFileDialog::getOpenFileName(this,tr("Otwórz..."), "/home/", tr("Pliki glinka (*.glinka)"));
-	if (m_GroupBox != nullptr && m_BottomWidget != nullptr && !fileName.isEmpty())
-	{
-		delete m_CustomPlot;
-		delete m_GroupBox;
-		delete m_BottomWidget;
-
-		m_Test.resetTest();
-		m_Rate.resetRate();
-	}
-	if (!fileName.isEmpty())
-	{
-		m_Rate.getRatingInsulation(fileName.toStdString());
-		m_Test = m_Rate.returnsTest();
-		//m_Test.getTest(fileName.toStdString());
-		createCentralWidget();
-		createBottomWidget();
-	}*/
-
 }
-
-

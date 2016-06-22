@@ -327,7 +327,7 @@ void RatingWidget::rate()
 	setLineEditWidget();
 	setLineEditWidgetRate();
 }
-void RatingWidget::save()
+/*void RatingWidget::save()
 {
 	QString fileName = QFileDialog::getSaveFileName(this,tr("Zapisz plik jako..."), "/home/*.glinka", tr("Pliki txt (*.glinka)"));
 
@@ -337,7 +337,7 @@ void RatingWidget::save()
 			getLineRatingWidget();
 		m_Rate->writeRatingInsulation(fileName.toStdString());
 	}
-}
+}*/
 void RatingWidget::setRatingWidget()
 {
 	*m_Test = m_Rate->returnsTest();

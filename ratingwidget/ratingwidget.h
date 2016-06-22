@@ -75,7 +75,7 @@ class RatingWidget : public QWidget
 		explicit RatingWidget(QWidget *parent = 0);
 		RatingWidget(QString nameWinding, RatingInsulation *rate, QWidget *parent);
 		void news();
-		void save();
+		//void save();
 		void setRatingWidget();
 		RatingInsulation *returnsm_Rate();
 		QString &returnsNameWinding(){return m_NameWinding;}

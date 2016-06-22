@@ -59,6 +59,8 @@ class MainWindow : public QMainWindow
 		void createMenus();
 		void createStatusBar();
 		void createToolBar();
+		void createTabWidgetSave(int numberWindings);
+		void createTabWidgetOpen(QString fileName);
 
 	private slots:
 		void news();
