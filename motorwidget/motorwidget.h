@@ -1,10 +1,9 @@
 #ifndef MOTORWIDGET_H
 #define MOTORWIDGET_H
 
-#include <QWidget>
 #include <QtGui>
-#include <QPushButton>
-//#inlcude <QGroupBox>
+#include <memory>
+
 #include "ratingwidget/ratingwidget.h"
 #include "motor/motor.h"
 
@@ -25,15 +24,15 @@ class MotorWidget : public QWidget
 		QVector<QGroupBox *>m_VectorTempWindingBox;
 		QGroupBox *m_WindingData;
 
-		RatedData *m_rData;
+		std::unique_ptr<RatedData> m_rData;
 		QVector<QString> m_VectorNameWindings;
 		QTabBar *m_TabBar;
-		Motor *m_Motor;
+		std::shared_ptr<Motor> m_Motor;
 
 	private slots:
 		void addDateReconstruction(int);
 	public:
-		explicit MotorWidget(Motor *motor,QTabBar *tabBar, QVector<RatingWidget *> &vectorRatingWidget,int numberButton, QWidget *parent = 0);
+		explicit MotorWidget(std::shared_ptr<Motor> motor,QTabBar *tabBar, QVector<RatingWidget *> &vectorRatingWidget,int numberButton, QWidget *parent = 0);
 		void createRatedData();
 		void createLabelButton();
 		void createMainWidget();

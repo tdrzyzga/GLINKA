@@ -3,17 +3,17 @@
 RatingWidget::RatingWidget(QWidget *parent) : QWidget(parent), poland(QLocale::Polish, QLocale::Poland)
 {
 	QTextCodec::setCodecForLocale(QTextCodec::codecForName ("UTF-8"));
-	m_Test = new Test();
-	m_Rate = new RatingInsulation();
+	m_Test.reset(new Test());
+	m_Rate.reset(new RatingInsulation());
 	m_NameWinding = tr("Uzwojenie");
 
 	createWidget();
 }
-RatingWidget::RatingWidget(QString nameWinding, RatingInsulation *rate, QWidget *parent) : QWidget(parent), poland(QLocale::Polish, QLocale::Poland)
+RatingWidget::RatingWidget(QString nameWinding, std::shared_ptr<RatingInsulation> rate, QWidget *parent) : QWidget(parent), poland(QLocale::Polish, QLocale::Poland)
 {
 	QTextCodec::setCodecForLocale(QTextCodec::codecForName ("UTF-8"));
 	m_Rate = rate;
-	m_Test = new Test(m_Rate->returnsTest());
+	m_Test.reset(new Test(m_Rate->returnsTest()));
 	m_NameWinding = nameWinding;
 
 	createWidget();
@@ -327,17 +327,6 @@ void RatingWidget::rate()
 	setLineEditWidget();
 	setLineEditWidgetRate();
 }
-/*void RatingWidget::save()
-{
-	QString fileName = QFileDialog::getSaveFileName(this,tr("Zapisz plik jako..."), "/home/*.glinka", tr("Pliki txt (*.glinka)"));
-
-	if (!fileName.isEmpty())
-	{
-		if (m_Rate->returnsRateTotal()== 0.0)
-			getLineRatingWidget();
-		m_Rate->writeRatingInsulation(fileName.toStdString());
-	}
-}*/
 void RatingWidget::setRatingWidget()
 {
 	*m_Test = m_Rate->returnsTest();
@@ -346,7 +335,7 @@ void RatingWidget::setRatingWidget()
 	setCustomPlot();
 
 }
-RatingInsulation *RatingWidget::returnsm_Rate()
+std::shared_ptr<RatingInsulation> RatingWidget::returnsm_Rate()
 {
 	return m_Rate;
 }

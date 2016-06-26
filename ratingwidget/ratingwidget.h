@@ -1,29 +1,9 @@
 #ifndef RATINGWIDGET_H
 #define RATINGWIDGET_H
+
 #include <QtGui>
-#include <QAction>
-#include <QToolBar>
-#include <QMenu>
-#include <QApplication>
-#include <QMenuBar>
-#include <QStatusBar>
-#include <QMainWindow>
-#include <QFormLayout>
-#include <QLineEdit>
-#include <QLabel>
-#include <QTableWidget>
-#include <QFile>
-#include <QDataStream>
-#include <QPushButton>
-#include <QWidget>
-#include <QDockWidget>
-#include <QGroupBox>
-#include <QFileDialog>
-#include <QString>
-#include <QLocale>
-#include <QStyle>
-#include <QSpacerItem>
 #include <iterator>
+#include <memory>
 
 #include "qcustomplot/qcustomplot.h"
 #include "glinka2/glinka2.h"
@@ -58,8 +38,8 @@ class RatingWidget : public QWidget
 
 		QCustomPlot *m_CustomPlot;
 
-		Test *m_Test;
-		RatingInsulation *m_Rate;
+		std::shared_ptr<Test> m_Test;
+		std::shared_ptr<RatingInsulation> m_Rate;
 		QLocale poland;
 		QString m_NameWinding;
 
@@ -73,12 +53,13 @@ class RatingWidget : public QWidget
 
 	public:
 		explicit RatingWidget(QWidget *parent = 0);
-		RatingWidget(QString nameWinding, RatingInsulation *rate, QWidget *parent);
-		void news();
-		//void save();
-		void setRatingWidget();
-		RatingInsulation *returnsm_Rate();
+		explicit RatingWidget(QString nameWinding, std::shared_ptr<RatingInsulation> rate, QWidget *parent = 0);
+
+		std::shared_ptr<RatingInsulation> returnsm_Rate();
 		QString &returnsNameWinding(){return m_NameWinding;}
+
+		void news();
+		void setRatingWidget();
 		void setCustomPlot();
 		void setLineEditWidget();
 		void setLineEditWidgetRate();

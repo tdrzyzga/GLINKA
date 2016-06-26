@@ -77,7 +77,7 @@ void MainWindow::news()
 		numberWindings = QInputDialog::getInt(this, tr("QInputDialog::getInteger()"),
 									 tr("Podaj ilość uzwojeń:"), 2, 0, 100, 1, &ok);
 		if (ok)
-			createTabWidgetSave(numberWindings);
+			createTabWidgetNew(numberWindings);
 	}
 	else
 	{
@@ -91,11 +91,16 @@ void MainWindow::news()
 									 tr("Podaj ilość uzwojeń:"), 2, 0, 100, 1, &ok);
 		if (ok)
 		{
+			//for (int i=0; i<m_TabWidget->count(); ++i)
+			//{
+			//	m_TabWidget->removeTab(i);
+			//}
 			m_TabWidget->clear();
 			m_VectorRatingWidget.clear();
-			delete m_Motor;
+			m_MotorWidget->deleteLater();
+			m_Motor.reset();
 
-			createTabWidgetSave(numberWindings);
+			createTabWidgetNew(numberWindings);
 		}
 	}
 
@@ -139,7 +144,8 @@ void MainWindow::open()
 		{
 			m_TabWidget->clear();
 			m_VectorRatingWidget.clear();
-			delete m_Motor;
+			m_MotorWidget->deleteLater();
+			m_Motor.reset();
 
 			createTabWidgetOpen(fileName);
 		}
@@ -147,9 +153,9 @@ void MainWindow::open()
 	if (!fileName.isEmpty())
 		setCentralWidget(m_TabWidget);
 }
-void MainWindow::createTabWidgetSave(int numberWindings)
+void MainWindow::createTabWidgetNew(int numberWindings)
 {
-	m_Motor = new Motor();
+	m_Motor.reset(new Motor());
 	m_TabWidget = new QTabWidget(this);
 
 	for (int i=0; i<numberWindings; ++i)
@@ -163,7 +169,7 @@ void MainWindow::createTabWidgetSave(int numberWindings)
 }
 void MainWindow::createTabWidgetOpen(QString fileName)
 {
-	m_Motor = new Motor();
+	m_Motor.reset(new Motor());
 	m_Motor->getMotor(fileName.toStdString());
 	int numberWindings = m_Motor->returnsm_NumberWindings();
 	std::cout<<"Liczba uzwojen "<<numberWindings<<std::endl;

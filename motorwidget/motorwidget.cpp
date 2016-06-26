@@ -1,6 +1,6 @@
 #include "motorwidget.h"
 
-MotorWidget::MotorWidget(Motor *motor, QTabBar *tabBar, QVector<RatingWidget *> &vectorRatingWidget, int numberButton, QWidget *parent) : QWidget(parent)
+MotorWidget::MotorWidget(std::shared_ptr<Motor> motor, QTabBar *tabBar, QVector<RatingWidget *> &vectorRatingWidget, int numberButton, QWidget *parent) : QWidget(parent)
 {
 	m_VectorRatingWidget = vectorRatingWidget;
 	m_NumberButton = numberButton;
@@ -142,7 +142,4 @@ void MotorWidget::setLineMotorWidget()
 	m_LineNumber->setText(QString::fromStdString(m_Motor->setRatedData().m_Number));
 
 	m_LinePower->setText(QString::number(m_Motor->setRatedData().m_Power));
-
-
-
 }

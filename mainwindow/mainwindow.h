@@ -3,33 +3,8 @@
 
 #include <QtGui>
 #include <QLocale>
-/*
-#include <QAction>
-#include <QToolBar>
-#include <QMenu>
-#include <QApplication>
-#include <QMenuBar>
-#include <QStatusBar>
-#include <QMainWindow>
-#include <QFormLayout>
-#include <QLineEdit>
-#include <QLabel>
-#include <QTableWidget>
-#include <QFile>
-#include <QDataStream>
-#include <QPushButton>
-#include <QWidget>
-#include <QDockWidget>
-#include <QGroupBox>
-#include <QFileDialog>
-#include <QString>
-#include <QLocale>
-#include <QStyle>
-#include <QSpacerItem>
-#include <iterator>*/
 
 #include "qcustomplot/qcustomplot.h"
-//#include "glinka/glinka.h"
 #include "glinka2/glinka2.h"
 #include "ratingwidget/ratingwidget.h"
 #include "motor/motor.h"
@@ -51,7 +26,7 @@ class MainWindow : public QMainWindow
 		QToolBar *m_FileToolBar;
 
 		QVector<RatingWidget *> m_VectorRatingWidget;
-		Motor *m_Motor;
+		std::shared_ptr<Motor> m_Motor;
 		QTabWidget *m_TabWidget;
 		MotorWidget *m_MotorWidget;
 
@@ -59,7 +34,7 @@ class MainWindow : public QMainWindow
 		void createMenus();
 		void createStatusBar();
 		void createToolBar();
-		void createTabWidgetSave(int numberWindings);
+		void createTabWidgetNew(int numberWindings);
 		void createTabWidgetOpen(QString fileName);
 
 	private slots:

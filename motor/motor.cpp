@@ -16,7 +16,7 @@ Motor::Motor(RatedData &ratedData)
 	m_RatedData.m_Power = ratedData.m_Power;
 	m_NumberWindings = 0;
 }
-Motor::Motor(RatedData &ratedData, std::vector<RatingInsulation *> &vectorWindings, std::vector<std::string> vectorNameWindings)
+Motor::Motor(RatedData &ratedData, std::vector<std::shared_ptr<RatingInsulation>> &vectorWindings, std::vector<std::string> vectorNameWindings)
 {
 	m_RatedData.m_Name = ratedData.m_Name;
 	m_RatedData.m_Type = ratedData.m_Type;
@@ -29,12 +29,12 @@ Motor::Motor(RatedData &ratedData, std::vector<RatingInsulation *> &vectorWindin
 	m_VectorWindings = vectorWindings;
 }
 
-void Motor::setVectorWindings(RatingInsulation *rate)
+void Motor::setVectorWindings(std::shared_ptr<RatingInsulation> rate)
 {
 	m_VectorWindings.push_back(rate);
 	++m_NumberWindings;
 }
-RatingInsulation *Motor::returnsRatingInsulation(int i)
+std::shared_ptr<RatingInsulation> Motor::returnsRatingInsulation(int i)
 {
 	return m_VectorWindings[i];
 }
@@ -95,11 +95,11 @@ void Motor::getMotor(const std::string &name)
 	place = inFile.tellg();
 	inFile.close();
 
-	RatingInsulation *tempRatingInsulation;
+	std::shared_ptr<RatingInsulation> tempRatingInsulation;
 
 	for (int i=0; i<m_NumberWindings; ++i)
 	{
-		tempRatingInsulation = new RatingInsulation();
+		tempRatingInsulation.reset(new RatingInsulation());
 		place = tempRatingInsulation->getRatingInsulation(name, place);
 		m_VectorWindings.push_back(tempRatingInsulation);
 	}
