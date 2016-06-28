@@ -38,6 +38,7 @@ class MotorWidget : public QWidget
 		void createMainWidget();
 		void getLineMotorWidget();
 		void setLineMotorWidget();
+		~MotorWidget(){}
 };
 
 #endif // MOTORWIDGET_H

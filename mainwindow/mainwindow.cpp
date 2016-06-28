@@ -6,6 +6,8 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
 	QTextCodec::setCodecForLocale(QTextCodec::codecForName ("UTF-8"));
 
 	//ratingWidget = new RatingWidget(this);
+	m_TabWidget = nullptr;
+	m_MotorWidget = nullptr;
 
 	createFileActions();
 	createMenus();
@@ -156,7 +158,9 @@ void MainWindow::open()
 void MainWindow::createTabWidgetNew(int numberWindings)
 {
 	m_Motor.reset(new Motor());
-	m_TabWidget = new QTabWidget(this);
+
+	if (!m_TabWidget)
+		m_TabWidget = new QTabWidget(this);
 
 	for (int i=0; i<numberWindings; ++i)
 	{
@@ -173,7 +177,9 @@ void MainWindow::createTabWidgetOpen(QString fileName)
 	m_Motor->getMotor(fileName.toStdString());
 	int numberWindings = m_Motor->returnsm_NumberWindings();
 	std::cout<<"Liczba uzwojen "<<numberWindings<<std::endl;
-	m_TabWidget = new QTabWidget(this);
+
+	if (!m_TabWidget)
+		m_TabWidget = new QTabWidget(this);
 
 	for (int i=0; i<numberWindings; ++i)
 	{

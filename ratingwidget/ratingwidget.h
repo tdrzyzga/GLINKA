@@ -64,6 +64,8 @@ class RatingWidget : public QWidget
 		void setLineEditWidget();
 		void setLineEditWidgetRate();
 		void getLineRatingWidget();
+
+		~RatingWidget(){}
 };
 
 #endif // RATINGWIDGET_H

@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "glinka2/glinka2.h"
-//
+
 struct RatedData
 {
 	std::string m_Name;
