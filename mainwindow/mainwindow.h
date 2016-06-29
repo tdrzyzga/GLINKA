@@ -29,6 +29,7 @@ class MainWindow : public QMainWindow
 		std::shared_ptr<Motor> m_Motor;
 		QTabWidget *m_TabWidget;
 		MotorWidget *m_MotorWidget;
+		QString m_fileNameOpen;
 
 		void createFileActions();
 		void createMenus();
