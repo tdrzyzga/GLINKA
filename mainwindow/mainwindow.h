@@ -37,6 +37,7 @@ class MainWindow : public QMainWindow
 		void createToolBar();
 		void createTabWidgetNew(int numberWindings);
 		void createTabWidgetOpen(QString fileName);
+
 		void clearWidget();
 		void getLineDate();
 

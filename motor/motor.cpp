@@ -58,7 +58,7 @@ void Motor::writeMotor(const std::string &name)const
 	for (auto x:m_VectorWindings)
 		x->writeRatingInsulation(name);
 
-	outFile.open(name, ios_base::out | ios_base::app);// | ios_base::binary);
+	outFile.open(name, ios_base::out | ios_base::app);
 
 	if (!outFile.is_open())
 	{

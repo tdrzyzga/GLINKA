@@ -71,6 +71,7 @@ void MainWindow::createToolBar()
 void MainWindow::news()
 {
 	bool ok;
+
 	int numberWindings;
 
 	if(m_VectorRatingWidget.isEmpty())
@@ -148,6 +149,7 @@ void MainWindow::open()
 			createTabWidgetOpen(m_FileNameOpen);
 		}
 	}
+
 	if (!m_FileNameOpen.isEmpty())
 		setCentralWidget(m_TabWidget);
 }
@@ -172,8 +174,9 @@ void MainWindow::createTabWidgetOpen(QString fileName)
 {
 	m_Motor.reset(new Motor());
 	m_Motor->getMotor(fileName.toStdString());
+
 	int numberWindings = m_Motor->returnsm_NumberWindings();
-	std::cout<<"Liczba uzwojen "<<numberWindings<<std::endl;
+	//std::cout<<"Liczba uzwojen "<<numberWindings<<std::endl;
 
 	if (!m_TabWidget)
 		m_TabWidget = new QTabWidget(this);

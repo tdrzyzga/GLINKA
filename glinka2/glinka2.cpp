@@ -54,24 +54,25 @@ void Test::reconstruction(const std::string &name)
 		exit(EXIT_FAILURE);
 	}
 
-	pair<double, double> temp_glinka;
-	pair<double, double> min;
+	pair<double, double> pairTempGlinka;
+	pair<double, double> minVoltageAndTime;
+
 	bool min_get = false;
-	while (inFile >> temp_glinka.second && inFile >> temp_glinka.first)
+	while (inFile >> pairTempGlinka.second && inFile >> pairTempGlinka.first)
 	{
-		if (temp_glinka.first >= 0.09 && !min_get)
+		if (pairTempGlinka.first >= 0.09 && !min_get)
 		{
-			min = temp_glinka;
+			minVoltageAndTime = pairTempGlinka;
 			min_get = true;
 		}
-		glinka.insert(temp_glinka);
+		glinka.insert(pairTempGlinka);
 	}
 	inFile.close();
 
-	multimap<double, double>::reverse_iterator max=glinka.rbegin();
+	multimap<double, double>::reverse_iterator maxVoltageAndTime=glinka.rbegin();
 
-	m_TD.m_TimeReconstruction=max->second-min.second;
-	m_TD.m_MaxVoltage=max->first;
+	m_TD.m_TimeReconstruction=maxVoltageAndTime->second-minVoltageAndTime.second;
+	m_TD.m_MaxVoltage=maxVoltageAndTime->first;
 }
 void Test::setTest()
 {
@@ -171,11 +172,11 @@ std::streampos Test::getTest(const std::string &name, std::streampos place)
 
 	int sizeMultimap;
 	inFile.read((char *) &sizeMultimap, sizeof sizeMultimap);
-	pair<double, double>temp_glinka;
+	pair<double, double>pairTempGlinka;
 	for (int i=0; i<sizeMultimap; ++i)
 	{
-		inFile.read((char *) &temp_glinka, sizeof temp_glinka);
-		glinka.insert(temp_glinka);
+		inFile.read((char *) &pairTempGlinka, sizeof pairTempGlinka);
+		glinka.insert(pairTempGlinka);
 	}
 	place = inFile.tellg();
 	inFile.close();

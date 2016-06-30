@@ -29,13 +29,15 @@ class MotorWidget : public QWidget
 		QTabBar *m_TabBar;
 		std::shared_ptr<Motor> m_Motor;
 
+		void createRatedData();
+		void createLabelButton();
+		void createMainWidget();
+
 	private slots:
 		void addDateReconstruction(int);
 	public:
 		explicit MotorWidget(std::shared_ptr<Motor> motor,QTabBar *tabBar, QVector<RatingWidget *> &vectorRatingWidget,int numberButton, QWidget *parent = 0);
-		void createRatedData();
-		void createLabelButton();
-		void createMainWidget();
+
 		void getLineMotorWidget();
 		void setLineMotorWidget();
 		~MotorWidget(){}

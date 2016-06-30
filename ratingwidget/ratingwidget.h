@@ -48,6 +48,11 @@ class RatingWidget : public QWidget
 		void createLineEditWidgetRate();
 		void createCustomPlot();
 
+		void setCustomPlot();
+		void setLineEditWidget();
+		void setLineEditWidgetRate();
+
+
 	private slots:
 		void rate();
 
@@ -60,9 +65,6 @@ class RatingWidget : public QWidget
 
 		void news();
 		void setRatingWidget();
-		void setCustomPlot();
-		void setLineEditWidget();
-		void setLineEditWidgetRate();
 		void getLineRatingWidget();
 
 		~RatingWidget(){}

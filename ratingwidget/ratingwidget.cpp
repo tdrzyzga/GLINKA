@@ -250,14 +250,25 @@ void RatingWidget::setCustomPlot()
 	std::multimap<double, double> glinka(m_Test->returnsGlinka());
 	QVector<double> x;
 	QVector<double> y;
+	QVector<double> min;
+	QVector<double> max;
 	for (auto i:glinka)
 	{
 		y.push_back(i.first);
 		x.push_back(i.second);
 
 	}
+
+	for (int i=0; i<=m_Test->returnsMaxVoltage(); ++i)
+	{
+		min.push_back(10);
+		max.push_back(i);
+	}
 	//m_CustomPlot->addGraph();
 	m_CustomPlot->graph(0)->setData(x, y);
+	m_CustomPlot->addGraph();
+	m_CustomPlot->graph(1)->setData(min, max);
+
 	//m_CustomPlot->graph(0)->setName(tr("Napięcie odbudowy [V]"));
 	//m_CustomPlot->xAxis->setLabel(tr("Czas [s]"));
 	//m_CustomPlot->yAxis->setLabel(tr("Napięcie odbudowy [V]"));
@@ -311,6 +322,7 @@ void RatingWidget::news()
 		m_Test->resetTest();
 		m_Rate->resetRate();
 	}
+
 	if (!fileName.isEmpty())
 	{
 		m_Test->reconstruction(fileName.toStdString());
@@ -322,8 +334,10 @@ void RatingWidget::news()
 void RatingWidget::rate()
 {
 	getLineRatingWidget();
+
 	m_Rate->rateTotal();
-	m_Rate->showRate();
+	//m_Rate->showRate();
+
 	setLineEditWidget();
 	setLineEditWidgetRate();
 }
