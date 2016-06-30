@@ -29,7 +29,7 @@ class MainWindow : public QMainWindow
 		std::shared_ptr<Motor> m_Motor;
 		QTabWidget *m_TabWidget;
 		MotorWidget *m_MotorWidget;
-		QString m_fileNameOpen;
+		QString m_FileNameOpen;
 
 		void createFileActions();
 		void createMenus();
@@ -37,6 +37,8 @@ class MainWindow : public QMainWindow
 		void createToolBar();
 		void createTabWidgetNew(int numberWindings);
 		void createTabWidgetOpen(QString fileName);
+		void clearWidget();
+		void getLineDate();
 
 	private slots:
 		void news();
