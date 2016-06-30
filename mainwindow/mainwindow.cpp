@@ -80,31 +80,15 @@ void MainWindow::news()
 		if (ok)
 			createTabWidgetNew(numberWindings);
 	}
-	else if (!m_VectorRatingWidget.isEmpty() && m_FileNameOpen.isEmpty())
+	else if (!m_VectorRatingWidget.isEmpty())
 	{
 		int ret = QMessageBox::warning(this, tr(""), tr("Zapisać plik?"),
 									   QMessageBox::Ok | QMessageBox::Cancel,
 									   QMessageBox::Ok);
 		if (ret==QMessageBox::Ok)
+		{
 			save();
-
-		numberWindings = QInputDialog::getInt(this, tr("QInputDialog::getInteger()"),
-									 tr("Podaj ilość uzwojeń:"), 2, 0, 100, 1, &ok);
-		if (ok)
-		{
-			clearWidget();
-			createTabWidgetNew(numberWindings);
-		}
-	}
-	else if (!m_FileNameOpen.isEmpty())
-	{
-		int ret = QMessageBox::warning(this, tr(""), tr("Zapisać plik?"),
-										   QMessageBox::Ok | QMessageBox::Cancel,
-										   QMessageBox::Ok);
-		if (ret == QMessageBox::Ok)
-		{
-			getLineDate();
-			m_Motor->writeMotor(m_FileNameOpen.toStdString());
+			m_FileNameOpen.clear();
 		}
 
 		numberWindings = QInputDialog::getInt(this, tr("QInputDialog::getInteger()"),
@@ -114,7 +98,6 @@ void MainWindow::news()
 			clearWidget();
 			createTabWidgetNew(numberWindings);
 		}
-		m_FileNameOpen.clear();
 	}
 
 	if (ok)
@@ -128,13 +111,13 @@ void MainWindow::save()
 
 		m_FileNameOpen = QFileDialog::getSaveFileName(this,tr("Zapisz plik jako..."), "/home/*.glinka", tr("Pliki txt (*.glinka)"));
 
-		if (!fileNameOpen.isEmpty())
-			m_Motor->writeMotor(fileName.toStdString());
+		if (!m_FileNameOpen.isEmpty())
+			m_Motor->writeMotor(m_FileNameOpen.toStdString());
 	}
 	else if(!m_FileNameOpen.isEmpty())
 	{
 		getLineDate();
-		m_Motor->writeMotor(fileName.toStdString());
+		m_Motor->writeMotor(m_FileNameOpen.toStdString());
 	}
 }
 void MainWindow::open()
@@ -146,13 +129,16 @@ void MainWindow::open()
 		if (!m_FileNameOpen.isEmpty())
 			createTabWidgetOpen(m_FileNameOpen);
 	}
-	else
+	else if(!m_VectorRatingWidget.isEmpty())
 	{
 		int ret = QMessageBox::warning(this, tr(""), tr("Zapisać plik?"),
 									   QMessageBox::Ok | QMessageBox::Cancel,
 									   QMessageBox::Ok);
 		if (ret==QMessageBox::Ok)
+		{
 			save();
+			m_FileNameOpen.clear();
+		}
 
 		m_FileNameOpen = QFileDialog::getOpenFileName(this,tr("Otwórz..."), "/home/", tr("Pliki glinka (*.glinka)"));
 
