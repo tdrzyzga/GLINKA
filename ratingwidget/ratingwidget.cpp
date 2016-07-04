@@ -247,11 +247,15 @@ void RatingWidget::createCustomPlot()
 }
 void RatingWidget::setCustomPlot()
 {
-	std::multimap<double, double> glinka(m_Test->returnsGlinka());
+	std::multimap<double, double> glinka(m_Test->returnsm_MMGlinkaVoltageTime());
 	QVector<double> x;
 	QVector<double> y;
-	QVector<double> min;
-	QVector<double> max;
+	QVector<double> minX;
+	QVector<double> minY;
+
+	QVector<double> maxX;
+	QVector<double> maxY;
+
 	for (auto i:glinka)
 	{
 		y.push_back(i.first);
@@ -259,15 +263,24 @@ void RatingWidget::setCustomPlot()
 
 	}
 
-	for (int i=0; i<=m_Test->returnsMaxVoltage(); ++i)
+	for (int i=0; i<=m_Test->returnsPairMaxVoltageTime().first; ++i)
 	{
-		min.push_back(10);
-		max.push_back(i);
+		minX.push_back(m_Test->returnsPairMinVoltageTime().second);
+		minY.push_back(i);
 	}
+
+	for (int i=0; i<=m_Test->returnsPairMaxVoltageTime().first; ++i)
+	{
+		maxX.push_back(m_Test->returnsPairMaxVoltageTime().second);
+		maxY.push_back(i);
+	}
+
 	//m_CustomPlot->addGraph();
 	m_CustomPlot->graph(0)->setData(x, y);
 	m_CustomPlot->addGraph();
-	m_CustomPlot->graph(1)->setData(min, max);
+	m_CustomPlot->graph(1)->setData(minX, minY);
+	m_CustomPlot->addGraph();
+	m_CustomPlot->graph(2)->setData(maxX, maxY);
 
 	//m_CustomPlot->graph(0)->setName(tr("Napięcie odbudowy [V]"));
 	//m_CustomPlot->xAxis->setLabel(tr("Czas [s]"));

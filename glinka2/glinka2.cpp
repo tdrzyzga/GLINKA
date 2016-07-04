@@ -11,35 +11,40 @@
 
 Test::Test()
 {
-	m_TD.m_RatedVoltage = 0.0;
-	m_TD.m_TestVoltage = 0.0;
-	m_TD.m_MaxVoltage = 0.0;
-	m_TD.m_ResistanceAfter60s = 0.0;
-	m_TD.m_ResistanceAfter15s = 0.0;
-	m_TD.m_TimeShortCircuit = 0.0;
-	m_TD.m_TimeReconstruction = 0.0;
+	m_TechnicalData.m_RatedVoltage = 0.0;
+	m_TechnicalData.m_TestVoltage = 0.0;
+	m_TechnicalData.m_MaxVoltage = 0.0;
+	m_TechnicalData.m_ResistanceAfter60s = 0.0;
+	m_TechnicalData.m_ResistanceAfter15s = 0.0;
+	m_TechnicalData.m_TimeShortCircuit = 0.0;
+	m_TechnicalData.m_TimeReconstruction = 0.0;
 }
 Test::Test(const Test &ts)
 {
-	m_TD.m_RatedVoltage = ts.m_TD.m_RatedVoltage;
-	m_TD.m_TestVoltage = ts.m_TD.m_TestVoltage;
-	m_TD.m_MaxVoltage = ts.m_TD.m_MaxVoltage;
-	m_TD.m_ResistanceAfter60s = ts.m_TD.m_ResistanceAfter60s;
-	m_TD.m_ResistanceAfter15s = ts.m_TD.m_ResistanceAfter15s;
-	m_TD.m_TimeShortCircuit = ts.m_TD.m_TimeShortCircuit;
-	m_TD.m_TimeReconstruction = ts.m_TD.m_TimeReconstruction;
-	glinka = ts.glinka;
+	m_TechnicalData.m_RatedVoltage = ts.m_TechnicalData.m_RatedVoltage;
+	m_TechnicalData.m_TestVoltage = ts.m_TechnicalData.m_TestVoltage;
+	m_TechnicalData.m_MaxVoltage = ts.m_TechnicalData.m_MaxVoltage;
+	m_TechnicalData.m_ResistanceAfter60s = ts.m_TechnicalData.m_ResistanceAfter60s;
+	m_TechnicalData.m_ResistanceAfter15s = ts.m_TechnicalData.m_ResistanceAfter15s;
+	m_TechnicalData.m_TimeShortCircuit = ts.m_TechnicalData.m_TimeShortCircuit;
+	m_TechnicalData.m_TimeReconstruction = ts.m_TechnicalData.m_TimeReconstruction;
+	m_TechnicalData.m_PairMinVoltageTime = ts.m_TechnicalData.m_PairMinVoltageTime;
+	m_TechnicalData.m_PairMaxVoltageTime = ts.m_TechnicalData.m_PairMaxVoltageTime;
+	m_MMGlinkaVoltageTime = ts.m_MMGlinkaVoltageTime;
 }
-Test::Test(double rV, double tV, double mV, double r60, double r15, double tSC, double tR, std::multimap<double, double> &gl)
+Test::Test(double rV, double tV, double mV, double r60, double r15, double tSC, double tR, std::multimap<double, double> &gl,
+		   std::pair<double, double> &pMaxV, std::pair<double, double> &pMinV)
 {
-	m_TD.m_RatedVoltage = rV;
-	m_TD.m_TestVoltage = tV;
-	m_TD.m_MaxVoltage = mV;
-	m_TD.m_ResistanceAfter60s = r60;
-	m_TD.m_ResistanceAfter15s = r15;
-	m_TD.m_TimeShortCircuit = tSC;
-	m_TD.m_TimeReconstruction = tR;
-	glinka = gl;
+	m_TechnicalData.m_RatedVoltage = rV;
+	m_TechnicalData.m_TestVoltage = tV;
+	m_TechnicalData.m_MaxVoltage = mV;
+	m_TechnicalData.m_ResistanceAfter60s = r60;
+	m_TechnicalData.m_ResistanceAfter15s = r15;
+	m_TechnicalData.m_TimeShortCircuit = tSC;
+	m_TechnicalData.m_TimeReconstruction = tR;
+	m_TechnicalData.m_PairMinVoltageTime = pMinV;
+	m_TechnicalData.m_PairMaxVoltageTime = pMaxV;
+	m_MMGlinkaVoltageTime = gl;
 }
 void Test::reconstruction(const std::string &name)
 {
@@ -54,25 +59,26 @@ void Test::reconstruction(const std::string &name)
 		exit(EXIT_FAILURE);
 	}
 
-	pair<double, double> pairTempGlinka;
-	pair<double, double> minVoltageAndTime;
+	pair<double, double> pairTempGlinkaVoltageTime;
+	//pair<double, double> minVoltageAndTime;
 
 	bool min_get = false;
-	while (inFile >> pairTempGlinka.second && inFile >> pairTempGlinka.first)
+	while (inFile >> pairTempGlinkaVoltageTime.second && inFile >> pairTempGlinkaVoltageTime.first)
 	{
-		if (pairTempGlinka.first >= 0.09 && !min_get)
+		if (pairTempGlinkaVoltageTime.first >= 0.09 && !min_get)
 		{
-			minVoltageAndTime = pairTempGlinka;
+			m_TechnicalData.m_PairMinVoltageTime = pairTempGlinkaVoltageTime;
 			min_get = true;
 		}
-		glinka.insert(pairTempGlinka);
+		m_MMGlinkaVoltageTime.insert(pairTempGlinkaVoltageTime);
 	}
 	inFile.close();
 
-	multimap<double, double>::reverse_iterator maxVoltageAndTime=glinka.rbegin();
-
-	m_TD.m_TimeReconstruction=maxVoltageAndTime->second-minVoltageAndTime.second;
-	m_TD.m_MaxVoltage=maxVoltageAndTime->first;
+	multimap<double, double>::reverse_iterator maxVoltageAndTime=m_MMGlinkaVoltageTime.rbegin();
+	m_TechnicalData.m_PairMaxVoltageTime.first = maxVoltageAndTime->first;
+	m_TechnicalData.m_PairMaxVoltageTime.second = maxVoltageAndTime->second;
+	m_TechnicalData.m_TimeReconstruction=maxVoltageAndTime->second-m_TechnicalData.m_PairMinVoltageTime.second;
+	m_TechnicalData.m_MaxVoltage=maxVoltageAndTime->first;
 }
 void Test::setTest()
 {
@@ -82,15 +88,15 @@ void Test::setTest()
 	cout << "Podaj nazwę pliku do przetworzenia: ";
 	getline(cin, name);
 	cout << "Napięcie znamonowe [V]: ";
-	cin >> m_TD.m_RatedVoltage;
+	cin >> m_TechnicalData.m_RatedVoltage;
 	cout << "Napięcie probiercze [V]: ";
-	cin >> m_TD.m_TestVoltage;
+	cin >> m_TechnicalData.m_TestVoltage;
 	cout << "Rezystancja po 60 sekundach [kOhm]: ";
-	cin >> m_TD.m_ResistanceAfter60s;
+	cin >> m_TechnicalData.m_ResistanceAfter60s;
 	cout << "Rezystancja po 15 sekundach [kOhm]: ";
-	cin >> m_TD.m_ResistanceAfter15s;
+	cin >> m_TechnicalData.m_ResistanceAfter15s;
 	cout << "Czas zwarcia [s]: ";
-	cin >> m_TD.m_TimeShortCircuit;
+	cin >> m_TechnicalData.m_TimeShortCircuit;
 }
 void Test::showTest() const
 {
@@ -106,28 +112,32 @@ void Test::showTest() const
 
 	cout  << fixed << setprecision(2);
 	cout <<setw(wt)<<left<< "Napiecie znamonowe: " << setw(wt2)<<right
-			<< m_TD.m_RatedVoltage<< " V" << endl;
+			<< m_TechnicalData.m_RatedVoltage<< " V" << endl;
 	cout <<setw(wt)<<left<< "Napiecie probiercze: " << setw(wt2)<<right
-			<< m_TD.m_TestVoltage<< " V" << endl;
+			<< m_TechnicalData.m_TestVoltage<< " V" << endl;
 	cout <<setw(wt)<<left<< "Maksymalne napiecie odbudowy: " << setw(wt2)<<right
-			<< m_TD.m_MaxVoltage << " V" << endl;
+			<< m_TechnicalData.m_MaxVoltage << " V" << endl;
 	cout <<setw(wt)<<left<< "Rezystancja po 60 sekundach: " << setw(wt2)<<right
-			<< m_TD.m_ResistanceAfter60s << " kOhm" << endl;
+			<< m_TechnicalData.m_ResistanceAfter60s << " kOhm" << endl;
 	cout <<setw(wt)<<left<< "Rezystancja 15 sekundach: " << setw(wt2)<<right
-			<< m_TD.m_ResistanceAfter15s << " kOhm" << endl;
+			<< m_TechnicalData.m_ResistanceAfter15s << " kOhm" << endl;
 	//cout<<"Czas zwarcia: "<<fixed<<setprecision(2)<<m_TimeShortCircuit<<" s"<<endl;
 	//cout<<"Czas odbudowy napięcia: "<<fixed<<setprecision(2)<<m_TimeReconstruction<<" s"<<endl;
 }
 void Test::resetTest()
 {
-	m_TD.m_RatedVoltage = 0.0;
-	m_TD.m_TestVoltage = 0.0;
-	m_TD.m_MaxVoltage = 0.0;
-	m_TD.m_ResistanceAfter60s = 0.0;
-	m_TD.m_ResistanceAfter15s = 0.0;
-	m_TD.m_TimeShortCircuit = 0.0;
-	m_TD.m_TimeReconstruction = 0.0;
-	glinka.clear();
+	m_TechnicalData.m_RatedVoltage = 0.0;
+	m_TechnicalData.m_TestVoltage = 0.0;
+	m_TechnicalData.m_MaxVoltage = 0.0;
+	m_TechnicalData.m_ResistanceAfter60s = 0.0;
+	m_TechnicalData.m_ResistanceAfter15s = 0.0;
+	m_TechnicalData.m_TimeShortCircuit = 0.0;
+	m_TechnicalData.m_TimeReconstruction = 0.0;
+	m_TechnicalData.m_PairMinVoltageTime.first = 0.0;
+	m_TechnicalData.m_PairMinVoltageTime.second = 0.0;
+	m_TechnicalData.m_PairMaxVoltageTime.first = 0.0;
+	m_TechnicalData.m_PairMaxVoltageTime.second = 0.0;
+	m_MMGlinkaVoltageTime.clear();
 }
 void Test::writeTest(const std::string &name)const
 {
@@ -142,13 +152,13 @@ void Test::writeTest(const std::string &name)const
 		exit(EXIT_FAILURE);
 	}
 
-	int sizeStruct = sizeof m_TD;
+	int sizeStruct = sizeof m_TechnicalData;
 	outFile.write((char *) &sizeStruct, sizeof sizeStruct);
-	outFile.write((char *) &m_TD, sizeStruct);
+	outFile.write((char *) &m_TechnicalData, sizeStruct);
 
-	int sizeMultimap = glinka.size();
+	int sizeMultimap = m_MMGlinkaVoltageTime.size();
 	outFile.write((char *) &sizeMultimap, sizeof sizeMultimap);
-	for (auto x:glinka)
+	for (auto x:m_MMGlinkaVoltageTime)
 		outFile.write((char *) &x, sizeof x);
 	outFile.close();
 }
@@ -168,15 +178,15 @@ std::streampos Test::getTest(const std::string &name, std::streampos place)
 	inFile.seekg(place);
 	int sizeStruct;
 	inFile.read((char *) &sizeStruct, sizeof sizeStruct);
-	inFile.read((char *) &m_TD, sizeStruct);
+	inFile.read((char *) &m_TechnicalData, sizeStruct);
 
 	int sizeMultimap;
 	inFile.read((char *) &sizeMultimap, sizeof sizeMultimap);
-	pair<double, double>pairTempGlinka;
+	pair<double, double>pairTempGlinkaVoltageTime;
 	for (int i=0; i<sizeMultimap; ++i)
 	{
-		inFile.read((char *) &pairTempGlinka, sizeof pairTempGlinka);
-		glinka.insert(pairTempGlinka);
+		inFile.read((char *) &pairTempGlinkaVoltageTime, sizeof pairTempGlinkaVoltageTime);
+		m_MMGlinkaVoltageTime.insert(pairTempGlinkaVoltageTime);
 	}
 	place = inFile.tellg();
 	inFile.close();

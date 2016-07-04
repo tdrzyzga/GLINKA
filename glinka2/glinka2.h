@@ -22,30 +22,35 @@ private:
 			double m_ResistanceAfter15s;
 			double m_TimeShortCircuit;
 			double m_TimeReconstruction;
+			std::pair<double, double> m_PairMinVoltageTime;
+			std::pair<double, double> m_PairMaxVoltageTime;
 	};
-	TechnicalData m_TD;
-	std::multimap<double, double> glinka;
+	TechnicalData m_TechnicalData;
+	std::multimap<double, double> m_MMGlinkaVoltageTime;
 public:
 	Test();
 	Test(const Test &ts);
-	Test(double rV, double tV, double mV, double r60, double r15, double tSC, double tR, std::multimap<double, double> &gl);
+	Test(double rV, double tV, double mV, double r60, double r15, double tSC, double tR, std::multimap<double, double> &gl,
+		 std::pair<double, double> &pMaxV, std::pair<double, double> &pMinV);
 	~Test(){}
 	void reconstruction(const std::string &name);
-	double returnsRatedVoltage()const{ return m_TD.m_RatedVoltage;}
-	double returnsTestVoltage()const{ return m_TD.m_TestVoltage;}
-	double returnsMaxVoltage()const{ return m_TD.m_MaxVoltage;}
-	double returnsTimeReconstruction()const{return  m_TD.m_TimeReconstruction;}
-	double returnsResistanceAfter60s()const{ return m_TD.m_ResistanceAfter60s;}
-	double returnsResistanceAfter15s() const{return m_TD.m_ResistanceAfter15s;}
-	double returnsTimeShortCircuit()const{return m_TD.m_TimeShortCircuit;}
+	double returnsRatedVoltage()const{ return m_TechnicalData.m_RatedVoltage;}
+	double returnsTestVoltage()const{ return m_TechnicalData.m_TestVoltage;}
+	double returnsMaxVoltage()const{ return m_TechnicalData.m_MaxVoltage;}
+	double returnsTimeReconstruction()const{return  m_TechnicalData.m_TimeReconstruction;}
+	double returnsResistanceAfter60s()const{ return m_TechnicalData.m_ResistanceAfter60s;}
+	double returnsResistanceAfter15s() const{return m_TechnicalData.m_ResistanceAfter15s;}
+	double returnsTimeShortCircuit()const{return m_TechnicalData.m_TimeShortCircuit;}
+	std::pair<double, double> returnsPairMinVoltageTime()const {return m_TechnicalData.m_PairMinVoltageTime;}
+	std::pair<double, double> returnsPairMaxVoltageTime()const {return m_TechnicalData.m_PairMaxVoltageTime;}
 
-	void setRatedVoltage(double rV){ m_TD.m_RatedVoltage = rV;}
-	void setTestVoltage(double tV){ m_TD.m_TestVoltage = tV;}
-	void setMaxVoltage(double mV){ m_TD.m_MaxVoltage = mV;}
-	void setResistanceAfter60s(double r60){  m_TD.m_ResistanceAfter60s = r60;}
-	void setResistanceAfter15s(double r15){ m_TD.m_ResistanceAfter15s = r15;}
-	void setTimeShortCircuit(double tSC){ m_TD.m_TimeShortCircuit = tSC;}
-	std::multimap<double, double> returnsGlinka(){ return glinka;}
+	void setRatedVoltage(double rV){ m_TechnicalData.m_RatedVoltage = rV;}
+	void setTestVoltage(double tV){ m_TechnicalData.m_TestVoltage = tV;}
+	void setMaxVoltage(double mV){ m_TechnicalData.m_MaxVoltage = mV;}
+	void setResistanceAfter60s(double r60){  m_TechnicalData.m_ResistanceAfter60s = r60;}
+	void setResistanceAfter15s(double r15){ m_TechnicalData.m_ResistanceAfter15s = r15;}
+	void setTimeShortCircuit(double tSC){ m_TechnicalData.m_TimeShortCircuit = tSC;}
+	std::multimap<double, double> returnsm_MMGlinkaVoltageTime(){ return m_MMGlinkaVoltageTime;}
 
 	void setTest();
 	void writeTest(const std::string &name)const;
