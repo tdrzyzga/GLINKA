@@ -15,11 +15,11 @@ void CustomPlot::setCustomPlot(const Test &ts)
 	std::multimap<double, double> glinka(m_Test.returnsm_MMGlinkaVoltageTime());
 	QVector<double> x;
 	QVector<double> y;
-	QVector<double> minX;
-	QVector<double> minY;
+	QVector<double> minX(m_Test.returnsPairMinVoltageTime().second);
+	QVector<double> minY(m_Test.returnsPairMinVoltageTime().first);
 
-	QVector<double> maxX;
-	QVector<double> maxY;
+	QVector<double> maxX(m_Test.returnsPairMaxVoltageTime().second);
+	QVector<double> maxY(m_Test.returnsPairMaxVoltageTime().first);
 
 	for (auto i:glinka)
 	{
@@ -27,7 +27,7 @@ void CustomPlot::setCustomPlot(const Test &ts)
 		x.push_back(i.second);
 
 	}
-
+/*
 	for (int i=0; i<=m_Test.returnsPairMaxVoltageTime().first; ++i)
 	{
 		minX.push_back(m_Test.returnsPairMinVoltageTime().second);
@@ -38,14 +38,15 @@ void CustomPlot::setCustomPlot(const Test &ts)
 	{
 		maxX.push_back(m_Test.returnsPairMaxVoltageTime().second);
 		maxY.push_back(i);
-	}
+	}*/
 
 	addGraph();
 	graph(0)->setName(tr("Napięcie odbudowy [V]"));
-	//graph(0)->setLabel(tr("Czas [s]"));
+	xAxis->setLabel(tr("Czas [s]"));
 	graph(0)->setData(x, y);
 	addGraph();
 	graph(1)->setData(minX, minY);
+	graph(1)->setScatterStyle(QCPScatterStyle::ssDisc);
 	addGraph();
 	graph(2)->setData(maxX, maxY);
 
