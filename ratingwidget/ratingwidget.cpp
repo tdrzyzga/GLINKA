@@ -235,15 +235,15 @@ void RatingWidget::getLineRatingWidget()
 
 	*m_Rate = *m_Test;
 }
-void RatingWidget::createCustomPlot()
+/*void RatingWidget::createCustomPlot()
 {
 	m_CustomPlot = new QCustomPlot(this);
 
 	m_CustomPlot->setMinimumSize(1000, 400);
 
 	m_CustomPlot->replot();
-}
-void RatingWidget::setCustomPlot()
+}*/
+/*void RatingWidget::setCustomPlot()
 {
 	std::multimap<double, double> glinka(m_Test->returnsm_MMGlinkaVoltageTime());
 	QVector<double> x;
@@ -291,14 +291,17 @@ void RatingWidget::setCustomPlot()
 	m_CustomPlot->legend->setVisible(true);
 	m_CustomPlot->legend->setBrush(QBrush(QColor(255,255,255,230)));
 	m_CustomPlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop|Qt::AlignLeft);
-	m_CustomPlot->setInteraction(QCP::iSelectPlottables, true);
+	//m_CustomPlot->setInteraction(QCP::iRangeDrag, true);
+	//m_CustomPlot->setInteraction(QCP::iSelectPlottables, true);
+	m_CustomPlot->setInteractions(QCP::iRangeDrag | QCP::iSelectPlottables| QCP::iRangeZoom | QCP::iMultiSelect| QCP::iSelectAxes| QCP::iSelectLegend | QCP::iSelectItems | QCP::iSelectOther);
 	m_CustomPlot->replot();
-}
+}*/
 void RatingWidget::createWidget()
 {
 	createLineEditWidget();
 	createLineEditWidgetRate();
-	createCustomPlot();
+	//createCustomPlot();
+	m_CustomPlot = new CustomPlot(m_Rate);
 
 	QScrollArea *scroll= new QScrollArea(this);
 	scroll->setWidgetResizable(true);
@@ -336,7 +339,7 @@ void RatingWidget::news()
 		m_Rate->resetRate();
 
 		//for (int i=0; i<m_CustomPlot->graphCount(); ++i)
-			m_CustomPlot->clearGraphs();
+			//m_CustomPlot->clearGraphs();
 	}
 
 	if (!fileName.isEmpty())
@@ -344,7 +347,8 @@ void RatingWidget::news()
 		m_Test->reconstruction(fileName.toStdString());
 		setLineEditWidget();
 		setLineEditWidgetRate();
-		setCustomPlot();
+		//setCustomPlot();
+		m_CustomPlot->setCustomPlot();
 	}
 }
 void RatingWidget::rate()
@@ -362,7 +366,7 @@ void RatingWidget::setRatingWidget()
 	*m_Test = m_Rate->returnsTest();
 	setLineEditWidget();
 	setLineEditWidgetRate();
-	setCustomPlot();
+	m_CustomPlot->setCustomPlot();
 
 }
 std::shared_ptr<RatingInsulation> RatingWidget::returnsm_Rate()
