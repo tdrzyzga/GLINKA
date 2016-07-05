@@ -1,17 +1,17 @@
 #include "customplot.h"
 
-CustomPlot::CustomPlot()
+CustomPlot::CustomPlot(QWidget *parent): QCustomPlot(parent), m_Test()
 {
 	setMinimumSize(1000, 400);
 	replot();
 }
-CustomPlot::CustomPlot(std::shared_ptr<RatingInsulation> rate)
+CustomPlot::CustomPlot(const Test &ts, QWidget *parent): QCustomPlot(parent)
 {
-	m_Rate = rate;
+	m_Test = ts;
 }
-void CustomPlot::setCustomPlot()
+void CustomPlot::setCustomPlot(const Test &ts)
 {
-	Test m_Test(m_Rate->returnsTest());
+	m_Test = ts;
 	std::multimap<double, double> glinka(m_Test.returnsm_MMGlinkaVoltageTime());
 	QVector<double> x;
 	QVector<double> y;

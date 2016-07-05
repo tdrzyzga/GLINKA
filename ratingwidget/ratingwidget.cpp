@@ -301,7 +301,7 @@ void RatingWidget::createWidget()
 	createLineEditWidget();
 	createLineEditWidgetRate();
 	//createCustomPlot();
-	m_CustomPlot = new CustomPlot(m_Rate);
+	m_CustomPlot = new CustomPlot(this);
 
 	QScrollArea *scroll= new QScrollArea(this);
 	scroll->setWidgetResizable(true);
@@ -339,7 +339,7 @@ void RatingWidget::news()
 		m_Rate->resetRate();
 
 		//for (int i=0; i<m_CustomPlot->graphCount(); ++i)
-			//m_CustomPlot->clearGraphs();
+			m_CustomPlot->clearGraphs();
 	}
 
 	if (!fileName.isEmpty())
@@ -348,7 +348,7 @@ void RatingWidget::news()
 		setLineEditWidget();
 		setLineEditWidgetRate();
 		//setCustomPlot();
-		m_CustomPlot->setCustomPlot();
+		m_CustomPlot->setCustomPlot(*m_Test);
 	}
 }
 void RatingWidget::rate()
@@ -366,7 +366,7 @@ void RatingWidget::setRatingWidget()
 	*m_Test = m_Rate->returnsTest();
 	setLineEditWidget();
 	setLineEditWidgetRate();
-	m_CustomPlot->setCustomPlot();
+	m_CustomPlot->setCustomPlot(*m_Test);
 
 }
 std::shared_ptr<RatingInsulation> RatingWidget::returnsm_Rate()

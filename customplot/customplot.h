@@ -10,13 +10,13 @@
 class CustomPlot : public QCustomPlot
 {
 	private:
-		std::shared_ptr<RatingInsulation> m_Rate;
+		Test m_Test;
 
 	public:
-		explicit CustomPlot();
-		explicit CustomPlot(std::shared_ptr<RatingInsulation> rate);
+		explicit CustomPlot(QWidget *parent = 0);
+		explicit CustomPlot(const Test &ts, QWidget *parent = 0);
 
-		void setCustomPlot();
+		void setCustomPlot(const Test &ts);
 
 		~CustomPlot(){}
 };
