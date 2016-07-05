@@ -238,9 +238,7 @@ void RatingWidget::getLineRatingWidget()
 void RatingWidget::createCustomPlot()
 {
 	m_CustomPlot = new QCustomPlot(this);
-	m_CustomPlot->addGraph();
-	m_CustomPlot->graph(0)->setName(tr("Napięcie odbudowy [V]"));
-	m_CustomPlot->xAxis->setLabel(tr("Czas [s]"));
+
 	m_CustomPlot->setMinimumSize(1000, 400);
 
 	m_CustomPlot->replot();
@@ -275,7 +273,9 @@ void RatingWidget::setCustomPlot()
 		maxY.push_back(i);
 	}
 
-	//m_CustomPlot->addGraph();
+	m_CustomPlot->addGraph();
+	m_CustomPlot->graph(0)->setName(tr("Napięcie odbudowy [V]"));
+	m_CustomPlot->xAxis->setLabel(tr("Czas [s]"));
 	m_CustomPlot->graph(0)->setData(x, y);
 	m_CustomPlot->addGraph();
 	m_CustomPlot->graph(1)->setData(minX, minY);
@@ -334,6 +334,9 @@ void RatingWidget::news()
 	{
 		m_Test->resetTest();
 		m_Rate->resetRate();
+
+		//for (int i=0; i<m_CustomPlot->graphCount(); ++i)
+			m_CustomPlot->clearGraphs();
 	}
 
 	if (!fileName.isEmpty())

@@ -89,7 +89,6 @@ void MainWindow::news()
 		if (ret==QMessageBox::Ok)
 		{
 			save();
-			m_FileNameOpen.clear();
 		}
 
 		numberWindings = QInputDialog::getInt(this, tr("QInputDialog::getInteger()"),
@@ -98,6 +97,7 @@ void MainWindow::news()
 		{
 			clearWidget();
 			createTabWidgetNew(numberWindings);
+			m_FileNameOpen.clear();
 		}
 	}
 
@@ -208,7 +208,10 @@ void MainWindow::clearWidget()
 void MainWindow::getLineDate()
 {
 	for (auto x: m_VectorRatingWidget)
+	{
 		x->getLineRatingWidget();
+		x->returnsm_Rate()->rateTotal();
+	}
 
 	m_MotorWidget->getLineMotorWidget();
 }
