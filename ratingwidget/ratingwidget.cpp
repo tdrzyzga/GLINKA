@@ -235,73 +235,11 @@ void RatingWidget::getLineRatingWidget()
 
 	*m_Rate = *m_Test;
 }
-/*void RatingWidget::createCustomPlot()
-{
-	m_CustomPlot = new QCustomPlot(this);
-
-	m_CustomPlot->setMinimumSize(1000, 400);
-
-	m_CustomPlot->replot();
-}*/
-/*void RatingWidget::setCustomPlot()
-{
-	std::multimap<double, double> glinka(m_Test->returnsm_MMGlinkaVoltageTime());
-	QVector<double> x;
-	QVector<double> y;
-	QVector<double> minX;
-	QVector<double> minY;
-
-	QVector<double> maxX;
-	QVector<double> maxY;
-
-	for (auto i:glinka)
-	{
-		y.push_back(i.first);
-		x.push_back(i.second);
-
-	}
-
-	for (int i=0; i<=m_Test->returnsPairMaxVoltageTime().first; ++i)
-	{
-		minX.push_back(m_Test->returnsPairMinVoltageTime().second);
-		minY.push_back(i);
-	}
-
-	for (int i=0; i<=m_Test->returnsPairMaxVoltageTime().first; ++i)
-	{
-		maxX.push_back(m_Test->returnsPairMaxVoltageTime().second);
-		maxY.push_back(i);
-	}
-
-	m_CustomPlot->addGraph();
-	m_CustomPlot->graph(0)->setName(tr("Napięcie odbudowy [V]"));
-	m_CustomPlot->xAxis->setLabel(tr("Czas [s]"));
-	m_CustomPlot->graph(0)->setData(x, y);
-	m_CustomPlot->addGraph();
-	m_CustomPlot->graph(1)->setData(minX, minY);
-	m_CustomPlot->addGraph();
-	m_CustomPlot->graph(2)->setData(maxX, maxY);
-
-	//m_CustomPlot->graph(0)->setName(tr("Napięcie odbudowy [V]"));
-	//m_CustomPlot->xAxis->setLabel(tr("Czas [s]"));
-	//m_CustomPlot->yAxis->setLabel(tr("Napięcie odbudowy [V]"));
-	m_CustomPlot->xAxis->setRange(0, *(std::max_element(x.begin(), x.end())));
-	m_CustomPlot->yAxis->setRange(0, *(std::max_element(y.begin(), y.end())));
-	//m_CustomPlot->setMinimumSize(1000, 500);
-	m_CustomPlot->legend->setVisible(true);
-	m_CustomPlot->legend->setBrush(QBrush(QColor(255,255,255,230)));
-	m_CustomPlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop|Qt::AlignLeft);
-	//m_CustomPlot->setInteraction(QCP::iRangeDrag, true);
-	//m_CustomPlot->setInteraction(QCP::iSelectPlottables, true);
-	m_CustomPlot->setInteractions(QCP::iRangeDrag | QCP::iSelectPlottables| QCP::iRangeZoom | QCP::iMultiSelect| QCP::iSelectAxes| QCP::iSelectLegend | QCP::iSelectItems | QCP::iSelectOther);
-	m_CustomPlot->replot();
-}*/
 void RatingWidget::createWidget()
 {
 	createLineEditWidget();
 	createLineEditWidgetRate();
-	//createCustomPlot();
-	m_CustomPlot = new CustomPlot(this);
+	createCustomPlot();
 
 	QScrollArea *scroll= new QScrollArea(this);
 	scroll->setWidgetResizable(true);
@@ -347,8 +285,7 @@ void RatingWidget::news()
 		m_Test->reconstruction(fileName.toStdString());
 		setLineEditWidget();
 		setLineEditWidgetRate();
-		//setCustomPlot();
-		m_CustomPlot->setCustomPlot(*m_Test);
+		setCustomPlot();
 	}
 }
 void RatingWidget::rate()
@@ -366,11 +303,90 @@ void RatingWidget::setRatingWidget()
 	*m_Test = m_Rate->returnsTest();
 	setLineEditWidget();
 	setLineEditWidgetRate();
-	m_CustomPlot->setCustomPlot(*m_Test);
+	setCustomPlot();
 
 }
 std::shared_ptr<RatingInsulation> RatingWidget::returnsm_Rate()
 {
 	return m_Rate;
 }
+void RatingWidget::createCustomPlot()
+{
+	m_CustomPlot = new QCustomPlot(this);
 
+	connect(m_CustomPlot, SIGNAL(legendDoubleClick(QCPLegend*,QCPAbstractLegendItem*,QMouseEvent*)), this, SLOT(legendDoubleClick(QCPLegend*,QCPAbstractLegendItem*)));
+
+	m_CustomPlot->setMinimumSize(1000, 400);
+
+	m_CustomPlot->replot();
+}
+void RatingWidget::setCustomPlot()
+{
+	std::multimap<double, double> glinka(m_Test->returnsm_MMGlinkaVoltageTime());
+	QVector<double> x;
+	QVector<double> y;
+
+	//QVector<double> minX(m_Test.returnsPairMinVoltageTime().second);
+	//QVector<double> minY(m_Test.returnsPairMinVoltageTime().first);
+
+	//QVector<double> maxX(m_Test.returnsPairMaxVoltageTime().second);
+	//QVector<double> maxY(m_Test.returnsPairMaxVoltageTime().first);
+
+	for (auto i:glinka)
+	{
+		y.push_back(i.first);
+		x.push_back(i.second);
+
+	}
+/*
+	for (int i=0; i<=m_Test.returnsPairMaxVoltageTime().first; ++i)
+	{
+		minX.push_back(m_Test.returnsPairMinVoltageTime().second);
+		minY.push_back(i);
+	}
+
+	for (int i=0; i<=m_Test.returnsPairMaxVoltageTime().first; ++i)
+	{
+		maxX.push_back(m_Test.returnsPairMaxVoltageTime().second);
+		maxY.push_back(i);
+	}*/
+
+	m_CustomPlot->addGraph();
+	m_CustomPlot->graph(0)->setName(tr("Napięcie odbudowy [V]"));
+	m_CustomPlot->xAxis->setLabel(tr("Czas [s]"));
+	m_CustomPlot->graph(0)->setData(x, y);
+
+	//addGraph();
+	//graph(1)->setData(minX, minY);
+	//graph(1)->setScatterStyle(QCPScatterStyle::ssDisc);
+
+	//addGraph();
+	//graph(2)->setData(maxX, maxY);
+
+	m_CustomPlot->xAxis->setRange(0, *(std::max_element(x.begin(), x.end())));
+	m_CustomPlot->yAxis->setRange(0, *(std::max_element(y.begin(), y.end())));
+
+	m_CustomPlot->legend->setVisible(true);
+	m_CustomPlot->legend->setBrush(QBrush(QColor(255,255,255,230)));
+	m_CustomPlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop|Qt::AlignLeft);
+
+	m_CustomPlot->setInteractions(QCP::iRangeDrag | QCP::iSelectPlottables| QCP::iRangeZoom | QCP::iMultiSelect| QCP::iSelectAxes| QCP::iSelectLegend | QCP::iSelectItems | QCP::iSelectOther);
+
+	m_CustomPlot->replot();
+}
+void RatingWidget::legendDoubleClick(QCPLegend *legend, QCPAbstractLegendItem *item)
+{
+  // Rename a graph by double clicking on its legend item
+  Q_UNUSED(legend)
+  if (item) // only react if item was clicked (user could have clicked on border padding of legend where there is no item, then item is 0)
+  {
+	QCPPlottableLegendItem *plItem = qobject_cast<QCPPlottableLegendItem*>(item);
+	bool ok;
+	QString newName = QInputDialog::getText(this, "QCustomPlot example", "New graph name:", QLineEdit::Normal, plItem->plottable()->name(), &ok);
+	if (ok)
+	{
+	  plItem->plottable()->setName(newName);
+	  m_CustomPlot->replot();
+	}
+  }
+}

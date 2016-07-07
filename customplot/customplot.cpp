@@ -1,13 +1,14 @@
 #include "customplot.h"
 
-CustomPlot::CustomPlot(QWidget *parent): QCustomPlot(parent), m_Test()
+CustomPlot::CustomPlot(QWidget *parent): QWidget(parent), m_Test()
 {
-	setMinimumSize(1000, 400);
-	replot();
+	createCustomPlot();
 }
-CustomPlot::CustomPlot(const Test &ts, QWidget *parent): QCustomPlot(parent)
+CustomPlot::CustomPlot(const Test &ts, QWidget *parent): QWidget(parent)
 {
 	m_Test = ts;
+
+	createCustomPlot();
 }
 void CustomPlot::setCustomPlot(const Test &ts)
 {
@@ -15,11 +16,12 @@ void CustomPlot::setCustomPlot(const Test &ts)
 	std::multimap<double, double> glinka(m_Test.returnsm_MMGlinkaVoltageTime());
 	QVector<double> x;
 	QVector<double> y;
-	QVector<double> minX(m_Test.returnsPairMinVoltageTime().second);
-	QVector<double> minY(m_Test.returnsPairMinVoltageTime().first);
 
-	QVector<double> maxX(m_Test.returnsPairMaxVoltageTime().second);
-	QVector<double> maxY(m_Test.returnsPairMaxVoltageTime().first);
+	//QVector<double> minX(m_Test.returnsPairMinVoltageTime().second);
+	//QVector<double> minY(m_Test.returnsPairMinVoltageTime().first);
+
+	//QVector<double> maxX(m_Test.returnsPairMaxVoltageTime().second);
+	//QVector<double> maxY(m_Test.returnsPairMaxVoltageTime().first);
 
 	for (auto i:glinka)
 	{
@@ -40,27 +42,34 @@ void CustomPlot::setCustomPlot(const Test &ts)
 		maxY.push_back(i);
 	}*/
 
-	addGraph();
-	graph(0)->setName(tr("Napięcie odbudowy [V]"));
-	xAxis->setLabel(tr("Czas [s]"));
-	graph(0)->setData(x, y);
-	addGraph();
-	graph(1)->setData(minX, minY);
-	graph(1)->setScatterStyle(QCPScatterStyle::ssDisc);
-	addGraph();
-	graph(2)->setData(maxX, maxY);
+	m_CustomPlot->addGraph();
+	m_CustomPlot->graph(0)->setName(tr("Napięcie odbudowy [V]"));
+	m_CustomPlot->xAxis->setLabel(tr("Czas [s]"));
+	m_CustomPlot->graph(0)->setData(x, y);
 
-	//m_CustomPlot->graph(0)->setName(tr("Napięcie odbudowy [V]"));
-	//m_CustomPlot->xAxis->setLabel(tr("Czas [s]"));
-	//m_CustomPlot->yAxis->setLabel(tr("Napięcie odbudowy [V]"));
-	xAxis->setRange(0, *(std::max_element(x.begin(), x.end())));
-	yAxis->setRange(0, *(std::max_element(y.begin(), y.end())));
-	//m_CustomPlot->setMinimumSize(1000, 500);
-	legend->setVisible(true);
-	legend->setBrush(QBrush(QColor(255,255,255,230)));
-	axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop|Qt::AlignLeft);
-	//m_CustomPlot->setInteraction(QCP::iRangeDrag, true);
-	//m_CustomPlot->setInteraction(QCP::iSelectPlottables, true);
-	setInteractions(QCP::iRangeDrag | QCP::iSelectPlottables| QCP::iRangeZoom | QCP::iMultiSelect| QCP::iSelectAxes| QCP::iSelectLegend | QCP::iSelectItems | QCP::iSelectOther);
-	replot();
+	//addGraph();
+	//graph(1)->setData(minX, minY);
+	//graph(1)->setScatterStyle(QCPScatterStyle::ssDisc);
+
+	//addGraph();
+	//graph(2)->setData(maxX, maxY);
+
+	m_CustomPlot->xAxis->setRange(0, *(std::max_element(x.begin(), x.end())));
+	m_CustomPlot->yAxis->setRange(0, *(std::max_element(y.begin(), y.end())));
+
+	m_CustomPlot->legend->setVisible(true);
+	m_CustomPlot->legend->setBrush(QBrush(QColor(255,255,255,230)));
+	m_CustomPlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop|Qt::AlignLeft);
+
+	m_CustomPlot->setInteractions(QCP::iRangeDrag | QCP::iSelectPlottables| QCP::iRangeZoom | QCP::iMultiSelect| QCP::iSelectAxes| QCP::iSelectLegend | QCP::iSelectItems | QCP::iSelectOther);
+
+	m_CustomPlot->replot();
+}
+void CustomPlot::createCustomPlot()
+{
+	m_CustomPlot = new QCustomPlot(this);
+
+	m_CustomPlot->setMinimumSize(1000, 400);
+
+	m_CustomPlot->replot();
 }
