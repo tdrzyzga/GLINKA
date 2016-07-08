@@ -158,7 +158,9 @@ void MainWindow::createTabWidgetNew(int numberWindings)
 	m_Motor.reset(new Motor());
 
 	if (!m_TabWidget)
+	{
 		m_TabWidget = new QTabWidget(this);
+	}
 
 	for (int i=0; i<numberWindings; ++i)
 	{
@@ -179,7 +181,9 @@ void MainWindow::createTabWidgetOpen(QString fileName)
 	//std::cout<<"Liczba uzwojen "<<numberWindings<<std::endl;
 
 	if (!m_TabWidget)
+	{
 		m_TabWidget = new QTabWidget(this);
+	}
 
 	for (int i=0; i<numberWindings; ++i)
 	{

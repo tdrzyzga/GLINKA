@@ -3,12 +3,44 @@
 CustomPlot::CustomPlot(QWidget *parent): QWidget(parent), m_Test()
 {
 	createCustomPlot();
+	createAction();
+	createPlotBar();
+
+	createWidget();
 }
 CustomPlot::CustomPlot(const Test &ts, QWidget *parent): QWidget(parent)
 {
 	m_Test = ts;
 
 	createCustomPlot();
+}
+void CustomPlot::createAction()
+{
+	m_ChangeNameGraph = new QAction(QIcon(":/icons/icons/new.png"), tr("&Nowy"), this);
+	m_ChangeNameGraph->setStatusTip(tr("Zmień nazwę wykresu"));
+
+	connect (m_ChangeNameGraph, SIGNAL(triggered()), this, SLOT(changeNameGraph()));
+}
+void CustomPlot::createPlotBar()
+{
+	m_PlotBar = new QToolBar(this);
+
+	m_PlotBar->addAction(m_ChangeNameGraph);
+
+	m_PlotBar->setOrientation(Qt::Vertical);
+}
+
+void CustomPlot::createWidget()
+{
+	QScrollArea *scroll= new QScrollArea(this);
+	scroll->setWidgetResizable(true);
+	scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	scroll->setWidget(m_CustomPlot);
+
+	m_MainBox = new QHBoxLayout(this);
+
+	m_MainBox->addWidget(m_PlotBar);
+	m_MainBox->addWidget(scroll);
 }
 void CustomPlot::setCustomPlot(const Test &ts)
 {
@@ -69,7 +101,31 @@ void CustomPlot::createCustomPlot()
 {
 	m_CustomPlot = new QCustomPlot(this);
 
+	connect(m_CustomPlot, SIGNAL(legendDoubleClick(QCPLegend*,QCPAbstractLegendItem*,QMouseEvent*)), this, SLOT(legendDoubleClick(QCPLegend*,QCPAbstractLegendItem*)));
+
 	m_CustomPlot->setMinimumSize(1000, 400);
 
 	m_CustomPlot->replot();
+}
+void CustomPlot::legendDoubleClick(QCPLegend *legend, QCPAbstractLegendItem *item)
+{
+  // Rename a graph by double clicking on its legend item
+  Q_UNUSED(legend)
+  if (item) // only react if item was clicked (user could have clicked on border padding of legend where there is no item, then item is 0)
+  {
+	QCPPlottableLegendItem *plotTableLegendItem = qobject_cast<QCPPlottableLegendItem*>(item);
+
+	bool ok;
+
+	QString newName = QInputDialog::getText(this, tr(""), tr("Nazwa wykresu:"), QLineEdit::Normal, plotTableLegendItem->plottable()->name(), &ok);
+	if (ok)
+	{
+	  plotTableLegendItem->plottable()->setName(newName);
+	  m_CustomPlot->replot();
+	}
+  }
+}
+void CustomPlot::changeNameGraph()
+{
+	emit(legendDoubleClick(m_CustomPlot->legend, m_CustomPlot->legend->item(0)));
 }

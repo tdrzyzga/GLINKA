@@ -15,21 +15,21 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-           mainwindow/mainwindow.cpp \
-           qcustomplot/qcustomplot.cpp \
-                        glinka2/glinka2.cpp \
-                        ratingwidget/ratingwidget.cpp \
-    motor/motor.cpp \
-    motorwidget/motorwidget.cpp \
-    customplot/customplot.cpp
+			mainwindow/mainwindow.cpp \
+			qcustomplot/qcustomplot.cpp \
+			glinka2/glinka2.cpp \
+			ratingwidget/ratingwidget.cpp \
+			motor/motor.cpp \
+			motorwidget/motorwidget.cpp \
+			customplot/customplot.cpp
 
 HEADERS  += mainwindow/mainwindow.h \
             qcustomplot/qcustomplot.h \
-                        glinka2/glinka2.h \
-                        ratingwidget/ratingwidget.h \
-    motor/motor.h \
-    motorwidget/motorwidget.h \
-    customplot/customplot.h
+			glinka2/glinka2.h \
+			ratingwidget/ratingwidget.h \
+			motor/motor.h \
+			motorwidget/motorwidget.h \
+			customplot/customplot.h
 
 FORMS    += mainwindow.ui
 

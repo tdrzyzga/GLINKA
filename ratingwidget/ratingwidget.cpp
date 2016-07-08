@@ -2,7 +2,6 @@
 
 RatingWidget::RatingWidget(QWidget *parent) : QWidget(parent), poland(QLocale::Polish, QLocale::Poland)
 {
-	QTextCodec::setCodecForLocale(QTextCodec::codecForName ("UTF-8"));
 	m_Test.reset(new Test());
 	m_Rate.reset(new RatingInsulation());
 	m_NameWinding = tr("Uzwojenie");
@@ -11,7 +10,6 @@ RatingWidget::RatingWidget(QWidget *parent) : QWidget(parent), poland(QLocale::P
 }
 RatingWidget::RatingWidget(QString nameWinding, std::shared_ptr<RatingInsulation> rate, QWidget *parent) : QWidget(parent), poland(QLocale::Polish, QLocale::Poland)
 {
-	QTextCodec::setCodecForLocale(QTextCodec::codecForName ("UTF-8"));
 	m_Rate = rate;
 	m_Test.reset(new Test(m_Rate->returnsTest()));
 	m_NameWinding = nameWinding;
@@ -239,12 +237,13 @@ void RatingWidget::createWidget()
 {
 	createLineEditWidget();
 	createLineEditWidgetRate();
-	createCustomPlot();
+	//createCustomPlot();
+	m_CustomPlot = new CustomPlot(this);
 
-	QScrollArea *scroll= new QScrollArea(this);
+	/*QScrollArea *scroll= new QScrollArea(this);
 	scroll->setWidgetResizable(true);
 	scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-	scroll->setWidget(m_CustomPlot);
+	scroll->setWidget(m_CustomPlot);//->returnsCustomPlot());*/
 
 	QPushButton	*button = new QPushButton(tr("Oceń"), this);
 	button->setDefault(true);
@@ -265,7 +264,7 @@ void RatingWidget::createWidget()
 
 	m_MainBox = new QVBoxLayout(this);
 	m_MainBox->addWidget(groupBox);
-	m_MainBox->addWidget(scroll);
+	m_MainBox->addWidget(m_CustomPlot);
 }
 void RatingWidget::news()
 {
@@ -277,7 +276,7 @@ void RatingWidget::news()
 		m_Rate->resetRate();
 
 		//for (int i=0; i<m_CustomPlot->graphCount(); ++i)
-			m_CustomPlot->clearGraphs();
+		m_CustomPlot->returnsCustomPlot()->clearGraphs();
 	}
 
 	if (!fileName.isEmpty())
@@ -285,7 +284,8 @@ void RatingWidget::news()
 		m_Test->reconstruction(fileName.toStdString());
 		setLineEditWidget();
 		setLineEditWidgetRate();
-		setCustomPlot();
+		//setCustomPlot();
+		m_CustomPlot->setCustomPlot(*m_Test);
 	}
 }
 void RatingWidget::rate()
@@ -298,18 +298,20 @@ void RatingWidget::rate()
 	setLineEditWidget();
 	setLineEditWidgetRate();
 }
+
 void RatingWidget::setRatingWidget()
 {
 	*m_Test = m_Rate->returnsTest();
 	setLineEditWidget();
 	setLineEditWidgetRate();
-	setCustomPlot();
-
+//	setCustomPlot();
+	m_CustomPlot->setCustomPlot(*m_Test);
 }
 std::shared_ptr<RatingInsulation> RatingWidget::returnsm_Rate()
 {
 	return m_Rate;
 }
+/*
 void RatingWidget::createCustomPlot()
 {
 	m_CustomPlot = new QCustomPlot(this);
@@ -338,7 +340,7 @@ void RatingWidget::setCustomPlot()
 		x.push_back(i.second);
 
 	}
-/*
+
 	for (int i=0; i<=m_Test.returnsPairMaxVoltageTime().first; ++i)
 	{
 		minX.push_back(m_Test.returnsPairMinVoltageTime().second);
@@ -349,7 +351,7 @@ void RatingWidget::setCustomPlot()
 	{
 		maxX.push_back(m_Test.returnsPairMaxVoltageTime().second);
 		maxY.push_back(i);
-	}*/
+	}
 
 	m_CustomPlot->addGraph();
 	m_CustomPlot->graph(0)->setName(tr("Napięcie odbudowy [V]"));
@@ -374,6 +376,7 @@ void RatingWidget::setCustomPlot()
 
 	m_CustomPlot->replot();
 }
+
 void RatingWidget::legendDoubleClick(QCPLegend *legend, QCPAbstractLegendItem *item)
 {
   // Rename a graph by double clicking on its legend item
@@ -390,3 +393,4 @@ void RatingWidget::legendDoubleClick(QCPLegend *legend, QCPAbstractLegendItem *i
 	}
   }
 }
+*/

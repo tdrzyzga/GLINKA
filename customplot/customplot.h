@@ -9,9 +9,22 @@
 
 class CustomPlot : public QWidget
 {
+		Q_OBJECT
 	private:
 		Test m_Test;
 		QCustomPlot *m_CustomPlot;
+
+		QAction *m_ChangeNameGraph;
+		QToolBar *m_PlotBar;
+		QHBoxLayout *m_MainBox;
+
+		void createAction();
+		void createPlotBar();
+		void createWidget();
+
+	private slots:
+		void legendDoubleClick(QCPLegend *legend, QCPAbstractLegendItem *item);
+		void changeNameGraph();
 
 	public:
 		explicit CustomPlot(QWidget *parent = 0);
@@ -21,9 +34,10 @@ class CustomPlot : public QWidget
 
 		void setCustomPlot(const Test &ts);
 
-		//QCustomPlot * returnsCustomPlot(){return m_CustomPlot;}
+		QCustomPlot * returnsCustomPlot(){return m_CustomPlot;}
 
 		~CustomPlot(){}
+
 };
 
 #endif // CUSTOMPLOT_H

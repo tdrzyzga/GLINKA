@@ -9,6 +9,7 @@
 #include "ratingwidget/ratingwidget.h"
 #include "motor/motor.h"
 #include "motorwidget/motorwidget.h"
+#include "customplot/customplot.h"
 
 class MainWindow : public QMainWindow
 {

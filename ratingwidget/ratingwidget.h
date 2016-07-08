@@ -7,6 +7,7 @@
 
 #include "qcustomplot/qcustomplot.h"
 #include "glinka2/glinka2.h"
+#include "customplot/customplot.h"
 
 class RatingWidget : public QWidget
 {
@@ -37,7 +38,7 @@ class RatingWidget : public QWidget
 		QLineEdit *m_LineRateTotal;
 
 		//QCustomPlot *m_CustomPlot;
-		QCustomPlot *m_CustomPlot;
+		CustomPlot *m_CustomPlot;
 
 		std::shared_ptr<Test> m_Test;
 		std::shared_ptr<RatingInsulation> m_Rate;
@@ -47,16 +48,16 @@ class RatingWidget : public QWidget
 		void createWidget();
 		void createLineEditWidget();
 		void createLineEditWidgetRate();
-		void createCustomPlot();
+		//void createCustomPlot();
 
-		void setCustomPlot();
+		//void setCustomPlot();
 		void setLineEditWidget();
 		void setLineEditWidgetRate();
 
 
 	private slots:
 		void rate();
-		void legendDoubleClick(QCPLegend *legend, QCPAbstractLegendItem *item);
+		//void legendDoubleClick(QCPLegend *legend, QCPAbstractLegendItem *item);
 
 	public:
 		explicit RatingWidget(QWidget *parent = 0);
