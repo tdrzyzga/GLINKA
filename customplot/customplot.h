@@ -15,6 +15,7 @@ class CustomPlot : public QWidget
 		QCustomPlot *m_CustomPlot;
 
 		QAction *m_ChangeNameGraph;
+		QAction *m_Cursors;
 		QToolBar *m_PlotBar;
 		QHBoxLayout *m_MainBox;
 
@@ -22,9 +23,14 @@ class CustomPlot : public QWidget
 		void createPlotBar();
 		void createWidget();
 
+
+
 	private slots:
 		void legendDoubleClick(QCPLegend *legend, QCPAbstractLegendItem *item);
 		void changeNameGraph();
+		void mousePress(QMouseEvent* event);
+		//void moveCursors();
+
 
 	public:
 		explicit CustomPlot(QWidget *parent = 0);

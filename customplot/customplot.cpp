@@ -16,16 +16,20 @@ CustomPlot::CustomPlot(const Test &ts, QWidget *parent): QWidget(parent)
 }
 void CustomPlot::createAction()
 {
-	m_ChangeNameGraph = new QAction(QIcon(":/icons/icons/new.png"), tr("&Nowy"), this);
+	m_ChangeNameGraph = new QAction(QIcon(":/icons/icons/legend.png"), tr("&Nowy"), this);
 	m_ChangeNameGraph->setStatusTip(tr("Zmień nazwę wykresu"));
-
 	connect (m_ChangeNameGraph, SIGNAL(triggered()), this, SLOT(changeNameGraph()));
+
+	m_Cursors = new QAction(QIcon(":/icons/icons/cursors.png"), tr("&Kursory"), this);
+	m_Cursors->setStatusTip(tr("Kursory"));
+	//connect (m_Cursors, SIGNAL(triggered()), this, SLOT(moveCursors()));
 }
 void CustomPlot::createPlotBar()
 {
 	m_PlotBar = new QToolBar(this);
 
 	m_PlotBar->addAction(m_ChangeNameGraph);
+	m_PlotBar->addAction(m_Cursors);
 
 	m_PlotBar->setOrientation(Qt::Vertical);
 }
@@ -102,6 +106,7 @@ void CustomPlot::createCustomPlot()
 	m_CustomPlot = new QCustomPlot(this);
 
 	connect(m_CustomPlot, SIGNAL(legendDoubleClick(QCPLegend*,QCPAbstractLegendItem*,QMouseEvent*)), this, SLOT(legendDoubleClick(QCPLegend*,QCPAbstractLegendItem*)));
+	connect(m_CustomPlot, SIGNAL(mousePress(QMouseEvent*)), this, SLOT(mousePress(QMouseEvent*)));
 
 	m_CustomPlot->setMinimumSize(1000, 400);
 
@@ -128,4 +133,28 @@ void CustomPlot::legendDoubleClick(QCPLegend *legend, QCPAbstractLegendItem *ite
 void CustomPlot::changeNameGraph()
 {
 	emit(legendDoubleClick(m_CustomPlot->legend, m_CustomPlot->legend->item(0)));
+}
+void CustomPlot::mousePress(QMouseEvent* event)
+{
+	QCustomPlot *customPlot=m_CustomPlot;
+		static QCPItemLine *hCursor, *vCursor;
+
+	double x=customPlot->xAxis->pixelToCoord(event->pos().x());
+	double y=customPlot->yAxis->pixelToCoord(event->pos().y());
+
+	if(hCursor) customPlot->removeItem(hCursor);
+		hCursor = new QCPItemLine(customPlot);
+
+		customPlot->addItem(hCursor);
+		hCursor->start->setCoords(QCPRange::minRange, y);
+		hCursor->end->setCoords(QCPRange::maxRange, y);
+
+	if(vCursor) customPlot->removeItem(vCursor);
+		vCursor = new QCPItemLine(customPlot);
+
+		customPlot->addItem(vCursor);
+		vCursor->start->setCoords( x, QCPRange::minRange);
+		vCursor->end->setCoords( x, QCPRange::maxRange);
+
+	customPlot->replot();
 }

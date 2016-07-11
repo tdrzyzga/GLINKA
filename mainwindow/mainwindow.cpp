@@ -33,7 +33,7 @@ void MainWindow::createFileActions()
 	m_SaveAction->setShortcut(QKeySequence::Save);
 	connect (m_SaveAction, SIGNAL(triggered()), this, SLOT(save()));
 
-	m_QuitAction = new QAction(tr("&Wyjście"), this);
+	m_QuitAction = new QAction(QIcon(":/icons/icons/quit.png"), tr("&Wyjście"), this);
 	m_QuitAction->setStatusTip(tr("Wyjdź z programu"));
 	m_QuitAction->setShortcut(Qt::CTRL + Qt::Key_Q);
 	connect (m_QuitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
