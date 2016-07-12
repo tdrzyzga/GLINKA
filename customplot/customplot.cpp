@@ -16,20 +16,25 @@ CustomPlot::CustomPlot(const Test &ts, QWidget *parent): QWidget(parent)
 }
 void CustomPlot::createAction()
 {
-	m_ChangeNameGraph = new QAction(QIcon(":/icons/icons/legend.png"), tr("&Nowy"), this);
-	m_ChangeNameGraph->setStatusTip(tr("Zmień nazwę wykresu"));
-	connect (m_ChangeNameGraph, SIGNAL(triggered()), this, SLOT(changeNameGraph()));
+	m_ChangeNameGraphAction = new QAction(QIcon(":/icons/icons/legend.png"), tr("&Nazwa wykresu"), this);
+	m_ChangeNameGraphAction->setStatusTip(tr("Zmień nazwę wykresu"));
+	connect (m_ChangeNameGraphAction, SIGNAL(triggered()), this, SLOT(changeNameGraph()));
 
-	m_Cursors = new QAction(QIcon(":/icons/icons/cursors.png"), tr("&Kursory"), this);
-	m_Cursors->setStatusTip(tr("Kursory"));
+	m_CursorsAction = new QAction(QIcon(":/icons/icons/cursors.png"), tr("&Kursory"), this);
+	m_CursorsAction->setStatusTip(tr("Kursory"));
 	//connect (m_Cursors, SIGNAL(triggered()), this, SLOT(moveCursors()));
+
+	m_ChangeRangeAction = new QAction(QIcon(":/icons/icons/legend.png"), tr("&Zakresy"), this);
+	m_ChangeRangeAction->setStatusTip(tr("Zmień zakresy wykresu"));
+	connect (m_ChangeRangeAction, SIGNAL(triggered()), this, SLOT(changeRangeGraph()));
 }
 void CustomPlot::createPlotBar()
 {
 	m_PlotBar = new QToolBar(this);
 
-	m_PlotBar->addAction(m_ChangeNameGraph);
-	m_PlotBar->addAction(m_Cursors);
+	m_PlotBar->addAction(m_ChangeNameGraphAction);
+	m_PlotBar->addAction(m_CursorsAction);
+	m_PlotBar->addAction(m_ChangeRangeAction);
 
 	m_PlotBar->setOrientation(Qt::Vertical);
 }
@@ -107,6 +112,7 @@ void CustomPlot::createCustomPlot()
 
 	connect(m_CustomPlot, SIGNAL(legendDoubleClick(QCPLegend*,QCPAbstractLegendItem*,QMouseEvent*)), this, SLOT(legendDoubleClick(QCPLegend*,QCPAbstractLegendItem*)));
 	connect(m_CustomPlot, SIGNAL(mousePress(QMouseEvent*)), this, SLOT(mousePress(QMouseEvent*)));
+	connect(m_CustomPlot, SIGNAL(axisDoubleClick(QCPAxis *axis, QCPAxis::SelectablePart part, QMouseEvent *event)), this, SLOT(axisDoubleClick(QCPAxis *axis, QCPAxis::SelectablePart part)));
 
 	m_CustomPlot->setMinimumSize(1000, 400);
 
@@ -157,4 +163,37 @@ void CustomPlot::mousePress(QMouseEvent* event)
 		vCursor->end->setCoords( x, QCPRange::maxRange);
 
 	customPlot->replot();
+}
+void CustomPlot::changeRangeGraph()
+{
+	QDialog *range = new QDialog(this, Qt::Dialog);
+
+	QLabel *xAxis = new QLabel(tr("Oś X"), this);
+	QLineEdit *xLine = new QLineEdit(this);
+	QPushButton *ok = new QPushButton(this);
+
+	QHBoxLayout *vBox = new QHBoxLayout;
+	vBox->addWidget(xAxis);
+	vBox->addWidget(xLine);
+	vBox->addWidget(ok);
+	range->setLayout(vBox);
+
+	range->show();
+}
+
+void CustomPlot::axisDoubleClick(QCPAxis *axis, QCPAxis::SelectablePart part)
+{
+	QDialog *range = new QDialog(this, Qt::Dialog);
+
+	QLabel *xAxis = new QLabel(tr("Oś X"), this);
+	QLineEdit *xLine = new QLineEdit(this);
+	QPushButton *ok = new QPushButton(this);
+
+	QHBoxLayout *vBox = new QHBoxLayout(this);
+	vBox->addWidget(xAxis);
+	vBox->addWidget(xLine);
+	vBox->addWidget(ok);
+	range->setLayout(vBox);
+
+	range->show();
 }

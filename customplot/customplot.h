@@ -1,3 +1,4 @@
+
 #ifndef CUSTOMPLOT_H
 #define CUSTOMPLOT_H
 
@@ -14,8 +15,10 @@ class CustomPlot : public QWidget
 		Test m_Test;
 		QCustomPlot *m_CustomPlot;
 
-		QAction *m_ChangeNameGraph;
-		QAction *m_Cursors;
+		QAction *m_ChangeNameGraphAction;
+		QAction *m_CursorsAction;
+		QAction *m_ChangeRangeAction;
+
 		QToolBar *m_PlotBar;
 		QHBoxLayout *m_MainBox;
 
@@ -29,6 +32,8 @@ class CustomPlot : public QWidget
 		void legendDoubleClick(QCPLegend *legend, QCPAbstractLegendItem *item);
 		void changeNameGraph();
 		void mousePress(QMouseEvent* event);
+		void changeRangeGraph();
+		void axisDoubleClick(QCPAxis *axis, QCPAxis::SelectablePart part);
 		//void moveCursors();
 
 
