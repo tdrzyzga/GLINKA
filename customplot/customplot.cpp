@@ -5,7 +5,6 @@ CustomPlot::CustomPlot(QWidget *parent): QWidget(parent), m_Test(), poland(QLoca
 	createCustomPlot();
 	createAction();
 	createPlotBar();
-	createQDialogRange();
 
 	createWidget();
 }
@@ -14,7 +13,6 @@ CustomPlot::CustomPlot(const Test &ts, QWidget *parent): QWidget(parent), poland
 	m_Test = ts;
 
 	createCustomPlot();
-	createQDialogRange();
 }
 void CustomPlot::createAction()
 {
@@ -26,7 +24,7 @@ void CustomPlot::createAction()
 	m_CursorsAction->setStatusTip(tr("Kursory"));
 	//connect (m_Cursors, SIGNAL(triggered()), this, SLOT(moveCursors()));
 
-	m_ChangeRangeAction = new QAction(QIcon(":/icons/icons/legend.png"), tr("&Zakresy"), this);
+	m_ChangeRangeAction = new QAction(QIcon(":/icons/icons/scope.png"), tr("&Zakresy"), this);
 	m_ChangeRangeAction->setStatusTip(tr("Zmień zakresy wykresu"));
 	connect (m_ChangeRangeAction, SIGNAL(triggered()), this, SLOT(changeRangeGraph()));
 }
@@ -102,7 +100,7 @@ void CustomPlot::setCustomPlot(const Test &ts)
 	m_CustomPlot->legend->setBrush(QBrush(QColor(255,255,255,230)));
 	m_CustomPlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop|Qt::AlignLeft);
 
-	m_CustomPlot->setInteractions(/*QCP::iRangeDrag | QCP::iSelectPlottables| QCP::iRangeZoom | QCP::iMultiSelect| QCP::iSelectAxes|*/ QCP::iSelectLegend);// | QCP::iSelectItems | QCP::iSelectOther);
+	m_CustomPlot->setInteractions(/*QCP::iRangeDrag | QCP::iSelectPlottables | QCP::iMultiSelect| QCP::iSelectAxes|*/ QCP::iSelectLegend | QCP::iRangeZoom);// | QCP::iSelectItems | QCP::iSelectOther);
 
 	m_CustomPlot->replot();
 }
@@ -166,7 +164,10 @@ void CustomPlot::mousePress(QMouseEvent* event)
 }
 void CustomPlot::changeRangeGraph()
 {
-	m_Range->show();
+	if (!m_Range)
+		createQDialogRange();
+	else
+		m_Range->show();
 
 	if (m_Range->exec() == QDialog::Accepted)
 	{
@@ -180,14 +181,14 @@ void CustomPlot::createQDialogRange()
 {
 	m_Range = new QDialog(this, Qt::Dialog);
 
-	QLabel *minimum = new QLabel(tr("Min:"), this);
+	QLabel *minimum = new QLabel(QString("Min:"), this);
 	QLabel *maksimum = new QLabel(tr("Maks:"), this);
 
-	QLabel *xAxis = new QLabel(QString("Oś X(%1 - %2)").arg(0, 0, 'f', 1).arg(*m_XAxis.rbegin(), 0, 'f', 1), this);
+	QLabel *xAxis = new QLabel(QString("  Oś X [s]:\n(0,0 - "+poland.toString(*m_XAxis.rbegin(), 'f', 1)+")"), this);
 	m_XLineMin = new QLineEdit(this);
 	m_XLineMax = new QLineEdit(this);
 
-	QLabel *yAxis = new QLabel(QString("Oś Y(%1 - %2)").arg(0).arg(*m_YAxis.rbegin(), 0, 'f', 1), this);
+	QLabel *yAxis = new QLabel(QString("  Oś Y [V]:\n(0,0 - "+poland.toString(*m_YAxis.rbegin(), 'f', 1)+")"), this);
 	m_YLineMin = new QLineEdit(this);
 	m_YLineMax = new QLineEdit(this);
 

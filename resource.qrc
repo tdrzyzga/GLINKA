@@ -6,5 +6,6 @@
         <file>icons/quit.png</file>
         <file>icons/save.png</file>
         <file>icons/legend.png</file>
+        <file>icons/scope.png</file>
     </qresource>
 </RCC>
