@@ -1,18 +1,20 @@
 #include "customplot.h"
 
-CustomPlot::CustomPlot(QWidget *parent): QWidget(parent), m_Test()
+CustomPlot::CustomPlot(QWidget *parent): QWidget(parent), m_Test(), poland(QLocale::Polish, QLocale::Poland)
 {
 	createCustomPlot();
 	createAction();
 	createPlotBar();
+	createQDialogRange();
 
 	createWidget();
 }
-CustomPlot::CustomPlot(const Test &ts, QWidget *parent): QWidget(parent)
+CustomPlot::CustomPlot(const Test &ts, QWidget *parent): QWidget(parent), poland(QLocale::Polish, QLocale::Poland)
 {
 	m_Test = ts;
 
 	createCustomPlot();
+	createQDialogRange();
 }
 void CustomPlot::createAction()
 {
@@ -55,8 +57,6 @@ void CustomPlot::setCustomPlot(const Test &ts)
 {
 	m_Test = ts;
 	std::multimap<double, double> glinka(m_Test.returnsm_MMGlinkaVoltageTime());
-	QVector<double> x;
-	QVector<double> y;
 
 	//QVector<double> minX(m_Test.returnsPairMinVoltageTime().second);
 	//QVector<double> minY(m_Test.returnsPairMinVoltageTime().first);
@@ -66,8 +66,8 @@ void CustomPlot::setCustomPlot(const Test &ts)
 
 	for (auto i:glinka)
 	{
-		y.push_back(i.first);
-		x.push_back(i.second);
+		m_YAxis.push_back(i.first);
+		m_XAxis.push_back(i.second);
 
 	}
 /*
@@ -86,7 +86,7 @@ void CustomPlot::setCustomPlot(const Test &ts)
 	m_CustomPlot->addGraph();
 	m_CustomPlot->graph(0)->setName(tr("Napięcie odbudowy [V]"));
 	m_CustomPlot->xAxis->setLabel(tr("Czas [s]"));
-	m_CustomPlot->graph(0)->setData(x, y);
+	m_CustomPlot->graph(0)->setData(m_XAxis, m_YAxis);
 
 	//addGraph();
 	//graph(1)->setData(minX, minY);
@@ -95,14 +95,14 @@ void CustomPlot::setCustomPlot(const Test &ts)
 	//addGraph();
 	//graph(2)->setData(maxX, maxY);
 
-	m_CustomPlot->xAxis->setRange(0, *(std::max_element(x.begin(), x.end())));
-	m_CustomPlot->yAxis->setRange(0, *(std::max_element(y.begin(), y.end())));
+	m_CustomPlot->xAxis->setRange(0, *(std::max_element(m_XAxis.begin(), m_XAxis.end())));
+	m_CustomPlot->yAxis->setRange(0, *(std::max_element(m_YAxis.begin(), m_YAxis.end())));
 
 	m_CustomPlot->legend->setVisible(true);
 	m_CustomPlot->legend->setBrush(QBrush(QColor(255,255,255,230)));
 	m_CustomPlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop|Qt::AlignLeft);
 
-	m_CustomPlot->setInteractions(QCP::iRangeDrag | QCP::iSelectPlottables| QCP::iRangeZoom | QCP::iMultiSelect| QCP::iSelectAxes| QCP::iSelectLegend | QCP::iSelectItems | QCP::iSelectOther);
+	m_CustomPlot->setInteractions(/*QCP::iRangeDrag | QCP::iSelectPlottables| QCP::iRangeZoom | QCP::iMultiSelect| QCP::iSelectAxes|*/ QCP::iSelectLegend);// | QCP::iSelectItems | QCP::iSelectOther);
 
 	m_CustomPlot->replot();
 }
@@ -166,34 +166,56 @@ void CustomPlot::mousePress(QMouseEvent* event)
 }
 void CustomPlot::changeRangeGraph()
 {
-	QDialog *range = new QDialog(this, Qt::Dialog);
+	m_Range->show();
 
-	QLabel *xAxis = new QLabel(tr("Oś X"), this);
-	QLineEdit *xLine = new QLineEdit(this);
-	QPushButton *ok = new QPushButton(this);
+	if (m_Range->exec() == QDialog::Accepted)
+	{
+		m_CustomPlot->xAxis->setRange(poland.toDouble(m_XLineMin->text()), poland.toDouble(m_XLineMax->text()));
+		m_CustomPlot->yAxis->setRange(poland.toDouble(m_YLineMin->text()), poland.toDouble(m_YLineMax->text()));
+		m_CustomPlot->replot();
+	}
+}
 
-	QHBoxLayout *vBox = new QHBoxLayout;
-	vBox->addWidget(xAxis);
-	vBox->addWidget(xLine);
-	vBox->addWidget(ok);
-	range->setLayout(vBox);
+void CustomPlot::createQDialogRange()
+{
+	m_Range = new QDialog(this, Qt::Dialog);
 
-	range->show();
+	QLabel *minimum = new QLabel(tr("Min:"), this);
+	QLabel *maksimum = new QLabel(tr("Maks:"), this);
+
+	QLabel *xAxis = new QLabel(QString("Oś X(%1 - %2)").arg(0, 0, 'f', 1).arg(*m_XAxis.rbegin(), 0, 'f', 1), this);
+	m_XLineMin = new QLineEdit(this);
+	m_XLineMax = new QLineEdit(this);
+
+	QLabel *yAxis = new QLabel(QString("Oś Y(%1 - %2)").arg(0).arg(*m_YAxis.rbegin(), 0, 'f', 1), this);
+	m_YLineMin = new QLineEdit(this);
+	m_YLineMax = new QLineEdit(this);
+
+	QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok
+									 | QDialogButtonBox::Cancel);
+
+	connect(buttonBox, SIGNAL(accepted()), m_Range, SLOT(accept()));
+	connect(buttonBox, SIGNAL(rejected()), m_Range, SLOT(reject()));
+
+	QGridLayout *gBox = new QGridLayout;
+
+	gBox->addWidget(minimum, 0, 1);
+	gBox->addWidget(maksimum, 0, 2);
+
+	gBox->addWidget(xAxis, 1, 0);
+	gBox->addWidget(m_XLineMin, 1, 1);
+	gBox->addWidget(m_XLineMax, 1, 2);
+
+	gBox->addWidget(yAxis, 2, 0);
+	gBox->addWidget(m_YLineMin, 2, 1);
+	gBox->addWidget(m_YLineMax, 2, 2);
+
+	gBox->addWidget(buttonBox, 3, 2);
+
+	m_Range->setLayout(gBox);
 }
 
 void CustomPlot::axisDoubleClick(QCPAxis *axis, QCPAxis::SelectablePart part)
 {
-	QDialog *range = new QDialog(this, Qt::Dialog);
 
-	QLabel *xAxis = new QLabel(tr("Oś X"), this);
-	QLineEdit *xLine = new QLineEdit(this);
-	QPushButton *ok = new QPushButton(this);
-
-	QHBoxLayout *vBox = new QHBoxLayout(this);
-	vBox->addWidget(xAxis);
-	vBox->addWidget(xLine);
-	vBox->addWidget(ok);
-	range->setLayout(vBox);
-
-	range->show();
 }
