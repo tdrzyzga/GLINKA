@@ -100,7 +100,7 @@ void CustomPlot::setCustomPlot(const Test &ts)
 	m_CustomPlot->legend->setBrush(QBrush(QColor(255,255,255,230)));
 	m_CustomPlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop|Qt::AlignLeft);
 
-	m_CustomPlot->setInteractions(/*QCP::iRangeDrag | QCP::iSelectPlottables | QCP::iMultiSelect| QCP::iSelectAxes|*/ QCP::iSelectLegend | QCP::iRangeZoom);// | QCP::iSelectItems | QCP::iSelectOther);
+	m_CustomPlot->setInteractions(/*QCP::iRangeDrag | QCP::iSelectPlottables | QCP::iRangeZoom | QCP::iMultiSelect| QCP::iSelectAxes|*/ QCP::iSelectLegend);// | QCP::iSelectItems | QCP::iSelectOther);
 
 	m_CustomPlot->replot();
 }
@@ -167,7 +167,10 @@ void CustomPlot::changeRangeGraph()
 	if (!m_Range)
 		createQDialogRange();
 	else
-		m_Range->show();
+	{
+		m_Range->deleteLater();
+		createQDialogRange();
+	}
 
 	if (m_Range->exec() == QDialog::Accepted)
 	{
@@ -180,6 +183,7 @@ void CustomPlot::changeRangeGraph()
 void CustomPlot::createQDialogRange()
 {
 	m_Range = new QDialog(this, Qt::Dialog);
+	m_Range->setAttribute(Qt::WA_DeleteOnClose, true);
 
 	QLabel *minimum = new QLabel(QString("Min:"), this);
 	QLabel *maksimum = new QLabel(tr("Maks:"), this);
