@@ -66,13 +66,14 @@ void Motor::writeMotor(const std::string &name)const
 		exit(EXIT_FAILURE);
 	}
 
-	outFile<<m_RatedData.m_Name<<" ";
-	outFile<<m_RatedData.m_Type<<" ";
-	outFile<<m_RatedData.m_Number<<" ";
-	outFile<<m_RatedData.m_Power<<" ";
+	outFile<<m_RatedData.m_Name<<endl;
+	outFile<<m_RatedData.m_Type<<endl;
+	outFile<<m_RatedData.m_Number<<endl;
 
 	for (auto x:m_VectorNameWindings)
-		outFile<<x<<" ";
+		outFile<<x<<endl;
+
+	outFile<<m_RatedData.m_Power<<endl;
 
 	outFile.close();
 }
@@ -112,17 +113,18 @@ void Motor::getMotor(const std::string &name)
 	}
 	inFile.seekg(place);
 
-	inFile>>m_RatedData.m_Name;
-	inFile>>m_RatedData.m_Type;
-	inFile>>m_RatedData.m_Number;
-	inFile>>m_RatedData.m_Power;
+	getline(inFile, m_RatedData.m_Name);
+	getline(inFile, m_RatedData.m_Type);
+	getline(inFile, m_RatedData.m_Number);
 
 	string tempString;
 	for (int i=0; i<m_NumberWindings; ++i)
 	{
-		inFile>>tempString;
+		getline(inFile, tempString);
 		m_VectorNameWindings.push_back(tempString);
 	}
+
+		inFile>>m_RatedData.m_Power;
 
 	inFile.close();
 }
