@@ -15,8 +15,8 @@ class CustomPlot : public QWidget
 		Test m_Test;
 		QCustomPlot *m_CustomPlot;
 
-		QVector<double> m_XAxis;
-		QVector<double> m_YAxis;
+		QVector<double> m_VectorXAxis;
+		QVector<double> m_VectorYAxis;
 
 		QAction *m_ChangeNameGraphAction;
 		QAction *m_CursorsAction;
@@ -26,6 +26,8 @@ class CustomPlot : public QWidget
 		QHBoxLayout *m_MainBox;
 
 		QDialog *m_Range;
+		QLabel *m_XAxis;
+		QLabel *m_YAxis;
 		QLineEdit *m_XLineMin;
 		QLineEdit *m_XLineMax;
 		QLineEdit *m_YLineMin;
@@ -37,6 +39,7 @@ class CustomPlot : public QWidget
 		void createPlotBar();
 		void createWidget();
 		void createQDialogRange();
+		void setQDialogRange();
 
 
 
