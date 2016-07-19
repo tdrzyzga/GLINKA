@@ -21,6 +21,7 @@ class CustomPlot : public QWidget
 		QAction *m_ChangeNameGraphAction;
 		QAction *m_CursorsAction;
 		QAction *m_ChangeRangeAction;
+		QAction *m_CopyToClipboard;
 
 		QToolBar *m_PlotBar;
 		QHBoxLayout *m_MainBox;
@@ -33,6 +34,9 @@ class CustomPlot : public QWidget
 		QLineEdit *m_YLineMin;
 		QLineEdit *m_YLineMax;
 
+		QCPItemTracer *m_CursorFirst;
+		QCPItemTracer *m_CursorSecond;
+
 		QLocale poland;
 
 		void createAction();
@@ -40,17 +44,17 @@ class CustomPlot : public QWidget
 		void createWidget();
 		void createQDialogRange();
 		void setQDialogRange();
-
-
+		void createCursors();
+		void keyPressEvent(QKeyEvent *key);
 
 	private slots:
 		void legendDoubleClick(QCPLegend *legend, QCPAbstractLegendItem *item);
 		void changeNameGraph();
-		void mousePress(QMouseEvent* event);
+		//void mousePress(QMouseEvent* event);
 		void changeRangeGraph();
-		void axisDoubleClick(QCPAxis *axis, QCPAxis::SelectablePart part);
-		//void moveCursors();
-
+		//void axisDoubleClick(QCPAxis *axis, QCPAxis::SelectablePart part);
+		void copyToClipboard();
+		void setCursors();
 
 	public:
 		explicit CustomPlot(QWidget *parent = 0);

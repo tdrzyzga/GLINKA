@@ -7,5 +7,6 @@
         <file>icons/save.png</file>
         <file>icons/legend.png</file>
         <file>icons/scope.png</file>
+        <file>icons/copy.png</file>
     </qresource>
 </RCC>
