@@ -2,8 +2,9 @@
 #ifndef CUSTOMPLOT_H
 #define CUSTOMPLOT_H
 
-#include <QtGui>
-#include <memory>
+//#include <QtGui>
+//#include <memory>
+#include <QtAlgorithms>
 
 #include "qcustomplot/qcustomplot.h"
 #include "glinka2/glinka2.h"
@@ -36,6 +37,8 @@ class CustomPlot : public QWidget
 
 		QCPItemTracer *m_CursorFirst;
 		QCPItemTracer *m_CursorSecond;
+		QVector<double>::iterator m_GraphKeyCursorFirst;
+		QVector<double>::iterator m_GraphKeyCursorSecond;
 
 		QLocale poland;
 
@@ -45,7 +48,7 @@ class CustomPlot : public QWidget
 		void createQDialogRange();
 		void setQDialogRange();
 		void createCursors();
-		void keyPressEvent(QKeyEvent *key);
+		void keyPressEvent(QKeyEvent *event);
 
 	private slots:
 		void legendDoubleClick(QCPLegend *legend, QCPAbstractLegendItem *item);

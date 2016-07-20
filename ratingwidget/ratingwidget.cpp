@@ -239,6 +239,7 @@ void RatingWidget::createWidget()
 	createLineEditWidgetRate();
 	//createCustomPlot();
 	m_CustomPlot = new CustomPlot(this);
+	m_CustomPlot->setFocusPolicy(Qt::ClickFocus);
 
 	/*QScrollArea *scroll= new QScrollArea(this);
 	scroll->setWidgetResizable(true);

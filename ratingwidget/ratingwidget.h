@@ -1,8 +1,8 @@
 #ifndef RATINGWIDGET_H
 #define RATINGWIDGET_H
 
-#include <QtGui>
-#include <iterator>
+//#include <QtGui>
+//#include <iterator>
 #include <memory>
 
 #include "qcustomplot/qcustomplot.h"

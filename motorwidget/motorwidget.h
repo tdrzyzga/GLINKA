@@ -1,8 +1,8 @@
 #ifndef MOTORWIDGET_H
 #define MOTORWIDGET_H
 
-#include <QtGui>
-#include <memory>
+//#include <QtGui>
+//#include <memory>
 
 #include "ratingwidget/ratingwidget.h"
 #include "motor/motor.h"

@@ -83,8 +83,8 @@ void CustomPlot::setCustomPlot(const Test &ts)
 	m_CustomPlot->xAxis->setLabel(tr("Czas [s]"));
 	m_CustomPlot->graph(0)->setData(m_VectorXAxis, m_VectorYAxis);
 
-	m_CustomPlot->xAxis->setRange(0, *(std::max_element(m_VectorXAxis.begin(), m_VectorXAxis.end())));
-	m_CustomPlot->yAxis->setRange(0, *(std::max_element(m_VectorYAxis.begin(), m_VectorYAxis.end())));
+	m_CustomPlot->xAxis->setRange(0, *(std::max_element(m_VectorXAxis.begin(), m_VectorXAxis.end()))+10);
+	m_CustomPlot->yAxis->setRange(0, *(std::max_element(m_VectorYAxis.begin(), m_VectorYAxis.end()))+10);
 
 	m_CustomPlot->legend->setVisible(true);
 	m_CustomPlot->legend->setBrush(QBrush(QColor(255,255,255,230)));
@@ -209,6 +209,7 @@ void CustomPlot::createCursors()
 	//itemDemom_CursorFirst = m_CursorFirst; // so we can access it later in the bracketDataSlot for animation
 	m_CursorFirst->setGraph(m_CustomPlot->graph(0));
 	m_CursorFirst->setGraphKey(m_Test.returnsPairMinVoltageTime().second);
+	m_GraphKeyCursorFirst = qFind(m_VectorXAxis.begin(), m_VectorXAxis.end(), m_Test.returnsPairMinVoltageTime().second);
 	//m_CursorFirst->setInterpolating(true);
 	m_CursorFirst->setStyle(QCPItemTracer::tsPlus);
 	m_CursorFirst->setPen(QPen(Qt::red));
@@ -221,6 +222,7 @@ void CustomPlot::createCursors()
 	//itemDemom_CursorSecond = m_CursorSecond; // so we can access it later in the bracketDataSlot for animation
 	m_CursorSecond->setGraph(m_CustomPlot->graph(0));
 	m_CursorSecond->setGraphKey(m_Test.returnsPairMaxVoltageTime().second);
+	m_GraphKeyCursorSecond = qFind(m_VectorXAxis.begin(), m_VectorXAxis.end(), m_Test.returnsPairMaxVoltageTime().second);
 	//m_CursorSecond->setInterpolating(true);
 	m_CursorSecond->setStyle(QCPItemTracer::tsPlus);
 	m_CursorSecond->setPen(QPen(Qt::red));
@@ -243,7 +245,50 @@ void CustomPlot::setCursors()
 
 	m_CustomPlot->replot();
 }
-void CustomPlot::keyPressEvent(QKeyEvent *key)
+void CustomPlot::keyPressEvent(QKeyEvent *event)
 {
-	if (key->key()== )
+	if (m_CursorsAction->isChecked())
+	{
+		switch (event->key())
+		{
+			case Qt::Key_Right:
+								if (event->modifiers() == Qt::ShiftModifier)
+								{
+									if (event->modifiers() == Qt::ControlModifier)
+										m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond+10));
+									else
+										m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond+1));
+								}
+								else
+								{
+									if (event->modifiers() == Qt::ControlModifier)
+										m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_GraphKeyCursorFirst+10));
+									else
+										m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_GraphKeyCursorFirst+1));
+								}
+								break;
+			case Qt::Key_Left:
+								if (event->modifiers() == Qt::ShiftModifier)
+								{
+									if (event->modifiers() == Qt::ControlModifier)
+										m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond-10));
+									else
+										m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond-1));
+								}
+								else
+								{
+									if (event->modifiers() == Qt::ControlModifier)
+										m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_GraphKeyCursorFirst-10));
+									else
+										m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_GraphKeyCursorFirst-1));
+								}
+								break;
+			//case QKeySequence(Qt::CTRL + Qt::Key_Right): m_CursorSecond->setGraphKey((m_GraphKeyCursorSecond = m_GraphKeyCursorSecond+10));
+				//										 break;
+			//case QKeySequence(Qt::CTRL + Qt::Key_Left): m_CursorSecondt->setGraphKey((m_GraphKeyCursorSecond = m_GraphKeyCursorSecond-10));
+			//											 break;
+
+		}
+		m_CustomPlot->replot();
+	}
 }
