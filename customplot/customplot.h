@@ -14,6 +14,7 @@ class CustomPlot : public QWidget
 		Q_OBJECT
 	private:
 		Test m_Test;
+		std::multimap<double, double>m_GlinkaTimeVoltage;
 		QCustomPlot *m_CustomPlot;
 
 		QVector<double> m_VectorXAxis;
@@ -39,6 +40,7 @@ class CustomPlot : public QWidget
 		QCPItemTracer *m_CursorSecond;
 		QVector<double>::iterator m_GraphKeyCursorFirst;
 		QVector<double>::iterator m_GraphKeyCursorSecond;
+		QCPItemText *m_CursorFirstText;
 
 		QLocale poland;
 

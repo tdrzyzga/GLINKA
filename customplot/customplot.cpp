@@ -57,6 +57,7 @@ void CustomPlot::createWidget()
 {
 	QScrollArea *scroll= new QScrollArea(this);
 	scroll->setWidgetResizable(true);
+	scroll->setFocusPolicy(Qt::NoFocus);
 	scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 	scroll->setWidget(m_CustomPlot);
 
@@ -68,13 +69,13 @@ void CustomPlot::createWidget()
 void CustomPlot::setCustomPlot(const Test &ts)
 {
 	m_Test = ts;
-	std::multimap<double, double> glinka(m_Test.returnsm_MMGlinkaVoltageTime());
+	std::multimap<double, double>glinka(m_Test.returnsm_MMGlinkaVoltageTime());
 
 	for (auto i:glinka)
 	{
 		m_VectorYAxis.push_back(i.first);
 		m_VectorXAxis.push_back(i.second);
-
+		m_GlinkaTimeVoltage.insert(std::make_pair(i.second, i.first));
 	}
 
 	m_CustomPlot->addGraph();
@@ -86,11 +87,14 @@ void CustomPlot::setCustomPlot(const Test &ts)
 	m_CustomPlot->xAxis->setRange(0, *(std::max_element(m_VectorXAxis.begin(), m_VectorXAxis.end()))+10);
 	m_CustomPlot->yAxis->setRange(0, *(std::max_element(m_VectorYAxis.begin(), m_VectorYAxis.end()))+10);
 
+	m_CustomPlot->setInteractions(/*QCP::iRangeDrag | QCP::iSelectPlottables | QCP::iRangeZoom | QCP::iMultiSelect| QCP::iSelectAxes|*/ QCP::iSelectLegend);// | QCP::iSelectItems | QCP::iSelectOther);
+
+	qSort(m_VectorXAxis);
+	//qSort(m_VectorYAxis);
+
 	m_CustomPlot->legend->setVisible(true);
 	m_CustomPlot->legend->setBrush(QBrush(QColor(255,255,255,230)));
 	m_CustomPlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop|Qt::AlignLeft);
-
-	m_CustomPlot->setInteractions(/*QCP::iRangeDrag | QCP::iSelectPlottables | QCP::iRangeZoom | QCP::iMultiSelect| QCP::iSelectAxes|*/ QCP::iSelectLegend);// | QCP::iSelectItems | QCP::iSelectOther);
 
 	createCursors();
 
@@ -217,6 +221,13 @@ void CustomPlot::createCursors()
 	m_CursorFirst->setSize(30);
 	m_CursorFirst->setVisible(false);
 
+	m_CursorFirstText = new QCPItemText(m_CustomPlot);
+	m_CustomPlot->addItem(m_CursorFirstText);
+	m_CursorFirstText->setPositionAlignment(Qt::AlignTop | Qt::AlignCenter);
+	m_CursorFirstText->position->setType(QCPItemPosition::ptAxisRectRatio);
+	m_CursorFirstText->position->setCoords(0.5, 0.5);
+	m_CursorFirstText->setVisible(false);
+
 	m_CursorSecond = new QCPItemTracer(m_CustomPlot);
 	m_CustomPlot->addItem(m_CursorSecond);
 	//itemDemom_CursorSecond = m_CursorSecond; // so we can access it later in the bracketDataSlot for animation
@@ -236,11 +247,13 @@ void CustomPlot::setCursors()
 	{
 		m_CursorFirst->setVisible(true);
 		m_CursorSecond->setVisible(true);
+		m_CursorFirstText->setVisible(true);
 	}
 	else
 	{
 		m_CursorFirst->setVisible(false);
 		m_CursorSecond->setVisible(false);
+		m_CursorFirstText->setVisible(false);
 	}
 
 	m_CustomPlot->replot();
@@ -249,15 +262,21 @@ void CustomPlot::keyPressEvent(QKeyEvent *event)
 {
 	if (m_CursorsAction->isChecked())
 	{
+		auto voltage = m_GlinkaTimeVoltage.find(*m_GraphKeyCursorFirst);
 		switch (event->key())
 		{
 			case Qt::Key_Right:
 								if (event->modifiers() == Qt::ShiftModifier)
 								{
 									if (event->modifiers() == Qt::ControlModifier)
+									{
 										m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond+10));
+									}
 									else
+									{
 										m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond+1));
+									}
+									std::cout<<*m_GraphKeyCursorSecond<<std::endl;
 								}
 								else
 								{
@@ -265,7 +284,11 @@ void CustomPlot::keyPressEvent(QKeyEvent *event)
 										m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_GraphKeyCursorFirst+10));
 									else
 										m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_GraphKeyCursorFirst+1));
+									std::cout<<*m_GraphKeyCursorFirst<<std::endl;
 								}
+								voltage = m_GlinkaTimeVoltage.find(*m_GraphKeyCursorFirst);
+
+								m_CursorFirstText->setText(QString("Uod = %1 [V]\ntod = %2 [s]").arg(voltage->second).arg(*m_GraphKeyCursorFirst));
 								break;
 			case Qt::Key_Left:
 								if (event->modifiers() == Qt::ShiftModifier)
@@ -281,7 +304,11 @@ void CustomPlot::keyPressEvent(QKeyEvent *event)
 										m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_GraphKeyCursorFirst-10));
 									else
 										m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_GraphKeyCursorFirst-1));
+									m_CursorFirstText->setText(QString("Uod = %1 [V]\ntod = %2 [s]").arg(*m_GraphKeyCursorFirst));
 								}
+								voltage = m_GlinkaTimeVoltage.find(*m_GraphKeyCursorFirst);
+
+								m_CursorFirstText->setText(QString("Uod = %1 [V]\ntod = %2 [s]").arg(voltage->second).arg(*m_GraphKeyCursorFirst));
 								break;
 			//case QKeySequence(Qt::CTRL + Qt::Key_Right): m_CursorSecond->setGraphKey((m_GraphKeyCursorSecond = m_GraphKeyCursorSecond+10));
 				//										 break;
