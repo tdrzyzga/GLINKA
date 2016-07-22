@@ -273,7 +273,6 @@ void CustomPlot::keyPressEvent(QKeyEvent *event)
 										m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_GraphKeyCursorFirst-10));
 									else
 										m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_GraphKeyCursorFirst-1));
-									m_CursorFirstText->setText(QString("Uod = %1 [V]\ntod = %2 [s]").arg(*m_GraphKeyCursorFirst));
 								}
 								setCursorsText();
 								break;
@@ -286,14 +285,16 @@ void CustomPlot::setCursorsText()
 {
 	auto voltage = m_GlinkaTimeVoltage.find(*m_GraphKeyCursorFirst);
 
-	QString voltage1{("U1 = %1 [V]").arg(voltage->second)};
-	QString time1{("U1 = %1 [V]").arg(*m_GraphKeyCursorFirst)};
+	QString voltage1("U1 = %1 [V]");
+	voltage1 = voltage1.arg(voltage->second, 7, 'f', 2);
+	QString time1("t1 = %1 [s]");
+	time1 = time1.arg(*m_GraphKeyCursorFirst, 7, 'f', 2);
 
-	QString voltageReconstruction{("U1 = %1 [V]").arg(voltage->second)};
-	QString timeReconstruction{("U1 = %1 [V]").arg(*m_GraphKeyCursorFirst)};
+	QString voltageReconstruction("Uodb = %1 [V]");
+	QString timeReconstruction("Uodb = %1 [s]");
 
-	QString voltage2{("U1 = %1 [V]").arg(voltage->second)};
-	QString time2{("U1 = %1 [V]").arg(*m_GraphKeyCursorFirst)};
+	QString voltage2("U2 = %1 [V]");
+	QString time2("t1 = %1 [s]");
 
 	if (m_CursorsBox->returnsVoltageCursorFirst().checkState() != Qt::Checked)
 		voltage1 = "";
