@@ -21,7 +21,9 @@ SOURCES += main.cpp\
 			ratingwidget/ratingwidget.cpp \
 			motor/motor.cpp \
 			motorwidget/motorwidget.cpp \
-			customplot/customplot.cpp
+			customplot/customplot.cpp \
+			dialogrange/dialogrange.cpp \
+    dialogcursorsbox/dialogcursorsbox.cpp
 
 HEADERS  += mainwindow/mainwindow.h \
             qcustomplot/qcustomplot.h \
@@ -29,7 +31,9 @@ HEADERS  += mainwindow/mainwindow.h \
 			ratingwidget/ratingwidget.h \
 			motor/motor.h \
 			motorwidget/motorwidget.h \
-			customplot/customplot.h
+			customplot/customplot.h \
+			dialogrange/dialogrange.h \
+    dialogcursorsbox/dialogcursorsbox.h
 
 FORMS    += mainwindow.ui
 

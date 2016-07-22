@@ -8,6 +8,8 @@
 
 #include "qcustomplot/qcustomplot.h"
 #include "glinka2/glinka2.h"
+#include "dialogrange/dialogrange.h"
+#include "dialogcursorsbox/dialogcursorsbox.h"
 
 class CustomPlot : public QWidget
 {
@@ -28,14 +30,9 @@ class CustomPlot : public QWidget
 		QToolBar *m_PlotBar;
 		QHBoxLayout *m_MainBox;
 
-		QDialog *m_Range;
-		QLabel *m_XAxis;
-		QLabel *m_YAxis;
-		QLineEdit *m_XLineMin;
-		QLineEdit *m_XLineMax;
-		QLineEdit *m_YLineMin;
-		QLineEdit *m_YLineMax;
+		DialogRange *m_Range;
 
+		DialogCursorsBox *m_CursorsBox;
 		QCPItemTracer *m_CursorFirst;
 		QCPItemTracer *m_CursorSecond;
 		QVector<double>::iterator m_GraphKeyCursorFirst;
@@ -47,9 +44,13 @@ class CustomPlot : public QWidget
 		void createAction();
 		void createPlotBar();
 		void createWidget();
-		void createQDialogRange();
-		void setQDialogRange();
+
+		void createDialogRange();
+		void setDialogRange();
+
 		void createCursors();
+		void setCursorsText();
+
 		void keyPressEvent(QKeyEvent *event);
 
 	private slots:

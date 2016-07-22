@@ -7,6 +7,7 @@ CustomPlot::CustomPlot(QWidget *parent): QWidget(parent), m_Test(), poland(QLoca
 	createPlotBar();
 
 	m_Range = nullptr;
+	m_CursorsBox = nullptr;
 
 	createWidget();
 }
@@ -19,6 +20,7 @@ CustomPlot::CustomPlot(const Test &ts, QWidget *parent): QWidget(parent), poland
 	createPlotBar();
 
 	m_Range = nullptr;
+	m_CursorsBox = nullptr;
 
 	createWidget();
 }
@@ -138,67 +140,35 @@ void CustomPlot::changeNameGraph()
 void CustomPlot::changeRangeGraph()
 {
 	if (!m_Range)
-		createQDialogRange();
+		createDialogRange();
 	else
-		setQDialogRange();
+		setDialogRange();
 
 	if (m_Range->exec() == QDialog::Accepted)
 	{
-		m_CustomPlot->xAxis->setRange(poland.toDouble(m_XLineMin->text()), poland.toDouble(m_XLineMax->text()));
-		m_CustomPlot->yAxis->setRange(poland.toDouble(m_YLineMin->text()), poland.toDouble(m_YLineMax->text()));
+		m_CustomPlot->xAxis->setRange(poland.toDouble(m_Range->returnsXLineMin()), poland.toDouble(m_Range->returnsXLineMax()));
+		m_CustomPlot->yAxis->setRange(poland.toDouble(m_Range->returnsYLineMin()), poland.toDouble(m_Range->returnsYLineMax()));
 		m_CustomPlot->replot();
 	}
 }
 
-void CustomPlot::createQDialogRange()
+void CustomPlot::createDialogRange()
 {
-	m_Range = new QDialog(this, Qt::Dialog);
-	//m_Range->setAttribute(Qt::WA_DeleteOnClose, true);
-
-	QLabel *minimum = new QLabel(QString("Min:"), this);
-	QLabel *maksimum = new QLabel(tr("Maks:"), this);
-
-	m_XAxis = new QLabel(QString("  Oś X [s]:\n(0,0 - "+poland.toString(*m_VectorXAxis.rbegin(), 'f', 1)+")"), this);
-	m_XLineMin = new QLineEdit(this);
-	m_XLineMax = new QLineEdit(this);
-
-	m_YAxis = new QLabel(QString("  Oś Y [V]:\n(0,0 - "+poland.toString(*m_VectorYAxis.rbegin(), 'f', 1)+")"), this);
-	m_YLineMin = new QLineEdit(this);
-	m_YLineMax = new QLineEdit(this);
-
-	QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok
-									 | QDialogButtonBox::Cancel);
-
-	connect(buttonBox, SIGNAL(accepted()), m_Range, SLOT(accept()));
-	connect(buttonBox, SIGNAL(rejected()), m_Range, SLOT(reject()));
-
-	QGridLayout *gBox = new QGridLayout;
-
-	gBox->addWidget(minimum, 0, 1);
-	gBox->addWidget(maksimum, 0, 2);
-
-	gBox->addWidget(m_XAxis, 1, 0);
-	gBox->addWidget(m_XLineMin, 1, 1);
-	gBox->addWidget(m_XLineMax, 1, 2);
-
-	gBox->addWidget(m_YAxis, 2, 0);
-	gBox->addWidget(m_YLineMin, 2, 1);
-	gBox->addWidget(m_YLineMax, 2, 2);
-
-	gBox->addWidget(buttonBox, 3, 2);
-
-	m_Range->setLayout(gBox);
+	m_Range = new DialogRange(this, Qt::Dialog);
+	m_Range->setXAxis(QString("  Oś X [s]:\n(0,0 - "+poland.toString(*m_VectorXAxis.rbegin(), 'f', 1)+")"));
+	m_Range->setYAxis(QString("  Oś Y [V]:\n(0,0 - "+poland.toString(*m_VectorYAxis.rbegin(), 'f', 1)+")"));
 }
-void CustomPlot::setQDialogRange()
+void CustomPlot::setDialogRange()
 {
-	m_XAxis->setText(QString("  Oś X [s]:\n(0,0 - "+poland.toString(*m_VectorXAxis.rbegin(), 'f', 1)+")"));
-	m_YAxis->setText(QString("  Oś Y [V]:\n(0,0 - "+poland.toString(*m_VectorYAxis.rbegin(), 'f', 1)+")"));
+	m_Range->setXAxis(QString("  Oś X [s]:\n(0,0 - "+poland.toString(*m_VectorXAxis.rbegin(), 'f', 1)+")"));
+	m_Range->setYAxis(QString("  Oś Y [V]:\n(0,0 - "+poland.toString(*m_VectorYAxis.rbegin(), 'f', 1)+")"));
 }
 
 //void CustomPlot::axisDoubleClick(QCPAxis *axis, QCPAxis::SelectablePart part)
 //{
 
 //}
+
 void CustomPlot::copyToClipboard()
 {
 	QClipboard * clipboard = QApplication::clipboard();
@@ -210,11 +180,9 @@ void CustomPlot::createCursors()
 {
 	m_CursorFirst = new QCPItemTracer(m_CustomPlot);
 	m_CustomPlot->addItem(m_CursorFirst);
-	//itemDemom_CursorFirst = m_CursorFirst; // so we can access it later in the bracketDataSlot for animation
 	m_CursorFirst->setGraph(m_CustomPlot->graph(0));
 	m_CursorFirst->setGraphKey(m_Test.returnsPairMinVoltageTime().second);
 	m_GraphKeyCursorFirst = qFind(m_VectorXAxis.begin(), m_VectorXAxis.end(), m_Test.returnsPairMinVoltageTime().second);
-	//m_CursorFirst->setInterpolating(true);
 	m_CursorFirst->setStyle(QCPItemTracer::tsPlus);
 	m_CursorFirst->setPen(QPen(Qt::red));
 	m_CursorFirst->setBrush(Qt::red);
@@ -228,13 +196,13 @@ void CustomPlot::createCursors()
 	m_CursorFirstText->position->setCoords(0.5, 0.5);
 	m_CursorFirstText->setVisible(false);
 
+	m_CursorsBox = new DialogCursorsBox(this, Qt::Dialog);
+
 	m_CursorSecond = new QCPItemTracer(m_CustomPlot);
 	m_CustomPlot->addItem(m_CursorSecond);
-	//itemDemom_CursorSecond = m_CursorSecond; // so we can access it later in the bracketDataSlot for animation
 	m_CursorSecond->setGraph(m_CustomPlot->graph(0));
 	m_CursorSecond->setGraphKey(m_Test.returnsPairMaxVoltageTime().second);
 	m_GraphKeyCursorSecond = qFind(m_VectorXAxis.begin(), m_VectorXAxis.end(), m_Test.returnsPairMaxVoltageTime().second);
-	//m_CursorSecond->setInterpolating(true);
 	m_CursorSecond->setStyle(QCPItemTracer::tsPlus);
 	m_CursorSecond->setPen(QPen(Qt::red));
 	m_CursorSecond->setBrush(Qt::red);
@@ -245,12 +213,14 @@ void CustomPlot::setCursors()
 {
 	if (m_CursorsAction->isChecked())
 	{
+		m_CursorsBox->setVisible(true);
 		m_CursorFirst->setVisible(true);
 		m_CursorSecond->setVisible(true);
 		m_CursorFirstText->setVisible(true);
 	}
 	else
 	{
+		m_CursorsBox->setVisible(false);
 		m_CursorFirst->setVisible(false);
 		m_CursorSecond->setVisible(false);
 		m_CursorFirstText->setVisible(false);
@@ -262,7 +232,7 @@ void CustomPlot::keyPressEvent(QKeyEvent *event)
 {
 	if (m_CursorsAction->isChecked())
 	{
-		auto voltage = m_GlinkaTimeVoltage.find(*m_GraphKeyCursorFirst);
+
 		switch (event->key())
 		{
 			case Qt::Key_Right:
@@ -286,9 +256,8 @@ void CustomPlot::keyPressEvent(QKeyEvent *event)
 										m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_GraphKeyCursorFirst+1));
 									std::cout<<*m_GraphKeyCursorFirst<<std::endl;
 								}
-								voltage = m_GlinkaTimeVoltage.find(*m_GraphKeyCursorFirst);
 
-								m_CursorFirstText->setText(QString("Uod = %1 [V]\ntod = %2 [s]").arg(voltage->second).arg(*m_GraphKeyCursorFirst));
+								setCursorsText();
 								break;
 			case Qt::Key_Left:
 								if (event->modifiers() == Qt::ShiftModifier)
@@ -306,16 +275,42 @@ void CustomPlot::keyPressEvent(QKeyEvent *event)
 										m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_GraphKeyCursorFirst-1));
 									m_CursorFirstText->setText(QString("Uod = %1 [V]\ntod = %2 [s]").arg(*m_GraphKeyCursorFirst));
 								}
-								voltage = m_GlinkaTimeVoltage.find(*m_GraphKeyCursorFirst);
-
-								m_CursorFirstText->setText(QString("Uod = %1 [V]\ntod = %2 [s]").arg(voltage->second).arg(*m_GraphKeyCursorFirst));
+								setCursorsText();
 								break;
-			//case QKeySequence(Qt::CTRL + Qt::Key_Right): m_CursorSecond->setGraphKey((m_GraphKeyCursorSecond = m_GraphKeyCursorSecond+10));
-				//										 break;
-			//case QKeySequence(Qt::CTRL + Qt::Key_Left): m_CursorSecondt->setGraphKey((m_GraphKeyCursorSecond = m_GraphKeyCursorSecond-10));
-			//											 break;
 
 		}
 		m_CustomPlot->replot();
 	}
+}
+void CustomPlot::setCursorsText()
+{
+	auto voltage = m_GlinkaTimeVoltage.find(*m_GraphKeyCursorFirst);
+
+	QString voltage1{("U1 = %1 [V]").arg(voltage->second)};
+	QString time1{("U1 = %1 [V]").arg(*m_GraphKeyCursorFirst)};
+
+	QString voltageReconstruction{("U1 = %1 [V]").arg(voltage->second)};
+	QString timeReconstruction{("U1 = %1 [V]").arg(*m_GraphKeyCursorFirst)};
+
+	QString voltage2{("U1 = %1 [V]").arg(voltage->second)};
+	QString time2{("U1 = %1 [V]").arg(*m_GraphKeyCursorFirst)};
+
+	if (m_CursorsBox->returnsVoltageCursorFirst().checkState() != Qt::Checked)
+		voltage1 = "";
+	if (m_CursorsBox-> returnsTimeCursorFirst().checkState() != Qt::Checked)
+		time1 = "";
+
+	if (m_CursorsBox->returnsVoltageReconstruction().checkState() != Qt::Checked)
+		voltageReconstruction = "";
+	if (m_CursorsBox->returnsTimeReconstruction().checkState() != Qt::Checked)
+		timeReconstruction = "";
+
+	if (m_CursorsBox->returnsVoltageCursorSecond().checkState() != Qt::Checked)
+		voltage2 = "";
+	if (m_CursorsBox->returnsVoltageCursorSecond().checkState() != Qt::Checked)
+		time2 = "";
+
+
+	m_CursorFirstText->setText(voltage1+"\t"+voltageReconstruction+"\t"+voltage2+"\n"
+							   +time1+"\t"+timeReconstruction+"\t"+time2);
 }
