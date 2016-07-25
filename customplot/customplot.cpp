@@ -244,44 +244,25 @@ void CustomPlot::keyPressEvent(QKeyEvent *event)
 		switch (event->key())
 		{
 			case Qt::Key_Right:
-								if (event->modifiers() == Qt::ShiftModifier)
-								{
-									if (event->modifiers() == Qt::ControlModifier)
-									{
-										m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond+10));
-									}
-									else
-									{
-										m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond+1));
-									}
-									std::cout<<*m_GraphKeyCursorSecond<<std::endl;
-								}
-								else
-								{
-									if (event->modifiers() == Qt::ControlModifier)
+								if (event->modifiers().testFlag(Qt::ControlModifier)  && event->modifiers().testFlag(Qt::ShiftModifier))
+									m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond+10));
+								else if (event->modifiers().testFlag(Qt::ShiftModifier))
+									m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond+1));
+								else if (event->modifiers().testFlag(Qt::ControlModifier)  && !event->modifiers().testFlag(Qt::ShiftModifier))
 										m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_GraphKeyCursorFirst+10));
-									else
+								else if (!event->modifiers().testFlag(Qt::ControlModifier)  && !event->modifiers().testFlag(Qt::ShiftModifier))
 										m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_GraphKeyCursorFirst+1));
-									std::cout<<*m_GraphKeyCursorFirst<<std::endl;
-								}
-
 								setCursorsText();
 								break;
 			case Qt::Key_Left:
-								if (event->modifiers() == Qt::AltModifier)
-								{
-									if (event->modifiers() == Qt::ControlModifier && shift)
-										m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond-10));
-									else
-										m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond-1));
-								}
-								else
-								{
-									if (event->modifiers() == Qt::ControlModifier)
+								if (event->modifiers().testFlag(Qt::ControlModifier)  && event->modifiers().testFlag(Qt::ShiftModifier))
+									m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond-10));
+								else if (event->modifiers().testFlag(Qt::ShiftModifier))
+									m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond-1));
+								else if (event->modifiers().testFlag(Qt::ControlModifier)  && !event->modifiers().testFlag(Qt::ShiftModifier))
 										m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_GraphKeyCursorFirst-10));
-									else
+								else if (!event->modifiers().testFlag(Qt::ControlModifier)  && !event->modifiers().testFlag(Qt::ShiftModifier))
 										m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_GraphKeyCursorFirst-1));
-								}
 								setCursorsText();
 								break;
 
