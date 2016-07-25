@@ -2,8 +2,8 @@
 #ifndef CUSTOMPLOT_H
 #define CUSTOMPLOT_H
 
-//#include <QtGui>
-//#include <memory>
+#include <QtGui>
+#include <memory>
 #include <QtAlgorithms>
 
 #include "qcustomplot/qcustomplot.h"
@@ -37,7 +37,7 @@ class CustomPlot : public QWidget
 		QCPItemTracer *m_CursorSecond;
 		QVector<double>::iterator m_GraphKeyCursorFirst;
 		QVector<double>::iterator m_GraphKeyCursorSecond;
-		QCPItemText *m_CursorFirstText;
+		QCPItemText *m_CursorText;
 
 		QLocale poland;
 
@@ -61,6 +61,7 @@ class CustomPlot : public QWidget
 		//void axisDoubleClick(QCPAxis *axis, QCPAxis::SelectablePart part);
 		void copyToClipboard();
 		void setCursors();
+		void itemDoubleClick(QCPAbstractItem * item);
 
 	public:
 		explicit CustomPlot(QWidget *parent = 0);

@@ -10,13 +10,19 @@ DialogCursorsBox::DialogCursorsBox(QWidget *parent, Qt::WindowFlags f): QDialog(
 
 
 	m_VoltageCursorFirst = new QCheckBox(tr("napięcie U1"), this);
+	m_VoltageCursorFirst->setChecked(true);
 	m_TimeCursorFirst = new QCheckBox(tr("czas t1"), this);
+	m_TimeCursorFirst->setChecked(true);
 
 	m_VoltageReconstruction = new QCheckBox(tr("napięcie Uodb"), this);
+	m_VoltageReconstruction->setChecked(true);
 	m_TimeReconstruction = new QCheckBox(tr("czas todb"), this);
+	m_TimeReconstruction->setChecked(true);
 
 	m_VoltageCursorSecond = new QCheckBox(tr("napięcie U2"), this);
+	m_VoltageCursorSecond->setChecked(true);
 	m_TimeCursorSecond = new QCheckBox(tr("czas t2"), this);
+	m_TimeCursorSecond->setChecked(true);
 
 	QGridLayout *gBox = new QGridLayout;
 

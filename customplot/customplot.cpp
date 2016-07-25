@@ -7,7 +7,7 @@ CustomPlot::CustomPlot(QWidget *parent): QWidget(parent), m_Test(), poland(QLoca
 	createPlotBar();
 
 	m_Range = nullptr;
-	m_CursorsBox = nullptr;
+	//m_CursorsBox = nullptr;
 
 	createWidget();
 }
@@ -20,7 +20,7 @@ CustomPlot::CustomPlot(const Test &ts, QWidget *parent): QWidget(parent), poland
 	createPlotBar();
 
 	m_Range = nullptr;
-	m_CursorsBox = nullptr;
+	//m_CursorsBox = nullptr;
 
 	createWidget();
 }
@@ -89,7 +89,7 @@ void CustomPlot::setCustomPlot(const Test &ts)
 	m_CustomPlot->xAxis->setRange(0, *(std::max_element(m_VectorXAxis.begin(), m_VectorXAxis.end()))+10);
 	m_CustomPlot->yAxis->setRange(0, *(std::max_element(m_VectorYAxis.begin(), m_VectorYAxis.end()))+10);
 
-	m_CustomPlot->setInteractions(/*QCP::iRangeDrag | QCP::iSelectPlottables | QCP::iRangeZoom | QCP::iMultiSelect| QCP::iSelectAxes|*/ QCP::iSelectLegend);// | QCP::iSelectItems | QCP::iSelectOther);
+	m_CustomPlot->setInteractions(/*QCP::iRangeDrag | QCP::iSelectPlottables | QCP::iRangeZoom | QCP::iMultiSelect| QCP::iSelectAxes|*/ QCP::iSelectLegend | QCP::iSelectItems);// | QCP::iSelectOther);
 
 	qSort(m_VectorXAxis);
 	//qSort(m_VectorYAxis);
@@ -107,6 +107,7 @@ void CustomPlot::createCustomPlot()
 	m_CustomPlot = new QCustomPlot(this);
 
 	connect(m_CustomPlot, SIGNAL(legendDoubleClick(QCPLegend*,QCPAbstractLegendItem*,QMouseEvent*)), this, SLOT(legendDoubleClick(QCPLegend*,QCPAbstractLegendItem*)));
+	connect(m_CustomPlot, SIGNAL(itemDoubleClick(QCPAbstractItem*,QMouseEvent*)), this, SLOT(itemDoubleClick(QCPAbstractItem *)));
 	//connect(m_CustomPlot, SIGNAL(mousePress(QMouseEvent*)), this, SLOT(mousePress(QMouseEvent*)));
 	//connect(m_CustomPlot, SIGNAL(axisDoubleClick(QCPAxis *axis, QCPAxis::SelectablePart part, QMouseEvent *event)), this, SLOT(axisDoubleClick(QCPAxis *axis, QCPAxis::SelectablePart part)));
 
@@ -189,13 +190,17 @@ void CustomPlot::createCursors()
 	m_CursorFirst->setSize(30);
 	m_CursorFirst->setVisible(false);
 
-	m_CursorFirstText = new QCPItemText(m_CustomPlot);
-	m_CustomPlot->addItem(m_CursorFirstText);
-	m_CursorFirstText->setPositionAlignment(Qt::AlignTop | Qt::AlignCenter);
-	m_CursorFirstText->position->setType(QCPItemPosition::ptAxisRectRatio);
-	m_CursorFirstText->position->setCoords(0.5, 0.5);
-	m_CursorFirstText->setVisible(false);
-
+	m_CursorText = new QCPItemText(m_CustomPlot);
+	m_CustomPlot->addItem(m_CursorText);
+	m_CursorText->setPositionAlignment(Qt::AlignTop | Qt::AlignCenter);
+	m_CursorText->setPen(QPen(QColor()));
+	m_CursorText->setSelectedPen(QPen(QColor(Qt::blue)));
+	m_CursorText->setPadding(QMargins(5, 5, 5, 5));
+	m_CursorText->setBrush(QBrush(QColor(255,255,255,230)));
+	m_CursorText->setSelectedBrush(QBrush(QColor(255,255,255,230)));
+	m_CursorText->position->setType(QCPItemPosition::ptAxisRectRatio);
+	m_CursorText->position->setCoords(0.5, 0.5);
+	m_CursorText->setVisible(false);
 	m_CursorsBox = new DialogCursorsBox(this, Qt::Dialog);
 
 	m_CursorSecond = new QCPItemTracer(m_CustomPlot);
@@ -216,15 +221,18 @@ void CustomPlot::setCursors()
 		m_CursorsBox->setVisible(true);
 		m_CursorFirst->setVisible(true);
 		m_CursorSecond->setVisible(true);
-		m_CursorFirstText->setVisible(true);
+		if (m_CursorsBox->exec() == QDialog::Accepted)
+			setCursorsText();
+		m_CursorText->setVisible(true);
 	}
 	else
 	{
 		m_CursorsBox->setVisible(false);
 		m_CursorFirst->setVisible(false);
 		m_CursorSecond->setVisible(false);
-		m_CursorFirstText->setVisible(false);
+		m_CursorText->setVisible(false);
 	}
+
 
 	m_CustomPlot->replot();
 }
@@ -238,6 +246,7 @@ void CustomPlot::keyPressEvent(QKeyEvent *event)
 			case Qt::Key_Right:
 								if (event->modifiers() == Qt::ShiftModifier)
 								{
+									shift = true;
 									if (event->modifiers() == Qt::ControlModifier)
 									{
 										m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond+10));
@@ -247,8 +256,9 @@ void CustomPlot::keyPressEvent(QKeyEvent *event)
 										m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond+1));
 									}
 									std::cout<<*m_GraphKeyCursorSecond<<std::endl;
+									shift = false;
 								}
-								else
+								else if (event->modifiers() != Qt::ShiftModifier && !shift)
 								{
 									if (event->modifiers() == Qt::ControlModifier)
 										m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_GraphKeyCursorFirst+10));
@@ -260,12 +270,14 @@ void CustomPlot::keyPressEvent(QKeyEvent *event)
 								setCursorsText();
 								break;
 			case Qt::Key_Left:
-								if (event->modifiers() == Qt::ShiftModifier)
+								if (event->modifiers() == Qt::AltModifier)
 								{
-									if (event->modifiers() == Qt::ControlModifier)
+									shift = true;
+									if (event->modifiers() == Qt::ControlModifier && shift)
 										m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond-10));
 									else
 										m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond-1));
+									shift = false;
 								}
 								else
 								{
@@ -283,35 +295,46 @@ void CustomPlot::keyPressEvent(QKeyEvent *event)
 }
 void CustomPlot::setCursorsText()
 {
-	auto voltage = m_GlinkaTimeVoltage.find(*m_GraphKeyCursorFirst);
+	auto voltageFirst = m_GlinkaTimeVoltage.find(*m_GraphKeyCursorFirst);
+	auto voltageSecond = m_GlinkaTimeVoltage.find(*m_GraphKeyCursorSecond);
+	int fieldWidth = -1;
 
-	QString voltage1("U1 = %1 [V]");
-	voltage1 = voltage1.arg(voltage->second, 7, 'f', 2);
-	QString time1("t1 = %1 [s]");
-	time1 = time1.arg(*m_GraphKeyCursorFirst, 7, 'f', 2);
+	QString voltage1("U1 = %1 [V];");
+	voltage1 = voltage1.arg(voltageFirst->second, fieldWidth, 'f', 2);
+	QString time1("t1 = %1 [s];");
+	time1 = time1.arg(*m_GraphKeyCursorFirst, fieldWidth, 'f', 2);
 
-	QString voltageReconstruction("Uodb = %1 [V]");
-	QString timeReconstruction("Uodb = %1 [s]");
+	QString voltageReconstruction("Uodb = %1 [V];");
+	voltageReconstruction = voltageReconstruction.arg(voltageSecond->second, fieldWidth, 'f', 2);
+	QString timeReconstruction("todb = %1 [s];");
+	timeReconstruction = timeReconstruction.arg(*m_GraphKeyCursorSecond-*m_GraphKeyCursorFirst, fieldWidth, 'f', 2);
 
-	QString voltage2("U2 = %1 [V]");
-	QString time2("t1 = %1 [s]");
+	QString voltage2("U2 = %1 [V];");
+	voltage2 = voltage2.arg(voltageSecond->second, fieldWidth, 'f', 2);
+	QString time2("t2 = %1 [s];");
+	time2 = time2.arg(*m_GraphKeyCursorSecond, fieldWidth, 'f', 2);
 
 	if (m_CursorsBox->returnsVoltageCursorFirst().checkState() != Qt::Checked)
-		voltage1 = "";
+		voltage1 = QString("%1").arg("", fieldWidth);
 	if (m_CursorsBox-> returnsTimeCursorFirst().checkState() != Qt::Checked)
-		time1 = "";
+		time1 = QString("%1").arg("", fieldWidth);
 
 	if (m_CursorsBox->returnsVoltageReconstruction().checkState() != Qt::Checked)
-		voltageReconstruction = "";
+		voltageReconstruction = QString("%1").arg("", fieldWidth);
 	if (m_CursorsBox->returnsTimeReconstruction().checkState() != Qt::Checked)
-		timeReconstruction = "";
+		timeReconstruction = QString("%1").arg("", fieldWidth);
 
 	if (m_CursorsBox->returnsVoltageCursorSecond().checkState() != Qt::Checked)
-		voltage2 = "";
-	if (m_CursorsBox->returnsVoltageCursorSecond().checkState() != Qt::Checked)
-		time2 = "";
+		voltage2 = QString("%1").arg("", fieldWidth);
+	if (m_CursorsBox->returnsTimeCursorSecond().checkState() != Qt::Checked)
+		time2 = QString("%1").arg("", fieldWidth);
 
 
-	m_CursorFirstText->setText(voltage1+"\t"+voltageReconstruction+"\t"+voltage2+"\n"
+	m_CursorText->setText(voltage1+"\t"+voltageReconstruction+"\t"+voltage2+"\n"
 							   +time1+"\t"+timeReconstruction+"\t"+time2);
+}
+void CustomPlot::itemDoubleClick(QCPAbstractItem * item)
+{
+	Q_UNUSED(item)
+	setCursors();
 }
