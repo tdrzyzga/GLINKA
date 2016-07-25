@@ -246,7 +246,6 @@ void CustomPlot::keyPressEvent(QKeyEvent *event)
 			case Qt::Key_Right:
 								if (event->modifiers() == Qt::ShiftModifier)
 								{
-									shift = true;
 									if (event->modifiers() == Qt::ControlModifier)
 									{
 										m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond+10));
@@ -256,9 +255,8 @@ void CustomPlot::keyPressEvent(QKeyEvent *event)
 										m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond+1));
 									}
 									std::cout<<*m_GraphKeyCursorSecond<<std::endl;
-									shift = false;
 								}
-								else if (event->modifiers() != Qt::ShiftModifier && !shift)
+								else
 								{
 									if (event->modifiers() == Qt::ControlModifier)
 										m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_GraphKeyCursorFirst+10));
@@ -272,12 +270,10 @@ void CustomPlot::keyPressEvent(QKeyEvent *event)
 			case Qt::Key_Left:
 								if (event->modifiers() == Qt::AltModifier)
 								{
-									shift = true;
 									if (event->modifiers() == Qt::ControlModifier && shift)
 										m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond-10));
 									else
 										m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond-1));
-									shift = false;
 								}
 								else
 								{
