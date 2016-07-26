@@ -50,6 +50,7 @@ public:
 	void setResistanceAfter60s(double r60){  m_TechnicalData.m_ResistanceAfter60s = r60;}
 	void setResistanceAfter15s(double r15){ m_TechnicalData.m_ResistanceAfter15s = r15;}
 	void setTimeShortCircuit(double tSC){ m_TechnicalData.m_TimeShortCircuit = tSC;}
+	void setTimeReconstruction(double tR){ m_TechnicalData.m_TimeReconstruction = tR;}
 	std::multimap<double, double> returnsm_MMGlinkaVoltageTime(){ return m_MMGlinkaVoltageTime;}
 
 	void setTest();

@@ -21,11 +21,11 @@ void RatingWidget::createLineEditWidget()
 	QFont fontLine("Arial", 10);
 
 	m_LineMaxVoltage = new QLineEdit(this);
-	m_LineMaxVoltage->setReadOnly(true);
+	//m_LineMaxVoltage->setReadOnly(true);
 	m_LineMaxVoltage->setFont(fontLine);
 
 	m_LineTimeReconstruction = new QLineEdit(this);
-	m_LineTimeReconstruction->setReadOnly(true);
+	//m_LineTimeReconstruction->setReadOnly(true);
 	m_LineTimeReconstruction->setFont(fontLine);
 
 	m_LineRatedVoltage = new QLineEdit(this);
@@ -216,6 +216,12 @@ void RatingWidget::setLineEditWidgetRate()
 
 void RatingWidget::getLineRatingWidget()
 {
+	QString maxVoltage = m_LineMaxVoltage->text();
+	m_Test->setMaxVoltage(poland.toDouble(maxVoltage));
+
+	QString timeReconstruction = m_LineTimeReconstruction->text();
+	m_Test->setTimeReconstruction(poland.toDouble(timeReconstruction));
+
 	QString ratedVoltage = m_LineRatedVoltage->text();
 	m_Test->setRatedVoltage(poland.toDouble(ratedVoltage));
 

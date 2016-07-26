@@ -37,7 +37,11 @@ class CustomPlot : public QWidget
 		QCPItemTracer *m_CursorSecond;
 		QVector<double>::iterator m_GraphKeyCursorFirst;
 		QVector<double>::iterator m_GraphKeyCursorSecond;
+
 		QCPItemText *m_CursorText;
+		QCPItemLine *m_CursorLineFirst;
+		QCPItemLine *m_CursorLineSecond;
+		QCPItemLine *m_CursorsLine;
 
 		QLocale poland;
 
@@ -50,6 +54,7 @@ class CustomPlot : public QWidget
 
 		void createCursors();
 		void setCursorsText();
+		void setCursorsLine(QCPItemLine *cursorLine, QVector<double>::iterator graphKey);
 
 		void keyPressEvent(QKeyEvent *event);
 
