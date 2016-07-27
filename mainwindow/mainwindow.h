@@ -4,12 +4,12 @@
 #include <QtGui>
 #include <QLocale>
 
-#include "qcustomplot/qcustomplot.h"
-#include "glinka2/glinka2.h"
-#include "ratingwidget/ratingwidget.h"
-#include "motor/motor.h"
+//#include "qcustomplot/qcustomplot.h"
+//#include "glinka2/glinka2.h"
+//#include "ratingwidget/ratingwidget.h"
+//#include "motor/motor.h"
 #include "motorwidget/motorwidget.h"
-#include "customplot/customplot.h"
+//#include "customplot/customplot.h"
 
 class MainWindow : public QMainWindow
 {

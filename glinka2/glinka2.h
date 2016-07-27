@@ -34,6 +34,7 @@ public:
 		 std::pair<double, double> &pMaxV, std::pair<double, double> &pMinV);
 	~Test(){}
 	void reconstruction(const std::string &name);
+	void restoreTestInitialValue();
 	double returnsRatedVoltage()const{ return m_TechnicalData.m_RatedVoltage;}
 	double returnsTestVoltage()const{ return m_TechnicalData.m_TestVoltage;}
 	double returnsMaxVoltage()const{ return m_TechnicalData.m_MaxVoltage;}
@@ -41,8 +42,12 @@ public:
 	double returnsResistanceAfter60s()const{ return m_TechnicalData.m_ResistanceAfter60s;}
 	double returnsResistanceAfter15s() const{return m_TechnicalData.m_ResistanceAfter15s;}
 	double returnsTimeShortCircuit()const{return m_TechnicalData.m_TimeShortCircuit;}
+
 	std::pair<double, double> returnsPairMinVoltageTime()const {return m_TechnicalData.m_PairMinVoltageTime;}
 	std::pair<double, double> returnsPairMaxVoltageTime()const {return m_TechnicalData.m_PairMaxVoltageTime;}
+	std::pair<double, double> &returnsPairMinVoltageTime(){return m_TechnicalData.m_PairMinVoltageTime;}
+	std::pair<double, double> &returnsPairMaxVoltageTime(){return m_TechnicalData.m_PairMaxVoltageTime;}
+
 
 	void setRatedVoltage(double rV){ m_TechnicalData.m_RatedVoltage = rV;}
 	void setTestVoltage(double tV){ m_TechnicalData.m_TestVoltage = tV;}
@@ -111,8 +116,10 @@ public:
 	int returnsRateTimeReconstruction()const {return m_Rating.m_RateTimeReconstruction;}
 	int returnsRateMaxVoltageDivTestVoltage()const {return m_Rating.m_RateMaxVoltageDivTestVoltage;}
 	int returnsRateResistance60DivResistance15s()const {return m_Rating.m_RateResistance60DivResistance15s;}
-	const Test &returnsTest();
+	Test &returnsTest();
 	double returnsRateTotal()const {return m_Rating.m_RateTotal;}
+
+	void restoreRateInitialValue();
 
 	void writeRatingInsulation(const std::string &name)const;
 	std::streampos getRatingInsulation(const std::string &name, std::streampos place = 0);

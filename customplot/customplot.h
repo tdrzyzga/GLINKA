@@ -7,6 +7,7 @@
 #include <QtAlgorithms>
 
 #include "qcustomplot/qcustomplot.h"
+//#include "ratingwidget/ratingwidget.h"
 #include "glinka2/glinka2.h"
 #include "dialogrange/dialogrange.h"
 #include "dialogcursorsbox/dialogcursorsbox.h"
@@ -15,9 +16,11 @@ class CustomPlot : public QWidget
 {
 		Q_OBJECT
 	private:
-		Test m_Test;
+		//Test m_Test;
+		std::shared_ptr<RatingInsulation> m_Rate;
 		std::multimap<double, double>m_GlinkaTimeVoltage;
 		QCustomPlot *m_CustomPlot;
+		//RatingWidget *m_RatingWidget;
 
 		QVector<double> m_VectorXAxis;
 		QVector<double> m_VectorYAxis;
@@ -65,16 +68,19 @@ class CustomPlot : public QWidget
 		void changeRangeGraph();
 		//void axisDoubleClick(QCPAxis *axis, QCPAxis::SelectablePart part);
 		void copyToClipboard();
-		void setCursors();
 		void itemDoubleClick(QCPAbstractItem * item);
+
+	public slots:
+		void setCursors();
 
 	public:
 		explicit CustomPlot(QWidget *parent = 0);
-		explicit CustomPlot(const Test &ts, QWidget *parent = 0);
+		explicit CustomPlot(std::shared_ptr<RatingInsulation> rt, QWidget *parent = 0);
 
 		void createCustomPlot();
 
-		void setCustomPlot(const Test &ts);
+		void setCustomPlot();
+		void restoreCursorsOriginal();
 
 		QCustomPlot * returnsCustomPlot(){return m_CustomPlot;}
 

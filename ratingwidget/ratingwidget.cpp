@@ -2,7 +2,7 @@
 
 RatingWidget::RatingWidget(QWidget *parent) : QWidget(parent), poland(QLocale::Polish, QLocale::Poland)
 {
-	m_Test.reset(new Test());
+	//m_Test.reset(new Test());
 	m_Rate.reset(new RatingInsulation());
 	m_NameWinding = tr("Uzwojenie");
 
@@ -11,7 +11,7 @@ RatingWidget::RatingWidget(QWidget *parent) : QWidget(parent), poland(QLocale::P
 RatingWidget::RatingWidget(QString nameWinding, std::shared_ptr<RatingInsulation> rate, QWidget *parent) : QWidget(parent), poland(QLocale::Polish, QLocale::Poland)
 {
 	m_Rate = rate;
-	m_Test.reset(new Test(m_Rate->returnsTest()));
+	//m_Test.reset(new Test(m_Rate->returnsTest()));
 	m_NameWinding = nameWinding;
 
 	createWidget();
@@ -93,13 +93,13 @@ void RatingWidget::createLineEditWidget()
 }
 void RatingWidget::setLineEditWidget()
 {
-	m_LineMaxVoltage->setText(poland.toString(m_Test->returnsMaxVoltage(), 'f', 2));
-	m_LineTimeReconstruction->setText(poland.toString(m_Test->returnsTimeReconstruction(), 'f', 2));
-	m_LineRatedVoltage->setText(poland.toString(m_Test->returnsRatedVoltage()));
-	m_LineTestVoltage->setText(poland.toString(m_Test->returnsTestVoltage()));
-	m_LineResistanceAfter60s->setText(poland.toString(m_Test->returnsResistanceAfter60s()));
-	m_LineResistanceAfter15s->setText(poland.toString(m_Test->returnsResistanceAfter15s()));
-	m_LineTimeShortCircuit->setText(poland.toString(m_Test->returnsTimeShortCircuit()));
+	m_LineMaxVoltage->setText(poland.toString(m_Rate->returnsTest().returnsMaxVoltage(), 'f', 2));
+	m_LineTimeReconstruction->setText(poland.toString(m_Rate->returnsTest().returnsTimeReconstruction(), 'f', 2));
+	m_LineRatedVoltage->setText(poland.toString(m_Rate->returnsTest().returnsRatedVoltage()));
+	m_LineTestVoltage->setText(poland.toString(m_Rate->returnsTest().returnsTestVoltage()));
+	m_LineResistanceAfter60s->setText(poland.toString(m_Rate->returnsTest().returnsResistanceAfter60s()));
+	m_LineResistanceAfter15s->setText(poland.toString(m_Rate->returnsTest().returnsResistanceAfter15s()));
+	m_LineTimeShortCircuit->setText(poland.toString(m_Rate->returnsTest().returnsTimeShortCircuit()));
 }
 
 void RatingWidget::createLineEditWidgetRate()
@@ -217,34 +217,34 @@ void RatingWidget::setLineEditWidgetRate()
 void RatingWidget::getLineRatingWidget()
 {
 	QString maxVoltage = m_LineMaxVoltage->text();
-	m_Test->setMaxVoltage(poland.toDouble(maxVoltage));
+	m_Rate->returnsTest().setMaxVoltage(poland.toDouble(maxVoltage));
 
 	QString timeReconstruction = m_LineTimeReconstruction->text();
-	m_Test->setTimeReconstruction(poland.toDouble(timeReconstruction));
+	m_Rate->returnsTest().setTimeReconstruction(poland.toDouble(timeReconstruction));
 
 	QString ratedVoltage = m_LineRatedVoltage->text();
-	m_Test->setRatedVoltage(poland.toDouble(ratedVoltage));
+	m_Rate->returnsTest().setRatedVoltage(poland.toDouble(ratedVoltage));
 
 	QString testVoltage = m_LineTestVoltage->text();
-	m_Test->setTestVoltage(poland.toDouble(testVoltage));
+	m_Rate->returnsTest().setTestVoltage(poland.toDouble(testVoltage));
 
 	QString resistanceAfter60s = m_LineResistanceAfter60s->text();
-	m_Test->setResistanceAfter60s(poland.toDouble(resistanceAfter60s));
+	m_Rate->returnsTest().setResistanceAfter60s(poland.toDouble(resistanceAfter60s));
 
 	QString resistanceAfter15s = m_LineResistanceAfter15s->text();
-	m_Test->setResistanceAfter15s(poland.toDouble(resistanceAfter15s));
+	m_Rate->returnsTest().setResistanceAfter15s(poland.toDouble(resistanceAfter15s));
 
 	QString timeShortCircuit = m_LineTimeShortCircuit->text();
-	m_Test->setTimeShortCircuit(poland.toDouble(timeShortCircuit));
+	m_Rate->returnsTest().setTimeShortCircuit(poland.toDouble(timeShortCircuit));
 
-	*m_Rate = *m_Test;
+	//*m_Rate = *m_Test;
 }
 void RatingWidget::createWidget()
 {
 	createLineEditWidget();
 	createLineEditWidgetRate();
 	//createCustomPlot();
-	m_CustomPlot = new CustomPlot(this);
+	m_CustomPlot = new CustomPlot(m_Rate, this);
 	m_CustomPlot->setFocusPolicy(Qt::ClickFocus);
 
 	/*QScrollArea *scroll= new QScrollArea(this);
@@ -252,17 +252,22 @@ void RatingWidget::createWidget()
 	scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 	scroll->setWidget(m_CustomPlot);//->returnsCustomPlot());*/
 
-	QPushButton	*button = new QPushButton(tr("Oceń"), this);
-	button->setDefault(true);
+	QPushButton	*buttonRate = new QPushButton(tr("Oceń"), this);
+	buttonRate->setDefault(true);
 	//button->setAutoDefault(true);
-	button->setShortcut(QKeySequence(Qt::Key_Return));
+	buttonRate->setShortcut(QKeySequence(Qt::Key_Return));
+	buttonRate->setStatusTip(tr("Oceń stan izolacji"));
+	connect(buttonRate, SIGNAL(clicked()), this, SLOT(rate()));
 
-	connect(button, SIGNAL(clicked()), this, SLOT(rate()));
+	QPushButton	*buttonInitial = new QPushButton(tr("Wartości początkowe"), this);
+	buttonInitial->setStatusTip(tr("Przywróć wartości początkowe"));
+	connect(buttonInitial, SIGNAL(clicked()), this, SLOT(restoreInitialValue()));
 
 	QGridLayout *gBox = new QGridLayout(this);
 	gBox->addWidget(m_LineEdit, 0, 0);
 	gBox->addWidget(m_LineEditRate, 0, 1);
-	gBox->addWidget(button, 1, 0);
+	gBox->addWidget(buttonRate, 1, 0);
+	gBox->addWidget(buttonInitial, 1, 1);
 
 	QGroupBox *groupBox = new QGroupBox(this);
 	groupBox->setLayout(gBox);
@@ -277,9 +282,9 @@ void RatingWidget::news()
 {
 	QString fileName = QFileDialog::getOpenFileName(this,tr("Otwórz..."), "/home/", tr("Pliki txt (*.txt)"));
 
-	if (m_Test->returnsMaxVoltage() && !fileName.isEmpty())
+	if (m_Rate->returnsTest().returnsMaxVoltage() && !fileName.isEmpty())
 	{
-		m_Test->resetTest();
+		//m_Test->resetTest();
 		m_Rate->resetRate();
 
 		//for (int i=0; i<m_CustomPlot->graphCount(); ++i)
@@ -288,11 +293,12 @@ void RatingWidget::news()
 
 	if (!fileName.isEmpty())
 	{
-		m_Test->reconstruction(fileName.toStdString());
+		m_Rate->returnsTest().reconstruction(fileName.toStdString());
 		setLineEditWidget();
 		setLineEditWidgetRate();
 		//setCustomPlot();
-		m_CustomPlot->setCustomPlot(*m_Test);
+		//*m_Rate = *m_Test;
+		m_CustomPlot->setCustomPlot();
 	}
 }
 void RatingWidget::rate()
@@ -308,16 +314,28 @@ void RatingWidget::rate()
 
 void RatingWidget::setRatingWidget()
 {
-	*m_Test = m_Rate->returnsTest();
+	//*m_Test = m_Rate->returnsTest();
 	setLineEditWidget();
 	setLineEditWidgetRate();
 //	setCustomPlot();
-	m_CustomPlot->setCustomPlot(*m_Test);
+	m_CustomPlot->setCustomPlot();
 }
 std::shared_ptr<RatingInsulation> RatingWidget::returnsm_Rate()
 {
 	return m_Rate;
 }
+void RatingWidget::restoreInitialValue()
+{
+	//m_Test->resetTest();
+	//m_Rate->resetRate();
+	//m_CustomPlot->returnsCustomPlot()->clearGraphs();
+	//m_CustomPlot->returnsCustomPlot()->replot();
+	m_Rate->restoreRateInitialValue();
+	setLineEditWidget();
+	setLineEditWidgetRate();
+	m_CustomPlot->restoreCursorsOriginal();
+}
+
 /*
 void RatingWidget::createCustomPlot()
 {

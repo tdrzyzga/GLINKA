@@ -80,6 +80,29 @@ void Test::reconstruction(const std::string &name)
 	m_TechnicalData.m_TimeReconstruction=maxVoltageAndTime->second-m_TechnicalData.m_PairMinVoltageTime.second;
 	m_TechnicalData.m_MaxVoltage=maxVoltageAndTime->first;
 }
+void Test::restoreTestInitialValue()
+{
+	std::multimap<double, double>tempGlinkaVoltageTime(m_MMGlinkaVoltageTime);
+	m_MMGlinkaVoltageTime.clear();
+
+	bool min_get = false;
+	for (auto x:tempGlinkaVoltageTime)
+	{
+		if (x.first >= 0.09 && !min_get)
+		{
+			m_TechnicalData.m_PairMinVoltageTime = x;
+			min_get = true;
+		}
+		m_MMGlinkaVoltageTime.insert(x);
+	}
+
+	std::multimap<double, double>::reverse_iterator maxVoltageAndTime=m_MMGlinkaVoltageTime.rbegin();
+	m_TechnicalData.m_PairMaxVoltageTime.first = maxVoltageAndTime->first;
+	m_TechnicalData.m_PairMaxVoltageTime.second = maxVoltageAndTime->second;
+	m_TechnicalData.m_TimeReconstruction=maxVoltageAndTime->second-m_TechnicalData.m_PairMinVoltageTime.second;
+	m_TechnicalData.m_MaxVoltage=maxVoltageAndTime->first;
+}
+
 void Test::setTest()
 {
 	using std::cout;
@@ -407,6 +430,10 @@ int RatingInsulation::rateResistance60DivResistance15s()
 }
 double RatingInsulation::rateTotal()
 {
+	m_Rating.m_Resistance60sDivTestVoltage = returnsResistanceAfter60s() *1000/ returnsTestVoltage();
+	m_Rating.m_MaxVoltageDivTestVoltage = returnsMaxVoltage() / returnsTestVoltage();
+	m_Rating.m_Resistance60sDivResistance15s = returnsResistanceAfter60s() / returnsResistanceAfter15s();
+
 	m_Rating.m_RateTotal += rateResistance60sDivTestVoltage();
 	m_Rating.m_RateTotal += rateTimeReconstruction();
 	m_Rating.m_RateTotal += rateTimeShortCircuit();
@@ -453,9 +480,9 @@ void RatingInsulation::showRate() const
 	cout << setw(wt) << left << "Ocena koncowa: " << right
 			 << setw(wt2) << m_Rating.m_RateTotal << endl;
 }
- const Test & RatingInsulation::returnsTest()
+Test & RatingInsulation::returnsTest()
 {
-	return (const Test &)*this;
+	return (Test &)*this;
 }
 void RatingInsulation::resetRate()
 {
@@ -514,4 +541,18 @@ std::streampos RatingInsulation::getRatingInsulation(const std::string &name, st
 	place = inFile.tellg();
 	inFile.close();
 	return place;
+}
+void RatingInsulation::restoreRateInitialValue()
+{
+	Test::restoreTestInitialValue();
+
+	m_Rating.m_Resistance60sDivTestVoltage = 0.0;
+	m_Rating.m_MaxVoltageDivTestVoltage = 0.0;
+	m_Rating.m_Resistance60sDivResistance15s = 0.0;
+	m_Rating.m_RateResistance60sDivTestVoltage = 0;
+	m_Rating.m_RateTimeShortCircuit = 0;
+	m_Rating.m_RateTimeReconstruction = 0;
+	m_Rating.m_RateMaxVoltageDivTestVoltage = 0;
+	m_Rating.m_RateResistance60DivResistance15s = 0;
+	m_Rating.m_RateTotal = 0.0;
 }

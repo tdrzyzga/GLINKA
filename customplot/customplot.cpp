@@ -1,19 +1,23 @@
 #include "customplot.h"
 
-CustomPlot::CustomPlot(QWidget *parent): QWidget(parent), m_Test(), poland(QLocale::Polish, QLocale::Poland)
+CustomPlot::CustomPlot(QWidget *parent): QWidget(parent),  poland(QLocale::Polish, QLocale::Poland)
 {
+	//m_RatingWidget = parent;
+	m_Rate.reset(new RatingInsulation());
 	createCustomPlot();
 	createAction();
 	createPlotBar();
 
 	m_Range = nullptr;
+
 	//m_CursorsBox = nullptr;
 
 	createWidget();
 }
-CustomPlot::CustomPlot(const Test &ts, QWidget *parent): QWidget(parent), poland(QLocale::Polish, QLocale::Poland)
+CustomPlot::CustomPlot(std::shared_ptr<RatingInsulation> rt, QWidget *parent): QWidget(parent), poland(QLocale::Polish, QLocale::Poland)
 {
-	m_Test = ts;
+	m_Rate = rt;
+	//m_RatingWidget = parent;
 
 	createCustomPlot();
 	createAction();
@@ -68,9 +72,9 @@ void CustomPlot::createWidget()
 	m_MainBox->addWidget(m_PlotBar);
 	m_MainBox->addWidget(scroll);
 }
-void CustomPlot::setCustomPlot(const Test &ts)
+void CustomPlot::setCustomPlot()
 {
-	m_Test = ts;
+	Test m_Test = m_Rate->returnsTest();
 	std::multimap<double, double>glinka(m_Test.returnsm_MMGlinkaVoltageTime());
 
 	for (auto i:glinka)
@@ -195,6 +199,7 @@ void CustomPlot::copyToClipboard()
 
 void CustomPlot::createCursors()
 {
+	Test m_Test = m_Rate->returnsTest();
 	m_CursorFirst = new QCPItemTracer(m_CustomPlot);
 	m_CustomPlot->addItem(m_CursorFirst);
 	m_CursorFirst->setGraph(m_CustomPlot->graph(0));
@@ -419,6 +424,41 @@ void CustomPlot::setCursorsLine(QCPItemLine *cursorLine, QVector<double>::iterat
 	auto voltageFirst = m_GlinkaTimeVoltage.find(*m_GraphKeyCursorFirst);
 	auto voltageSecond = m_GlinkaTimeVoltage.find(*m_GraphKeyCursorSecond);
 
+	Test m_Test = m_Rate->returnsTest();
+	m_Test.returnsPairMinVoltageTime().first = voltageFirst->second;
+	m_Test.returnsPairMinVoltageTime().second = voltageFirst->first;
+	m_Test.returnsPairMaxVoltageTime().first = voltageSecond->second;
+	m_Test.returnsPairMaxVoltageTime().second = voltageSecond->first;
+
+	*m_Rate = m_Test;
+
+	//m_RatingWidget->setLineEditWidget();
+
 	m_CursorsLine->start->setCoords(*m_GraphKeyCursorFirst, voltageFirst->second);
 	m_CursorsLine->end->setCoords(*m_GraphKeyCursorSecond, voltageSecond->second);
+}
+void CustomPlot::restoreCursorsOriginal()
+{
+	Test m_Test = m_Rate->returnsTest();
+
+	m_GraphKeyCursorFirst = qFind(m_VectorXAxis.begin(), m_VectorXAxis.end(), m_Test.returnsPairMinVoltageTime().second);
+	m_CursorFirst->setGraphKey(*m_GraphKeyCursorFirst);
+
+	m_GraphKeyCursorFirst = qFind(m_VectorXAxis.begin(), m_VectorXAxis.end(), m_Test.returnsPairMinVoltageTime().second);
+	m_CursorSecond->setGraphKey(*m_GraphKeyCursorSecond);
+
+	m_CursorLineFirst->start->setCoords(*m_GraphKeyCursorFirst, QCPRange::minRange);
+	m_CursorLineFirst->end->setCoords(*m_GraphKeyCursorFirst, QCPRange::maxRange);
+
+	m_CursorLineSecond->start->setCoords(*m_GraphKeyCursorSecond, QCPRange::minRange);
+	m_CursorLineSecond->end->setCoords(*m_GraphKeyCursorSecond, QCPRange::maxRange);
+
+	auto voltageFirst = m_GlinkaTimeVoltage.find(*m_GraphKeyCursorFirst);
+	auto voltageSecond = m_GlinkaTimeVoltage.find(*m_GraphKeyCursorSecond);
+
+	m_CursorsLine->start->setCoords(*m_GraphKeyCursorFirst, voltageFirst->second);
+	m_CursorsLine->end->setCoords(*m_GraphKeyCursorSecond, voltageSecond->second);
+
+	setCursorsText();
+	m_CustomPlot->replot();
 }

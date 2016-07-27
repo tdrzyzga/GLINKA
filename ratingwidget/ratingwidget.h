@@ -3,9 +3,9 @@
 
 //#include <QtGui>
 //#include <iterator>
-#include <memory>
+//#include <memory>
 
-#include "qcustomplot/qcustomplot.h"
+//#include "qcustomplot/qcustomplot.h"
 #include "glinka2/glinka2.h"
 #include "customplot/customplot.h"
 
@@ -40,7 +40,7 @@ class RatingWidget : public QWidget
 		//QCustomPlot *m_CustomPlot;
 		CustomPlot *m_CustomPlot;
 
-		std::shared_ptr<Test> m_Test;
+		//std::shared_ptr<Test> m_Test;
 		std::shared_ptr<RatingInsulation> m_Rate;
 		QLocale poland;
 		QString m_NameWinding;
@@ -57,6 +57,7 @@ class RatingWidget : public QWidget
 
 	private slots:
 		void rate();
+		void restoreInitialValue();
 		//void legendDoubleClick(QCPLegend *legend, QCPAbstractLegendItem *item);
 
 	public:
