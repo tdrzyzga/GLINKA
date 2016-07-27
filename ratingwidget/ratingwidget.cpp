@@ -259,15 +259,26 @@ void RatingWidget::createWidget()
 	buttonRate->setStatusTip(tr("Oceń stan izolacji"));
 	connect(buttonRate, SIGNAL(clicked()), this, SLOT(rate()));
 
-	QPushButton	*buttonInitial = new QPushButton(tr("Wartości początkowe"), this);
-	buttonInitial->setStatusTip(tr("Przywróć wartości początkowe"));
-	connect(buttonInitial, SIGNAL(clicked()), this, SLOT(restoreInitialValue()));
+	QPushButton	*buttonInitialValue = new QPushButton(tr("Wartości początkowe"), this);
+	buttonInitialValue->setStatusTip(tr("Przywróć wartości początkowe"));
+	connect(buttonInitialValue, SIGNAL(clicked()), this, SLOT(restoreInitialValue()));
+
+	QPushButton	*buttonPlotValue = new QPushButton(tr("Wartości z wykresu"), this);
+	buttonPlotValue->setStatusTip(tr("Ustaw wartości z wykresu"));
+	connect(buttonPlotValue, SIGNAL(clicked()), this, SLOT(plotValue()));
+
+	QHBoxLayout *bLay = new QHBoxLayout(this);
+	bLay->addWidget(buttonRate);
+	bLay->addWidget(buttonInitialValue);
+	bLay->addWidget(buttonPlotValue);
+
+	QGroupBox *buttonBox = new QGroupBox(this);
+	buttonBox->setLayout(bLay);
 
 	QGridLayout *gBox = new QGridLayout(this);
 	gBox->addWidget(m_LineEdit, 0, 0);
 	gBox->addWidget(m_LineEditRate, 0, 1);
-	gBox->addWidget(buttonRate, 1, 0);
-	gBox->addWidget(buttonInitial, 1, 1);
+	gBox->addWidget(buttonBox, 1, 0);
 
 	QGroupBox *groupBox = new QGroupBox(this);
 	groupBox->setLayout(gBox);
@@ -334,6 +345,10 @@ void RatingWidget::restoreInitialValue()
 	setLineEditWidget();
 	setLineEditWidgetRate();
 	m_CustomPlot->restoreCursorsOriginal();
+}
+void RatingWidget::plotValue()
+{
+	setLineEditWidget();
 }
 
 /*

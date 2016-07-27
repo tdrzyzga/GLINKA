@@ -58,6 +58,7 @@ class RatingWidget : public QWidget
 	private slots:
 		void rate();
 		void restoreInitialValue();
+		void plotValue();
 		//void legendDoubleClick(QCPLegend *legend, QCPAbstractLegendItem *item);
 
 	public:
