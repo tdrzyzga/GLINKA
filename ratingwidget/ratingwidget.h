@@ -37,7 +37,6 @@ class RatingWidget : public QWidget
 		QLineEdit *m_LineRateResistance60DivResistance15s;
 		QLineEdit *m_LineRateTotal;
 
-		//QCustomPlot *m_CustomPlot;
 		CustomPlot *m_CustomPlot;
 
 		//std::shared_ptr<Test> m_Test;
@@ -48,9 +47,7 @@ class RatingWidget : public QWidget
 		void createWidget();
 		void createLineEditWidget();
 		void createLineEditWidgetRate();
-		//void createCustomPlot();
 
-		//void setCustomPlot();
 		void setLineEditWidget();
 		void setLineEditWidgetRate();
 
@@ -58,8 +55,7 @@ class RatingWidget : public QWidget
 	private slots:
 		void rate();
 		void restoreInitialValue();
-		void plotValue();
-		//void legendDoubleClick(QCPLegend *legend, QCPAbstractLegendItem *item);
+		void setPlotValue();
 
 	public:
 		explicit RatingWidget(QWidget *parent = 0);

@@ -430,6 +430,8 @@ int RatingInsulation::rateResistance60DivResistance15s()
 }
 double RatingInsulation::rateTotal()
 {
+	m_Rating.m_RateTotal = 0.0;
+
 	m_Rating.m_Resistance60sDivTestVoltage = returnsResistanceAfter60s() *1000/ returnsTestVoltage();
 	m_Rating.m_MaxVoltageDivTestVoltage = returnsMaxVoltage() / returnsTestVoltage();
 	m_Rating.m_Resistance60sDivResistance15s = returnsResistanceAfter60s() / returnsResistanceAfter15s();
@@ -546,6 +548,18 @@ void RatingInsulation::restoreRateInitialValue()
 {
 	Test::restoreTestInitialValue();
 
+	m_Rating.m_Resistance60sDivTestVoltage = 0.0;
+	m_Rating.m_MaxVoltageDivTestVoltage = 0.0;
+	m_Rating.m_Resistance60sDivResistance15s = 0.0;
+	m_Rating.m_RateResistance60sDivTestVoltage = 0;
+	m_Rating.m_RateTimeShortCircuit = 0;
+	m_Rating.m_RateTimeReconstruction = 0;
+	m_Rating.m_RateMaxVoltageDivTestVoltage = 0;
+	m_Rating.m_RateResistance60DivResistance15s = 0;
+	m_Rating.m_RateTotal = 0.0;
+}
+void RatingInsulation::resetPlotRate()
+{
 	m_Rating.m_Resistance60sDivTestVoltage = 0.0;
 	m_Rating.m_MaxVoltageDivTestVoltage = 0.0;
 	m_Rating.m_Resistance60sDivResistance15s = 0.0;

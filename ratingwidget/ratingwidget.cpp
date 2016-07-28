@@ -21,11 +21,11 @@ void RatingWidget::createLineEditWidget()
 	QFont fontLine("Arial", 10);
 
 	m_LineMaxVoltage = new QLineEdit(this);
-	//m_LineMaxVoltage->setReadOnly(true);
+	m_LineMaxVoltage->setReadOnly(true);
 	m_LineMaxVoltage->setFont(fontLine);
 
 	m_LineTimeReconstruction = new QLineEdit(this);
-	//m_LineTimeReconstruction->setReadOnly(true);
+	m_LineTimeReconstruction->setReadOnly(true);
 	m_LineTimeReconstruction->setFont(fontLine);
 
 	m_LineRatedVoltage = new QLineEdit(this);
@@ -243,14 +243,9 @@ void RatingWidget::createWidget()
 {
 	createLineEditWidget();
 	createLineEditWidgetRate();
-	//createCustomPlot();
+
 	m_CustomPlot = new CustomPlot(m_Rate, this);
 	m_CustomPlot->setFocusPolicy(Qt::ClickFocus);
-
-	/*QScrollArea *scroll= new QScrollArea(this);
-	scroll->setWidgetResizable(true);
-	scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-	scroll->setWidget(m_CustomPlot);//->returnsCustomPlot());*/
 
 	QPushButton	*buttonRate = new QPushButton(tr("Oceń"), this);
 	buttonRate->setDefault(true);
@@ -265,7 +260,7 @@ void RatingWidget::createWidget()
 
 	QPushButton	*buttonPlotValue = new QPushButton(tr("Wartości z wykresu"), this);
 	buttonPlotValue->setStatusTip(tr("Ustaw wartości z wykresu"));
-	connect(buttonPlotValue, SIGNAL(clicked()), this, SLOT(plotValue()));
+	connect(buttonPlotValue, SIGNAL(clicked()), this, SLOT(setPlotValue()));
 
 	QHBoxLayout *bLay = new QHBoxLayout(this);
 	bLay->addWidget(buttonRate);
@@ -295,10 +290,8 @@ void RatingWidget::news()
 
 	if (m_Rate->returnsTest().returnsMaxVoltage() && !fileName.isEmpty())
 	{
-		//m_Test->resetTest();
 		m_Rate->resetRate();
 
-		//for (int i=0; i<m_CustomPlot->graphCount(); ++i)
 		m_CustomPlot->returnsCustomPlot()->clearGraphs();
 	}
 
@@ -307,8 +300,7 @@ void RatingWidget::news()
 		m_Rate->returnsTest().reconstruction(fileName.toStdString());
 		setLineEditWidget();
 		setLineEditWidgetRate();
-		//setCustomPlot();
-		//*m_Rate = *m_Test;
+
 		m_CustomPlot->setCustomPlot();
 	}
 }
@@ -317,7 +309,6 @@ void RatingWidget::rate()
 	getLineRatingWidget();
 
 	m_Rate->rateTotal();
-	//m_Rate->showRate();
 
 	setLineEditWidget();
 	setLineEditWidgetRate();
@@ -325,10 +316,9 @@ void RatingWidget::rate()
 
 void RatingWidget::setRatingWidget()
 {
-	//*m_Test = m_Rate->returnsTest();
 	setLineEditWidget();
 	setLineEditWidgetRate();
-//	setCustomPlot();
+
 	m_CustomPlot->setCustomPlot();
 }
 std::shared_ptr<RatingInsulation> RatingWidget::returnsm_Rate()
@@ -337,100 +327,17 @@ std::shared_ptr<RatingInsulation> RatingWidget::returnsm_Rate()
 }
 void RatingWidget::restoreInitialValue()
 {
-	//m_Test->resetTest();
-	//m_Rate->resetRate();
-	//m_CustomPlot->returnsCustomPlot()->clearGraphs();
-	//m_CustomPlot->returnsCustomPlot()->replot();
 	m_Rate->restoreRateInitialValue();
+
 	setLineEditWidget();
 	setLineEditWidgetRate();
+
 	m_CustomPlot->restoreCursorsOriginal();
 }
-void RatingWidget::plotValue()
+void RatingWidget::setPlotValue()
 {
+	m_Rate->resetPlotRate();
+
 	setLineEditWidget();
+	setLineEditWidgetRate();
 }
-
-/*
-void RatingWidget::createCustomPlot()
-{
-	m_CustomPlot = new QCustomPlot(this);
-
-	connect(m_CustomPlot, SIGNAL(legendDoubleClick(QCPLegend*,QCPAbstractLegendItem*,QMouseEvent*)), this, SLOT(legendDoubleClick(QCPLegend*,QCPAbstractLegendItem*)));
-
-	m_CustomPlot->setMinimumSize(1000, 400);
-
-	m_CustomPlot->replot();
-}
-void RatingWidget::setCustomPlot()
-{
-	std::multimap<double, double> glinka(m_Test->returnsm_MMGlinkaVoltageTime());
-	QVector<double> x;
-	QVector<double> y;
-
-	//QVector<double> minX(m_Test.returnsPairMinVoltageTime().second);
-	//QVector<double> minY(m_Test.returnsPairMinVoltageTime().first);
-
-	//QVector<double> maxX(m_Test.returnsPairMaxVoltageTime().second);
-	//QVector<double> maxY(m_Test.returnsPairMaxVoltageTime().first);
-
-	for (auto i:glinka)
-	{
-		y.push_back(i.first);
-		x.push_back(i.second);
-
-	}
-
-	for (int i=0; i<=m_Test.returnsPairMaxVoltageTime().first; ++i)
-	{
-		minX.push_back(m_Test.returnsPairMinVoltageTime().second);
-		minY.push_back(i);
-	}
-
-	for (int i=0; i<=m_Test.returnsPairMaxVoltageTime().first; ++i)
-	{
-		maxX.push_back(m_Test.returnsPairMaxVoltageTime().second);
-		maxY.push_back(i);
-	}
-
-	m_CustomPlot->addGraph();
-	m_CustomPlot->graph(0)->setName(tr("Napięcie odbudowy [V]"));
-	m_CustomPlot->xAxis->setLabel(tr("Czas [s]"));
-	m_CustomPlot->graph(0)->setData(x, y);
-
-	//addGraph();
-	//graph(1)->setData(minX, minY);
-	//graph(1)->setScatterStyle(QCPScatterStyle::ssDisc);
-
-	//addGraph();
-	//graph(2)->setData(maxX, maxY);
-
-	m_CustomPlot->xAxis->setRange(0, *(std::max_element(x.begin(), x.end())));
-	m_CustomPlot->yAxis->setRange(0, *(std::max_element(y.begin(), y.end())));
-
-	m_CustomPlot->legend->setVisible(true);
-	m_CustomPlot->legend->setBrush(QBrush(QColor(255,255,255,230)));
-	m_CustomPlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop|Qt::AlignLeft);
-
-	m_CustomPlot->setInteractions(QCP::iRangeDrag | QCP::iSelectPlottables| QCP::iRangeZoom | QCP::iMultiSelect| QCP::iSelectAxes| QCP::iSelectLegend | QCP::iSelectItems | QCP::iSelectOther);
-
-	m_CustomPlot->replot();
-}
-
-void RatingWidget::legendDoubleClick(QCPLegend *legend, QCPAbstractLegendItem *item)
-{
-  // Rename a graph by double clicking on its legend item
-  Q_UNUSED(legend)
-  if (item) // only react if item was clicked (user could have clicked on border padding of legend where there is no item, then item is 0)
-  {
-	QCPPlottableLegendItem *plItem = qobject_cast<QCPPlottableLegendItem*>(item);
-	bool ok;
-	QString newName = QInputDialog::getText(this, "QCustomPlot example", "New graph name:", QLineEdit::Normal, plItem->plottable()->name(), &ok);
-	if (ok)
-	{
-	  plItem->plottable()->setName(newName);
-	  m_CustomPlot->replot();
-	}
-  }
-}
-*/

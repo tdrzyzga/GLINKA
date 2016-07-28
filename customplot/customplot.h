@@ -60,6 +60,8 @@ class CustomPlot : public QWidget
 		void setCursorsLine(QCPItemLine *cursorLine, QVector<double>::iterator graphKey);
 
 		void keyPressEvent(QKeyEvent *event);
+		void moveCursorToLeft(QKeyEvent *event);
+		void moveCursorToRight(QKeyEvent *event);
 
 	private slots:
 		void legendDoubleClick(QCPLegend *legend, QCPAbstractLegendItem *item);

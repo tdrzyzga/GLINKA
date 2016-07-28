@@ -2,8 +2,8 @@
 
 CustomPlot::CustomPlot(QWidget *parent): QWidget(parent),  poland(QLocale::Polish, QLocale::Poland)
 {
-	//m_RatingWidget = parent;
 	m_Rate.reset(new RatingInsulation());
+
 	createCustomPlot();
 	createAction();
 	createPlotBar();
@@ -17,7 +17,6 @@ CustomPlot::CustomPlot(QWidget *parent): QWidget(parent),  poland(QLocale::Polis
 CustomPlot::CustomPlot(std::shared_ptr<RatingInsulation> rt, QWidget *parent): QWidget(parent), poland(QLocale::Polish, QLocale::Poland)
 {
 	m_Rate = rt;
-	//m_RatingWidget = parent;
 
 	createCustomPlot();
 	createAction();
@@ -93,7 +92,8 @@ void CustomPlot::setCustomPlot()
 	QPen penGraph;
 	penGraph.setColor(Qt::darkBlue);
 	penGraph.setStyle(Qt::SolidLine);
-	penGraph.setWidth(1);
+	penGraph.setWidth(2);
+	penGraph.setCapStyle(Qt::SquareCap);
 
 	m_CustomPlot->graph(0)->setPen(penGraph);
 
@@ -103,7 +103,6 @@ void CustomPlot::setCustomPlot()
 	m_CustomPlot->setInteractions(/*QCP::iRangeDrag | QCP::iSelectPlottables | QCP::iRangeZoom | QCP::iMultiSelect| QCP::iSelectAxes|*/ QCP::iSelectLegend | QCP::iSelectItems);// | QCP::iSelectOther);
 
 	qSort(m_VectorXAxis);
-	//qSort(m_VectorYAxis);
 
 	QPen penBorder;
 	penBorder.setColor(Qt::darkBlue);
@@ -184,11 +183,6 @@ void CustomPlot::setDialogRange()
 	m_Range->setXAxis(QString("  Oś X [s]:\n(0,0 - "+poland.toString(*m_VectorXAxis.rbegin(), 'f', 1)+")"));
 	m_Range->setYAxis(QString("  Oś Y [V]:\n(0,0 - "+poland.toString(*m_VectorYAxis.rbegin(), 'f', 1)+")"));
 }
-
-//void CustomPlot::axisDoubleClick(QCPAxis *axis, QCPAxis::SelectablePart part)
-//{
-
-//}
 
 void CustomPlot::copyToClipboard()
 {
@@ -321,50 +315,10 @@ void CustomPlot::keyPressEvent(QKeyEvent *event)
 		switch (event->key())
 		{
 			case Qt::Key_Right:
-								if (event->modifiers().testFlag(Qt::ControlModifier)  && event->modifiers().testFlag(Qt::ShiftModifier))
-								{
-									m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond+10));
-									setCursorsLine(m_CursorLineSecond, m_GraphKeyCursorSecond);
-								}
-								else if (event->modifiers().testFlag(Qt::ShiftModifier))
-								{
-									m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond+1));
-									setCursorsLine(m_CursorLineSecond, m_GraphKeyCursorSecond);
-								}
-								else if (event->modifiers().testFlag(Qt::ControlModifier)  && !event->modifiers().testFlag(Qt::ShiftModifier))
-								{
-									m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_GraphKeyCursorFirst+10));
-									setCursorsLine(m_CursorLineFirst, m_GraphKeyCursorFirst);
-								}
-								else if (!event->modifiers().testFlag(Qt::ControlModifier)  && !event->modifiers().testFlag(Qt::ShiftModifier))
-								{
-									m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_GraphKeyCursorFirst+1));
-									setCursorsLine(m_CursorLineFirst, m_GraphKeyCursorFirst);
-								}
-								setCursorsText();
+								moveCursorToRight(event);
 								break;
 			case Qt::Key_Left:
-								if (event->modifiers().testFlag(Qt::ControlModifier)  && event->modifiers().testFlag(Qt::ShiftModifier))
-								{
-									m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond-10));
-									setCursorsLine(m_CursorLineSecond, m_GraphKeyCursorSecond);
-								}
-								else if (event->modifiers().testFlag(Qt::ShiftModifier))
-								{
-									m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond-1));
-									setCursorsLine(m_CursorLineSecond, m_GraphKeyCursorSecond);
-								}
-								else if (event->modifiers().testFlag(Qt::ControlModifier)  && !event->modifiers().testFlag(Qt::ShiftModifier))
-								{
-									m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_GraphKeyCursorFirst-10));
-									setCursorsLine(m_CursorLineFirst, m_GraphKeyCursorFirst);
-								}
-								else if (!event->modifiers().testFlag(Qt::ControlModifier)  && !event->modifiers().testFlag(Qt::ShiftModifier))
-								{
-									m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_GraphKeyCursorFirst-1));
-									setCursorsLine(m_CursorLineFirst, m_GraphKeyCursorFirst);
-								}
-								setCursorsText();
+								moveCursorToLeft(event);
 								break;
 
 		}
@@ -429,10 +383,10 @@ void CustomPlot::setCursorsLine(QCPItemLine *cursorLine, QVector<double>::iterat
 	m_Test.returnsPairMinVoltageTime().second = voltageFirst->first;
 	m_Test.returnsPairMaxVoltageTime().first = voltageSecond->second;
 	m_Test.returnsPairMaxVoltageTime().second = voltageSecond->first;
+	m_Test.setMaxVoltage(m_Test.returnsPairMaxVoltageTime().first);
+	m_Test.setTimeReconstruction(m_Test.returnsPairMaxVoltageTime().second - m_Test.returnsPairMinVoltageTime().second);
 
 	*m_Rate = m_Test;
-
-	//m_RatingWidget->setLineEditWidget();
 
 	m_CursorsLine->start->setCoords(*m_GraphKeyCursorFirst, voltageFirst->second);
 	m_CursorsLine->end->setCoords(*m_GraphKeyCursorSecond, voltageSecond->second);
@@ -444,7 +398,7 @@ void CustomPlot::restoreCursorsOriginal()
 	m_GraphKeyCursorFirst = qFind(m_VectorXAxis.begin(), m_VectorXAxis.end(), m_Test.returnsPairMinVoltageTime().second);
 	m_CursorFirst->setGraphKey(*m_GraphKeyCursorFirst);
 
-	m_GraphKeyCursorFirst = qFind(m_VectorXAxis.begin(), m_VectorXAxis.end(), m_Test.returnsPairMinVoltageTime().second);
+	m_GraphKeyCursorSecond = qFind(m_VectorXAxis.begin(), m_VectorXAxis.end(), m_Test.returnsPairMaxVoltageTime().second);
 	m_CursorSecond->setGraphKey(*m_GraphKeyCursorSecond);
 
 	m_CursorLineFirst->start->setCoords(*m_GraphKeyCursorFirst, QCPRange::minRange);
@@ -461,4 +415,91 @@ void CustomPlot::restoreCursorsOriginal()
 
 	setCursorsText();
 	m_CustomPlot->replot();
+}
+void CustomPlot::moveCursorToRight(QKeyEvent *event)
+{
+	if (event->modifiers().testFlag(Qt::ControlModifier)  && event->modifiers().testFlag(Qt::ShiftModifier))
+	{
+		if ((m_GraphKeyCursorSecond+10) >= m_VectorXAxis.end()-1)
+			m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_VectorXAxis.end()-1));
+		else
+			m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond+10));
+
+		setCursorsLine(m_CursorLineSecond, m_GraphKeyCursorSecond);
+	}
+	else if (event->modifiers().testFlag(Qt::ShiftModifier))
+	{
+		if ((m_GraphKeyCursorSecond+1) >= m_VectorXAxis.end()-1)
+			m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_VectorXAxis.end()-1));
+		else
+			m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond+1));
+		setCursorsLine(m_CursorLineSecond, m_GraphKeyCursorSecond);
+	}
+	else if (event->modifiers().testFlag(Qt::ControlModifier)  && !event->modifiers().testFlag(Qt::ShiftModifier) && m_GraphKeyCursorFirst !=m_GraphKeyCursorSecond)
+	{
+		double tempKey = *(m_GraphKeyCursorFirst+10);
+
+		if (tempKey >= *m_GraphKeyCursorSecond)
+			m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_GraphKeyCursorSecond));
+		else
+			m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_GraphKeyCursorFirst+10));
+
+		setCursorsLine(m_CursorLineFirst, m_GraphKeyCursorFirst);
+	}
+	else if (!event->modifiers().testFlag(Qt::ControlModifier)  && !event->modifiers().testFlag(Qt::ShiftModifier) && m_GraphKeyCursorFirst !=m_GraphKeyCursorSecond)
+	{
+		double tempKey = *(m_GraphKeyCursorFirst+1);
+
+		if (tempKey >= *m_GraphKeyCursorSecond)
+			m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_GraphKeyCursorSecond));
+		else
+			m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_GraphKeyCursorFirst+1));
+
+		setCursorsLine(m_CursorLineFirst, m_GraphKeyCursorFirst);
+	}
+	setCursorsText();
+}
+
+void CustomPlot::moveCursorToLeft(QKeyEvent *event)
+{
+	if (event->modifiers().testFlag(Qt::ControlModifier)  && event->modifiers().testFlag(Qt::ShiftModifier) && m_GraphKeyCursorFirst !=m_GraphKeyCursorSecond)
+	{
+		double tempKey = *(m_GraphKeyCursorSecond-10);
+
+		if (tempKey <= *m_GraphKeyCursorFirst)
+			m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorFirst));
+		else
+			m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond-10));
+
+		setCursorsLine(m_CursorLineSecond, m_GraphKeyCursorSecond);
+	}
+	else if (event->modifiers().testFlag(Qt::ShiftModifier) && m_GraphKeyCursorFirst !=m_GraphKeyCursorSecond)
+	{
+		double tempKey = *(m_GraphKeyCursorSecond-1);
+
+		if (tempKey <= *m_GraphKeyCursorFirst)
+			m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorFirst));
+		else
+			m_CursorSecond->setGraphKey(*(m_GraphKeyCursorSecond = m_GraphKeyCursorSecond-1));
+
+		setCursorsLine(m_CursorLineSecond, m_GraphKeyCursorSecond);
+	}
+	else if (event->modifiers().testFlag(Qt::ControlModifier)  && !event->modifiers().testFlag(Qt::ShiftModifier))
+	{
+		if ((m_GraphKeyCursorFirst-10) <= m_VectorXAxis.begin())
+			m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_VectorXAxis.begin()));
+		else
+			m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_GraphKeyCursorFirst-10));
+;
+		setCursorsLine(m_CursorLineFirst, m_GraphKeyCursorFirst);
+	}
+	else if (!event->modifiers().testFlag(Qt::ControlModifier)  && !event->modifiers().testFlag(Qt::ShiftModifier))
+	{
+		if ((m_GraphKeyCursorFirst-1) <= m_VectorXAxis.begin())
+			m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_VectorXAxis.begin()));
+		else
+			m_CursorFirst->setGraphKey(*(m_GraphKeyCursorFirst = m_GraphKeyCursorFirst-1));
+		setCursorsLine(m_CursorLineFirst, m_GraphKeyCursorFirst);
+	}
+	setCursorsText();
 }

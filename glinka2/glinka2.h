@@ -120,6 +120,7 @@ public:
 	double returnsRateTotal()const {return m_Rating.m_RateTotal;}
 
 	void restoreRateInitialValue();
+	void resetPlotRate();
 
 	void writeRatingInsulation(const std::string &name)const;
 	std::streampos getRatingInsulation(const std::string &name, std::streampos place = 0);
